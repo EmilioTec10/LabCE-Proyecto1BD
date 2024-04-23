@@ -9,6 +9,18 @@ namespace LabCEAPI.NewFolder
 
         private Profesor aprobador { get; set; }
 
-        private bool aprobado { get; set; }
+        public bool aprobado { get; set; }
+
+        private DateOnly dia { get; set; }
+
+        private DateTime hora { get; set; }
+
+        public PrestamoActivo(Activo activo, Profesor aprobador, DateOnly dia, DateTime hora)
+        {
+            this.activo = activo;
+            this.aprobador = aprobador;
+            this.dia = dia;
+            this.hora = hora;
+        }
     }
 }
