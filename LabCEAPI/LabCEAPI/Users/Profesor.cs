@@ -42,7 +42,9 @@ namespace LabCEAPI.Users
         //Metodo que genera una contraseña nueva aleatoriamente y la almacena en la base de datos
         public void generar_nueva_contraseña()
         {
+            this.contraseña = GeneradorContraseña.NuevaContraseña();
 
+            GeneradorContraseña.mandar_correo("manuelemilio1011@gmail.com", this.contraseña);
         }
 
         //Metodo que muestra todos los activos que actualemente estan prestados

@@ -59,7 +59,9 @@ namespace LabCEAPI.Users
         //Metodo que genera una nueva contraseña aleatoria para el administrador
         public void generar_nueva_contraseña()
         {
+            this.contraseña =  GeneradorContraseña.NuevaContraseña();
 
+            GeneradorContraseña.mandar_correo(this.email, this.contraseña);
         }
 
         //Metodo que genera el reporte de horas laboradas por los operadores
