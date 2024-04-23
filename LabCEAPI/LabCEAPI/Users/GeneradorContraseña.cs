@@ -4,6 +4,8 @@ using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
+//Codigo tomado del video https://www.youtube.com/watch?v=PvLXINCHK7c&t=200s&ab_channel=L-Code
+
 namespace LabCEAPI.Users
 {
     //Clase que contiene metodos para generar una nueva contraseña de manera aleatorio

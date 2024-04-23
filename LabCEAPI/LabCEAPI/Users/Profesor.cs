@@ -43,8 +43,10 @@ namespace LabCEAPI.Users
         public void generar_nueva_contraseña()
         {
             this.contraseña = GeneradorContraseña.NuevaContraseña();
+            
+            GeneradorContraseña.mandar_correo(this.email, this.contraseña);
 
-            GeneradorContraseña.mandar_correo("manuelemilio1011@gmail.com", this.contraseña);
+            string contraseña_encriptada = EncriptacionMD5.encriptar(this.contraseña);
         }
 
         //Metodo que muestra todos los activos que actualemente estan prestados
