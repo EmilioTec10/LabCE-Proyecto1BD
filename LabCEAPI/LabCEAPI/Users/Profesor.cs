@@ -16,9 +16,9 @@ namespace LabCEAPI.Users
 
         private int edad {  get; set; }
 
-        private string email {  get; set; }
+        public string email {  get; set; }
 
-        private string contraseña { get; set; }
+        public string contraseña { get; set; }
         
         //Metodo que registra a un profesor en la base de datos
         public void registrar_profesor(
@@ -50,15 +50,15 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que muestra todos los activos que actualemente estan prestados
-        public void ver_activos_prestados()
+        public LinkedList<Activo> ver_activos_prestados()
         {
-
+            return Activo.activos_prestados;
         }
 
         //Metodo que solicita por parte del profesor un prestamo de un activo
-        public void solicitar_prestamo_activo()
+        public void solicitar_prestamo_activo(Activo activo)
         {
-
+            PrestamoActivo prestamo = new PrestamoActivo(activo, this, DateOnly.FromDateTime(DateTime.Now), DateTime.Now);
         }
 
         //Metodo que acepta la solicitud de un prestamos a un estudiante
@@ -85,5 +85,7 @@ namespace LabCEAPI.Users
             ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora);
             return reservarLab;
         }
+
+        public set
     }
 }

@@ -1,4 +1,5 @@
 ﻿using LabCEAPI.Laboratorios;
+using LabCEAPI.Reportes_de_Horas;
 
 namespace LabCEAPI.Users
 {
@@ -27,15 +28,16 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que permite modificar datos de un profesor
-        public void modificar_profesor(string email, string new_email, string contraseña, string new_contraseña)
+        public void modificar_profesor(Profesor profesor , string new_email, string new_contraseña)
         {
-
+            profesor.email = new_email;
+            profesor.contraseña = new_contraseña;
         }
 
         //Metodo que elimina el usuario de un profesor de la base de datos y de la aplicacion
         public void eliminar_profesor(Profesor profesor)
         {
-            
+            //Lo elimina de la base
         }
 
         //Metodo que ve todos los operadores registrados en la aplicacion
@@ -67,6 +69,7 @@ namespace LabCEAPI.Users
         //Metodo que genera el reporte de horas laboradas por los operadores
         public void generar_reporte()
         {
+            ReporteGeneral reporteGeneral = new ReporteGeneral();   
 
         }
 
