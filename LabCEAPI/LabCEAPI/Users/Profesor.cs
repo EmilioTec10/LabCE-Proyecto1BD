@@ -82,9 +82,9 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que reserva un laboratorio por parte del profesor
-        public ReservarLab reservar_laboratorio(Laboratorio lab, DateOnly dia, DateTime hora, int duracion)
+        public ReservarLab reservar_laboratorio(Laboratorio lab, DateOnly dia, DateTime hora_inicio, DateTime hora_fin)
         {
-            ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora, duracion);
+            ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora_inicio, hora_fin);
             return reservarLab;
         }
 

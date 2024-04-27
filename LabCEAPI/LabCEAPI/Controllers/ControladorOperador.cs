@@ -10,8 +10,8 @@ using static LabCEAPI.Controllers.ControladorProfesor;
 using LabCEAPI.NewFolder;
 
 namespace LabCEAPI.Controllers
-{   
- 
+{
+
     [ApiController]
     [Route("api/[controller]")]
     public class OperadorController : ControllerBase
@@ -19,14 +19,14 @@ namespace LabCEAPI.Controllers
         Operador operador = new Operador();
 
         [HttpPost("registrar")]
-        public IActionResult RegistrarOperador([FromBody] OperadorData operadorData)
+        public IActionResult RegistrarOperador([FromBody] OperadorDataRequest operadorData)
         {
             operador.registrar_operador(operadorData.Cedula, operadorData.Carne, operadorData.Nombre, operadorData.Apellidos, operadorData.FechaDeNacimiento, operadorData.Edad, operadorData.Email, operadorData.Contraseña);
             return Ok("Operador registrado exitosamente");
         }
 
         [HttpPost("ingresar")]
-        public IActionResult IngresarOperador([FromBody] LoginData loginData)
+        public IActionResult IngresarOperador([FromBody] LoginDataOperador loginData)
         {
             operador.ingresar_operador(loginData.Email, loginData.Contraseña);
             return Ok("Operador ingresado exitosamente");
@@ -50,8 +50,8 @@ namespace LabCEAPI.Controllers
         public IActionResult ReservarLaboratorio([FromBody] ReservaLabData reservaLabData)
         {
             Laboratorio lab = new Laboratorio(reservaLabData.Nombre);
-            ReservarLab reservaLab = operador.reservar_laboratorio(lab, reservaLabData.Dia, reservaLabData.Hora, reservaLabData.duracion);
-            return Ok("Laboratorio reservado correctamente para el día " + reservaLabData.Dia.ToString() + " a las " + reservaLabData.Hora.ToString());
+            ReservarLab reservaLab = operador.reservar_laboratorio(lab, reservaLabData.Dia, reservaLabData.HoraInicio, reservaLabData.HoraFin);
+            return Ok("Laboratorio reservado correctamente para el día " + reservaLabData.Dia.ToString() + " de " + reservaLabData.HoraInicio.ToString() + " hasta las " + reservaLabData.HoraFin.ToString());
         }
 
         [HttpGet("ver-activos-disponibles")]
@@ -61,7 +61,7 @@ namespace LabCEAPI.Controllers
             return Ok(activosDisponibles);
         }
 
-        /*
+        
         [HttpPost("solicitar-activo-estudiante")]
         public IActionResult SolicitarActivoEstudiante([FromBody] SolicitarActivoData solicitarActivoData)
         {
@@ -71,10 +71,10 @@ namespace LabCEAPI.Controllers
             PrestamoActivo prestamoActivo = operador.solicitar_activo_estudiante(activo, profesor);
             return Ok("Solicitud de activo para estudiante realizada correctamente");
         }
-        */
+        
 
         [HttpPost("prestar-activo-estudiante")]
-        public IActionResult PrestarActivoEstudiante([FromBody] ActivoData activoData)
+        public IActionResult PrestarActivoEstudiante([FromBody] ActivoDataOperador activoData)
         {
             Activo activo = new Activo(activoData.Nombre, activoData.Marca, activoData.Modelo, activoData.Disponible, activoData.PrestadoA);
             operador.prestar_activo_estudiante(activo, activoData.ContraseñaOperador);
@@ -82,7 +82,7 @@ namespace LabCEAPI.Controllers
         }
 
         [HttpPost("prestar-activo-profesor")]
-        public IActionResult PrestarActivoProfesor([FromBody] ActivoData activoData)
+        public IActionResult PrestarActivoProfesor([FromBody] ActivoDataOperador activoData)
         {
             Activo activo = new Activo(activoData.Nombre, activoData.Marca, activoData.Modelo, activoData.Disponible, activoData.PrestadoA);
             operador.prestar_activo_profesor(activo, activoData.ContraseñaProfesor);
@@ -95,6 +95,7 @@ namespace LabCEAPI.Controllers
             LinkedList<Activo> activos_prestados = Activo.activos_prestados;
             return Ok(activos_prestados);
         }
+        [HttpPost("devolucion-activo-estudiante")]
         public IActionResult DevolucionActivoEstudiante([FromBody] DevolucionActivoData devolucionActivoData)
         {
             Activo activo = new Activo(devolucionActivoData.Activo.Nombre, devolucionActivoData.Activo.Marca, devolucionActivoData.Activo.Modelo, devolucionActivoData.Activo.Disponible, devolucionActivoData.Activo.PrestadoA);
@@ -124,7 +125,7 @@ namespace LabCEAPI.Controllers
             return Ok(verHorasLaboradasData);
         }
 
-        public class OperadorData
+        public class OperadorDataRequest
         {
             public int Cedula { get; set; }
             public int Carne { get; set; }
@@ -136,20 +137,20 @@ namespace LabCEAPI.Controllers
             public string Contraseña { get; set; }
         }
 
-        public class LoginData
+        public class LoginDataOperador
         {
             public string Email { get; set; }
             public string Contraseña { get; set; }
         }
 
-        public class ActivoData
+        public class ActivoDataOperador
         {
             public string Nombre { get; set; }
             public string Marca { get; set; }
             public string Modelo { get; set; }
             public bool Disponible { get; set; }
             public string PrestadoA { get; set; }
-            public string ContraseñaProfesor {  get; set; }
+            public string ContraseñaProfesor { get; set; }
             public string ContraseñaOperador { get; set; }
         }
 
@@ -159,6 +160,11 @@ namespace LabCEAPI.Controllers
             public string Nombre { get; set; }
             public string Marca { get; set; }
             public string Modelo { get; set; }
+            public string Placa {  get; set; }
+
+            public bool Disponible { get; set; }
+
+            public string PrestadoA {  get; set; }
         }
 
         public class PrestamoActivoData
@@ -191,6 +197,6 @@ namespace LabCEAPI.Controllers
             public DateTime hora_salida { get; set; }
             public float horas_trabajadas { get; set; }
         }
-   
-    
+
+    } 
 }

@@ -79,8 +79,8 @@ namespace LabCEAPI.Controllers
         public IActionResult ReservarLaboratorio([FromBody] ReservaLabData reserva_data)
         {
             Laboratorio lab = new Laboratorio(reserva_data.Nombre);
-            ReservarLab reserva = profesor.reservar_laboratorio(lab, reserva_data.Dia, reserva_data.Hora, reserva_data.duracion);
-            return Ok("Laboratorio reservado correctamente para el día " + reserva_data.Dia.ToString() + " a las " + reserva_data.Hora.ToString());
+            ReservarLab reserva = profesor.reservar_laboratorio(lab, reserva_data.Dia, reserva_data.HoraInicio, reserva_data.HoraFin);
+            return Ok("Laboratorio reservado correctamente para el día " + reserva_data.Dia.ToString() + " de " + reserva_data.HoraInicio.ToString() + " hasta " + reserva_data.HoraFin.ToString());
         }
 
 
@@ -119,8 +119,8 @@ namespace LabCEAPI.Controllers
         {
             public string Nombre { get; set; } // Nombre del laboratorio
             public DateOnly Dia { get; set; } // Fecha de la reserva
-            public DateTime Hora { get; set; } // Hora de la reserva
-            public int duracion { get; set; } // Cantidad de horas que se va a reservar
+            public DateTime HoraInicio { get; set; } 
+            public DateTime HoraFin { get; set; } 
         }
 
     }
