@@ -59,6 +59,8 @@ namespace LabCEAPI.Users
         public void solicitar_prestamo_activo(Activo activo)
         {
             PrestamoActivo prestamo = new PrestamoActivo(activo, this, DateOnly.FromDateTime(DateTime.Now), DateTime.Now);
+            Activo.activos_disponibles.Remove(activo);
+            Activo.activos_prestados.AddFirst(activo);
         }
 
         //Metodo que acepta la solicitud de un prestamos a un estudiante
@@ -80,12 +82,12 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que reserva un laboratorio por parte del profesor
-        public ReservarLab reservar_laboratorio(Laboratorio lab, DateOnly dia, DateTime hora)
+        public ReservarLab reservar_laboratorio(Laboratorio lab, DateOnly dia, DateTime hora, int duracion)
         {
-            ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora);
+            ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora, duracion);
             return reservarLab;
         }
 
-        public set
+ 
     }
 }

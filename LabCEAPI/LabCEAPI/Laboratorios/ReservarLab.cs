@@ -15,20 +15,24 @@ namespace LabCEAPI.Reservaciones
 
         DateTime hora { get; set; }
 
-        public ReservarLab(Laboratorio lab, Profesor profesor, DateOnly dia, DateTime hora)
+        int duracion { get; set; }
+
+        public ReservarLab(Laboratorio lab, Profesor profesor, DateOnly dia, DateTime hora, int duracion)
         {
             this.lab = lab;
             this.profesor = profesor;
             this.dia = dia;
             this.hora = hora;
+            this.duracion = duracion;
         }
 
-        public ReservarLab(Laboratorio lab, Operador operador, DateOnly dia, DateTime hora)
+        public ReservarLab(Laboratorio lab, Operador operador, DateOnly dia, DateTime hora, int duracion)
         {
             this.lab = lab;
             this.operador = operador;
             this.dia = dia;
             this.hora = hora;
+            this.duracion = duracion;
         }
     }
 }

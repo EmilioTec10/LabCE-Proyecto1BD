@@ -16,7 +16,7 @@ namespace LabCEAPI.Controllers
 
         [HttpPost("registrar")]
         public IActionResult RegistrarProfesor(
-            [FromBody] ProfesorData profesor_data)
+            [FromBody] ProfesorDataRequest profesor_data)
         {
             profesor.registrar_profesor(profesor_data.Cedula, profesor_data.Nombre, profesor_data.Apellidos, profesor_data.FechaDeNacimiento, profesor_data.Edad, profesor_data.Email, profesor_data.Contraseña);
             return Ok("Profesor registrado exitosamente");
@@ -24,7 +24,7 @@ namespace LabCEAPI.Controllers
 
         [HttpPost("ingresar")]
         public IActionResult IngresarProfesor(
-            [FromBody] LoginData login_data)
+            [FromBody] LoginDataRequest login_data)
         {
             profesor.ingresar_profesor(login_data.Email, login_data.Contraseña);
             return Ok("Profesor ingresado exitosamente");
@@ -40,9 +40,6 @@ namespace LabCEAPI.Controllers
         [HttpGet("ver-activos-prestados")]
         public IActionResult VerActivosPrestados()
         {
-            Activo activo = new Activo("nose", "nissan", "123", true, "");
-            Activo.activos_prestados.AddFirst(activo);
-            Activo.activos_prestados.AddFirst(new Activo("sise", "toyota", "321", true, "noe"));
             LinkedList<Activo> activos_prestados = profesor.ver_activos_prestados();
             return Ok(activos_prestados);
         }
@@ -82,12 +79,12 @@ namespace LabCEAPI.Controllers
         public IActionResult ReservarLaboratorio([FromBody] ReservaLabData reserva_data)
         {
             Laboratorio lab = new Laboratorio(reserva_data.Nombre);
-            ReservarLab reserva = profesor.reservar_laboratorio(lab, reserva_data.Dia, reserva_data.Hora);
+            ReservarLab reserva = profesor.reservar_laboratorio(lab, reserva_data.Dia, reserva_data.Hora, reserva_data.duracion);
             return Ok("Laboratorio reservado correctamente para el día " + reserva_data.Dia.ToString() + " a las " + reserva_data.Hora.ToString());
         }
 
 
-        public class ProfesorData
+        public class ProfesorDataRequest
         {
             public int Cedula { get; set; }
             public string Nombre { get; set; }
@@ -98,7 +95,7 @@ namespace LabCEAPI.Controllers
             public string Contraseña { get; set; }
         }
 
-        public class LoginData
+        public class LoginDataRequest
         {
             public string Email { get; set; }
             public string Contraseña { get; set; }
@@ -123,6 +120,7 @@ namespace LabCEAPI.Controllers
             public string Nombre { get; set; } // Nombre del laboratorio
             public DateOnly Dia { get; set; } // Fecha de la reserva
             public DateTime Hora { get; set; } // Hora de la reserva
+            public int duracion { get; set; } // Cantidad de horas que se va a reservar
         }
 
     }

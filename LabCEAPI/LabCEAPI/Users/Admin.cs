@@ -11,7 +11,8 @@ namespace LabCEAPI.Users
         //Metodo que permite ingresar como administrador a la aplicacion
         public void ingresar_admin(string email, string contraseña)
         {
-
+            Console.WriteLine(email);
+            Console.WriteLine(contraseña);
         }
 
         //Metodo que registra a un profesor por parte del administrador y lo guarda en la base de datos
@@ -24,7 +25,12 @@ namespace LabCEAPI.Users
             string email
             )
         {
-
+            Console.WriteLine(cedula);
+            Console.WriteLine(nombre);
+            Console.WriteLine(apellidos);
+            Console.WriteLine(fecha_de_nacimiento);
+            Console.WriteLine(edad);
+            Console.WriteLine(email);
         }
 
         //Metodo que permite modificar datos de un profesor

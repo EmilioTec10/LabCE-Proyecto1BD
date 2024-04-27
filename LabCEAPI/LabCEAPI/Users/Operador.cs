@@ -66,9 +66,9 @@ namespace LabCEAPI.Users
         }
 
         //Metodo para reservar un laboratorio en una fecha determinada
-        public ReservarLab reservar_laboratorio(Laboratorio lab, DateOnly dia, DateTime hora)
+        public ReservarLab reservar_laboratorio(Laboratorio lab, DateOnly dia, DateTime hora, int duracion)
         {
-            ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora);
+            ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora, duracion);
             return reservarLab;
         }
 
