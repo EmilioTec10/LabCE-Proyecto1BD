@@ -7,7 +7,7 @@ namespace LabCEAPI
 {
     public class EncriptacionMD5
     {
-
+        //Metodo que encripta un mensaje
         public static string encriptar (string mensaje)
         {
             string hash = "Lab Ce elpepe";
@@ -26,6 +26,7 @@ namespace LabCEAPI
             return Convert.ToBase64String(result);
         }
 
+        //Metodo que desencripta un mensaje
         public static string desencriptar (string mensajeEn)
         {
             string hash = "Lab Ce elpepe";

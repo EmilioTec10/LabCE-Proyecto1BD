@@ -24,10 +24,11 @@ namespace LabCEAPI.Users
 
         private string email {  get; set; }
 
-        private string contraseña {  get; set; }
+        private string contraseña { get; set; }
+
+        HorasLaboradas actual_hora { get; set; }
 
         LinkedList<HorasLaboradas> HorasLaboradas { get; set; }
-
 
 
         //Metodo que registra un nuevo operador y lo guarda en la base de datos
@@ -47,8 +48,16 @@ namespace LabCEAPI.Users
         //Metodo para ingresar como operador en la aplicacion
         public void ingresar_operador(string email, string contraseña)
         {
-            
+            actual_hora = new HorasLaboradas(DateTime.Now, DateOnly.FromDateTime(DateTime.Now));
         }
+
+        public void salir_operador()
+        {
+            actual_hora.hora_salida = DateTime.Now;
+            actual_hora.horas_trabajadas = (actual_hora.hora_salida.Hour - actual_hora.hora_ingreso.Hour) + ((actual_hora.hora_salida.Minute - actual_hora.hora_ingreso.Minute)/60);
+            HorasLaboradas.AddFirst(actual_hora);
+        }
+
 
         //Metodo para ver todos los laboratorios que estan disponibles en este momento
         public LinkedList<Laboratorio> ver_labs_disponibles()
@@ -122,16 +131,6 @@ namespace LabCEAPI.Users
             activo.dañado = true;
             activo.dellate_dañado = detalle;
             return activo;
-        }
-
-        public void registrar_entrada()
-        {
-
-        }
-
-        public void registrar_salida()
-        {
-
         }
 
         //Metodo para ver las horas laboradas del operador
