@@ -14,3 +14,4 @@ C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\bin\Debug\netstandard2.0\
 C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\bin\Debug\netstandard2.0\ref\LabCE.dll
 C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\bin\Debug\netstandard2.0\LabCE.pdb
 C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\obj\Debug\netstandard2.0\XamlC.stamp
+C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\obj\Debug\netstandard2.0\AppShell.xaml.g.cs

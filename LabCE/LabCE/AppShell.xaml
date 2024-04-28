@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://xamarin.com/schemas/2014/forms"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            x:Class="LabCE.AppShell">
+    
+    
+    <!-- Primera pestaña -->
+    <ContentPage Title="Prstamos Pendientes">
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+            <Label Text="Contenido de la pestaña 1" HorizontalOptions="Center" VerticalOptions="CenterAndExpand" />
+        </StackLayout>
+    </ContentPage>
+
+    <!-- Segunda pestaña -->
+    <ContentPage Title="Reserva de laboratorios">
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+            <Button Text="Haz clic aquí" Clicked="Boton_Clicked" />
+        </StackLayout>
+    </ContentPage>
+
+</TabbedPage>

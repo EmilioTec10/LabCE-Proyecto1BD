@@ -1,5 +1,7 @@
 ﻿using System;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
+
 
 namespace LabCE
 {
@@ -20,7 +22,8 @@ namespace LabCE
             if (correo == "mrr" && contrasena == "2197")
             {
                 // Si las credenciales son correctas, navegar a la página de menú
-                await DisplayAlert("siiii", "Credenciales correctas", "OK");
+                // await DisplayAlert("siiii", "Credenciales correctas", "OK");
+                await Navigation.PushAsync(new AppShell());
             }
             else
             {
