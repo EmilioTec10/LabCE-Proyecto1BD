@@ -37,6 +37,11 @@ namespace LabCE
             horaInicio.Format = "HH:mm"; // Formato de 24 horas
             horaInicio.PropertyChanged += horaInicio_PropertyChanged;
 
+            horaFin = new TimePicker();
+            horaFin.Time = new TimeSpan(12, 0, 0);
+            horaFin.Format = "HH:mm"; // Formato de 24 horas
+            horaFin.PropertyChanged += horaFin_PropertyChanged;
+
             // Agregar DatePicker a la página
             Content = new StackLayout
             {
@@ -45,7 +50,9 @@ namespace LabCE
                     new Label { Text = "Selecciona la fecha de la reserva" },
                     datePicker,
                     new Label { Text = "Selecciona la hora de inicio de la reserva" },
-                    horaInicio
+                    horaInicio,
+                    new Label { Text = "Selecciona la hora de fin de la reserva" },
+                    horaFin
                 }
             };
         }
@@ -78,6 +85,31 @@ namespace LabCE
                 }
             }
         }
+
+        private void horaFin_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == TimePicker.TimeProperty.PropertyName)
+            {
+                var selectedTime = horaInicio.Time;
+
+                // Verificar si la hora seleccionada no es exacta
+                if (selectedTime.Minutes != 0 && selectedTime.Minutes != 30)
+                {
+                    DisplayAlert("Error", "Por favor selecciona una hora exacta (por ejemplo, 7:00 o 11:30).", "OK");
+                    // Establecer la hora al minuto más cercano
+                    horaFin.Time = new TimeSpan(selectedTime.Hours, selectedTime.Minutes < 30 ? 0 : 30, 0);
+                }
+
+                // Verificar si la hora seleccionada está dentro del rango permitido
+                if (selectedTime < new TimeSpan(7, 30, 0) || selectedTime > new TimeSpan(21, 0, 0))
+                {
+                    DisplayAlert("Error", "Por favor selecciona una hora entre las 7:30 AM y las 9:00 PM.", "OK");
+                    // Establecer la hora predeterminada dentro del rango permitido
+                    horaFin.Time = selectedTime < new TimeSpan(7, 30, 0) ? new TimeSpan(7, 30, 0) : new TimeSpan(21, 0, 0);
+                }
+            }
+        }
+
 
     }
 }

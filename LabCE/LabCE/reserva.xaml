@@ -11,6 +11,8 @@
 
             <Label Text="Select a Time:" />
             <TimePicker x:Name="horaInicio" />
+            <Label Text="Select a Time:" />
+            <TimePicker x:Name="horaFin" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
