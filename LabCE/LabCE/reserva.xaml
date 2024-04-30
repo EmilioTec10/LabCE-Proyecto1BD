@@ -8,6 +8,10 @@
         <StackLayout Margin="20">
             <Label Text="Selecciona la fecha de la reserva" />
             <DatePicker x:Name="reservaDatePicker" />
+
+            <Label Text="Select a Time:" />
+            <TimePicker x:Name="myTimePicker" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
+
