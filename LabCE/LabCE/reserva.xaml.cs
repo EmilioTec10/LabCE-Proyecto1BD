@@ -186,7 +186,9 @@ namespace LabCE
             tablaReserva.Children.Add(new Label { Text = "28" }, 1, 1);
             tablaReserva.Children.Add(new Label { Text = "26" }, 2, 1);
             tablaReserva.Children.Add(new Label { Text = "pizarra" }, 3, 1);
-            tablaReserva.Children.Add(new Label { Text = "x" }, 4, 1);
+            Button button1 = new Button { Text = "x", CommandParameter = "F207" };
+            button1.Clicked += Button_Clicked;
+            tablaReserva.Children.Add(button1, 4, 1);
 
 
 
@@ -195,8 +197,30 @@ namespace LabCE
             tablaReserva.Children.Add(new Label { Text = "23" }, 1, 2);
             tablaReserva.Children.Add(new Label { Text = "23" }, 2, 2);
             tablaReserva.Children.Add(new Label { Text = "pizarreea" }, 3, 2);
-            tablaReserva.Children.Add(new Label { Text = "x" }, 4, 2);
+            Button button2 = new Button { Text = "x", CommandParameter = "F2078" };
+            button2.Clicked += Button_Clicked;
+            tablaReserva.Children.Add(button2, 4, 2);
         }
 
+        private void Button_Clicked(object sender, EventArgs e)
+        {
+            // Obtener el laboratorio correspondiente al botón presionado
+            Button button = (Button)sender;
+            string lab = button.CommandParameter.ToString();
+
+            // Obtener la fecha y horas seleccionadas
+            DateTime selectedDate = datePicker.Date;
+            TimeSpan selectedStartTime = horaInicio.Time;
+            TimeSpan selectedEndTime = horaFin.Time;
+
+            // Construir el mensaje que incluye la información de la reserva
+            string message = $"Reserva finalizada para el laboratorio {lab}.\n";
+            message += $"Fecha: {selectedDate:d}\n";
+            message += $"Hora de inicio: {selectedStartTime:hh\\:mm}\n";
+            message += $"Hora de fin: {selectedEndTime:hh\\:mm}";
+
+            // Mostrar el DisplayAlert con la información de la reserva
+            DisplayAlert("Reserva Finalizada", message, "OK");
+        }
     }
 }
