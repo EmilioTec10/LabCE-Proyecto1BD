@@ -14,7 +14,7 @@ const linksArray = [
   {
     label: 'Gestion Profesores',
     icon: <AiOutlineHome />,
-    to: '/gestion_profesores',
+    to: '/menu_gestion_profesores',
   },
   {
     label: 'Gestion Laboratorios',

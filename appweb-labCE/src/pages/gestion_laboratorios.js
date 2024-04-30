@@ -13,7 +13,7 @@ const linksArray = [
   {
     label: 'Gestion Profesores',
     icon: <AiOutlineHome />,
-    to: '/gestion_profesores',
+    to: '/menu_gestion_profesores',
   },
   {
     label: 'Gestion Laboratorios',
@@ -168,7 +168,14 @@ const Gestion_laboratorios = () => {
               fixedHeader
               noHeader
               dense
-              style={{ marginLeft: '20px' }}
+              style={{ marginTop: '20px' }} // Bajar la tabla en el eje Y
+              customStyles={{
+                table: {
+                  style: {
+                    marginBottom: '400px', // Aumentar el tamaño de la tabla
+                  },
+                },
+              }}
             />
           </DataTableContainer>
         </Content>
@@ -265,8 +272,6 @@ const DataTableContainer = styled.div`
   width: 80%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 20px;
-  margin-bottom: 20px;
 `;
 
 export default Gestion_laboratorios;
