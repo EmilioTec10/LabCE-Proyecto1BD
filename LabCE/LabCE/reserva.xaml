@@ -10,7 +10,7 @@
             <DatePicker x:Name="reservaDatePicker" />
 
             <Label Text="Select a Time:" />
-            <TimePicker x:Name="myTimePicker" />
+            <TimePicker x:Name="horaInicio" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

@@ -32,10 +32,10 @@ namespace LabCE
 
             datePicker.DateSelected += DatePicker_DateSelected;
 
-            myTimePicker = new TimePicker();
-            myTimePicker.Time = new TimeSpan(7, 0, 0); // Establecer la hora predeterminada a las 7:00
-            myTimePicker.Format = "HH:mm"; // Formato de 24 horas
-            myTimePicker.PropertyChanged += MyTimePicker_PropertyChanged;
+            horaInicio = new TimePicker();
+            horaInicio.Time = new TimeSpan(7, 0, 0); // Establecer la hora predeterminada a las 7:00
+            horaInicio.Format = "HH:mm"; // Formato de 24 horas
+            horaInicio.PropertyChanged += horaInicio_PropertyChanged;
 
             // Agregar DatePicker a la página
             Content = new StackLayout
@@ -44,8 +44,8 @@ namespace LabCE
                 Children = {
                     new Label { Text = "Selecciona la fecha de la reserva" },
                     datePicker,
-                    new Label { Text = "Selecciona la hora de la reserva" },
-                    myTimePicker
+                    new Label { Text = "Selecciona la hora de inicio de la reserva" },
+                    horaInicio
                 }
             };
         }
@@ -59,16 +59,22 @@ namespace LabCE
                 datePicker.Date = DateTime.Today; // Restablecer la fecha seleccionada
             }
         }
-        private void MyTimePicker_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        private void horaInicio_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
         {
             if (e.PropertyName == TimePicker.TimeProperty.PropertyName)
             {
-                var selectedTime = myTimePicker.Time;
+                var selectedTime = horaInicio.Time;
                 // Verificar si la hora seleccionada no es exacta
                 if (selectedTime.Minutes != 0 && selectedTime.Minutes != 30)
                 {
                     DisplayAlert("Error", "Por favor selecciona una hora exacta (por ejemplo, 7:00 o 11:30).", "OK");
-                    myTimePicker.Time = new TimeSpan(selectedTime.Hours, 0, 0); // Establecer la hora a la más cercana en punto
+                    horaInicio.Time = new TimeSpan(selectedTime.Hours, 0, 0); // Establecer la hora a la más cercana en punto
+                }
+
+                if (selectedTime < new TimeSpan(7, 0, 0) || selectedTime > new TimeSpan(20, 30, 0))
+                {
+                    DisplayAlert("Error", "Por favor selecciona una hora entre las 7:00 AM y las 8:30 PM.", "OK");
+                    horaInicio.Time = new TimeSpan(7, 0, 0); // Establecer la hora predeterminada a las 7:00 AM
                 }
             }
         }
