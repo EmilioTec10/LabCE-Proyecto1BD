@@ -18,22 +18,37 @@ namespace LabCEAPI.Controllers
         public IActionResult RegistrarProfesor(
             [FromBody] ProfesorDataRequest profesor_data)
         {
-            profesor.registrar_profesor(profesor_data.Cedula, profesor_data.Nombre, profesor_data.Apellidos, profesor_data.FechaDeNacimiento, profesor_data.Edad, profesor_data.Email, profesor_data.Contraseña);
+            profesor.registrar_profesor(profesor_data.Cedula, profesor_data.Nombre, profesor_data.Apellidos, profesor_data.Edad, profesor_data.Email, profesor_data.Contraseña);
             return Ok("Profesor registrado exitosamente");
         }
 
+        // Endpoint para que un profesor ingrese a la aplicación
         [HttpPost("ingresar")]
-        public IActionResult IngresarProfesor(
-            [FromBody] LoginDataRequest login_data)
+        public IActionResult IngresarProfesor(string email, string contraseña)
         {
-            profesor.ingresar_profesor(login_data.Email, login_data.Contraseña);
-            return Ok("Profesor ingresado exitosamente");
+            try
+            {
+                bool accesoPermitido = profesor.ingresar_profesor(email, contraseña);
+
+                if (accesoPermitido)
+                {
+                    return Ok("Inicio de sesión exitoso");
+                }
+                else
+                {
+                    return Unauthorized("Credenciales inválidas");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost("generar-nueva-contrasena")]
-        public IActionResult GenerarNuevaContrasena()
+        public IActionResult GenerarNuevaContrasena(string email)
         {
-            profesor.generar_nueva_contraseña();
+            profesor.generar_nueva_contraseña(email);
             return Ok("Nueva contraseña generada exitosamente y enviada por correo electrónico");
         }
 
@@ -89,7 +104,7 @@ namespace LabCEAPI.Controllers
             public int Cedula { get; set; }
             public string Nombre { get; set; }
             public string Apellidos { get; set; }
-            public DateOnly FechaDeNacimiento { get; set; }
+           // public DateOnly FechaDeNacimiento { get; set; }
             public int Edad { get; set; }
             public string Email { get; set; }
             public string Contraseña { get; set; }

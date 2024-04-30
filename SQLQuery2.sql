@@ -1,5 +1,5 @@
 -- Crear laDB 
-CREATE DATABASE LabCE;
+
 
 -- Usar  LabCE
 USE LabCE;
