@@ -6,13 +6,7 @@ import { AiOutlineHome, AiOutlineApartment } from 'react-icons/ai';
 import { MdOutlineAnalytics, MdLogout } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
-
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
+import DataTable from 'react-data-table-component';
 import Paper from '@mui/material/Paper';
 
 const linksArray = [
@@ -52,12 +46,9 @@ const secondarylinksArray = [
 ];
 
 const Gestion_laboratorios = () => {
-  
- 
   const [passwordError, setPasswordError] = useState('');
   const { setTheme, theme } = useContext(ThemeContext);
-  const themeStyle = theme === 'light' ? Light : Dark;
-  
+  const themeStyle = theme === 'dark' ? Light : Dark;
 
   const CambiarTheme = () => {
     setTheme((theme) => (theme === 'light' ? 'dark' : 'light'));
@@ -65,28 +56,34 @@ const Gestion_laboratorios = () => {
 
   const columnas = [
     {
-      nombre: 'Nombre',
-      key: 'nombre',
+      name: 'Nombre',
+      selector: row => row.nombre,
+      sortable: true
     },
     {
-      nombre: 'Capacidad',
-      key: 'capacidad',
+      name: 'Capacidad',
+      selector: row => row.capacidad,
+      sortable: true
     },
     {
-      nombre: 'Computadores',
-      key: 'computadores',
+      name: 'Computadores',
+      selector: row => row.computadores,
+      sortable: true
     },
     {
-      nombre: 'Facilidades',
-      key: 'facilidades',
+      name: 'Facilidades',
+      selector: row => row.facilidades,
+      sortable: true
     },
     {
-      nombre: 'Horario',
-      key: 'horario',
+      name: 'Horario',
+      selector: row => row.horario,
+      sortable: true
     },
     {
-      nombre: 'Activos',
-      key: 'activos',
+      name: 'Activos',
+      selector: row => row.activos,
+      sortable: true
     },
   ];
 
@@ -128,75 +125,70 @@ const Gestion_laboratorios = () => {
   return (
     <ThemeProvider theme={themeStyle}>
       <Container>
-        <div className="Logocontent">
-          <div className="imgcontent">
-            <img src={logo} alt="logo" />
+        <Sidebar>
+          <div className="Logocontent">
+            <div className="imgcontent">
+              <img src={logo} alt="logo" />
+            </div>
+            <h2>LabCE</h2>
           </div>
-          <h2>LabCE</h2>
-        </div>
-        {linksArray.map(({ icon, label, to }) => (
-          <div className="LinkContainer" key={label}>
-            <NavLink to={to} className="Links" activeClassName="active">
-              <div className="Linkicon">{icon}</div>
-              <span>{label}</span>
-            </NavLink>
-          </div>
-        ))}
-        <Divider />
-        {secondarylinksArray.map(({ icon, label, to }) => (
-          <div className="LinkContainer" key={label}>
-            <NavLink to={to} className="Links" activeClassName="active">
-              <div className="Linkicon">{icon}</div>
-              <span>{label}</span>
-            </NavLink>
-          </div>
-        ))}
-        <Divider />
-        <div className="Themecontent">
-          <div className="Togglecontent">
-            <div className="grid theme-container">
-              <div className="content">
-                <button onClick={CambiarTheme}>Cambiar Tema</button>
+          {linksArray.map(({ icon, label, to }) => (
+            <div className="LinkContainer" key={label}>
+              <NavLink to={to} className="Links" activeClassName="active">
+                <div className="Linkicon">{icon}</div>
+                <span>{label}</span>
+              </NavLink>
+            </div>
+          ))}
+          <Divider />
+          {secondarylinksArray.map(({ icon, label, to }) => (
+            <div className="LinkContainer" key={label}>
+              <NavLink to={to} className="Links" activeClassName="active">
+                <div className="Linkicon">{icon}</div>
+                <span>{label}</span>
+              </NavLink>
+            </div>
+          ))}
+          <Divider />
+          <div className="Themecontent">
+            <div className="Togglecontent">
+              <div className="grid theme-container">
+                <div className="content">
+                  <button onClick={CambiarTheme}>Cambiar Tema</button>
+                </div>
               </div>
             </div>
           </div>
-        </div>
+        </Sidebar>
+        <Content>
+          <DataTableContainer>
+            <DataTable
+              columns={columnas}
+              data={data}
+              fixedHeader
+              noHeader
+              dense
+              style={{ marginLeft: '20px' }}
+            />
+          </DataTableContainer>
+        </Content>
       </Container>
-
-      <div className="container table">
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columnas.map((column) => (
-                  <TableCell key={column.key}>{column.nombre}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((row, index) => (
-                <TableRow key={index}>
-                  {columnas.map((column) => (
-                    <TableCell key={column.key}>{row[column.key]}</TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </div>
     </ThemeProvider>
   );
 };
 
 const Container = styled.div`
+  display: flex;
+`;
+
+const Sidebar = styled.div`
   color: ${(props) => props.theme.text};
   background: ${(props) => props.theme.bg};
   position: fixed;
-  padding-top: 20px;
-  width: 300px; /* Ancho fijo de la barra lateral */
-  height: 100vh; /* Altura fija de la barra lateral */
-  z-index: 1000; /* Para asegurarse de que esté encima del contenido */
+  width: 300px;
+  height: 100vh;
+  z-index: 1000;
+
   .Logocontent {
     display: flex;
     justify-content: center;
@@ -210,6 +202,7 @@ const Container = styled.div`
       }
     }
   }
+
   .LinkContainer {
     margin: 8px 0;
     padding: 0 15%;
@@ -238,6 +231,7 @@ const Container = styled.div`
       }
     }
   }
+
   .Themecontent {
     display: flex;
     align-items: center;
@@ -255,11 +249,24 @@ const Container = styled.div`
   }
 `;
 
+const Content = styled.div`
+  margin-left: 300px; // Asegurar que el contenido comience después de la barra lateral
+  flex-grow: 1; // Permitir que el contenido crezca para llenar el espacio restante
+`;
+
 const Divider = styled.div`
   height: 1px;
   width: 100%;
   background: ${(props) => props.theme.bg3};
   margin: 20px 0;
+`;
+
+const DataTableContainer = styled.div`
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 20px;
+  margin-bottom: 20px;
 `;
 
 export default Gestion_laboratorios;

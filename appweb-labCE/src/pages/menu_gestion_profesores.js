@@ -94,14 +94,10 @@ const Menu_gestion_profesores = () => {
 
     },
     {
-
       nombre: 'Activos',
       selector: row => row.activos,
       sortable: true
-
     }
-
-
   ];
 
   const data =[
@@ -174,27 +170,11 @@ const Menu_gestion_profesores = () => {
             </div>
           </div>
         </div>
-        <TableContainer>
-          <Table>
-            <TableHead>
-              <TableRow>
-                {columnas.map((columna, index) => (
-                  <TableCell key={index}>{columna.nombre}</TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((fila, index) => (
-                <TableRow key={index}>
-                  {columnas.map((columna, colIndex) => (
-                    <TableCell key={colIndex}>{columna.selector(fila)}</TableCell>
-                  ))}
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
       </Container>
+      <div>
+
+
+      </div>
     </ThemeProvider>
   );
 };
