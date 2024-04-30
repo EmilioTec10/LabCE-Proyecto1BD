@@ -13,6 +13,9 @@
             <TimePicker x:Name="horaInicio" />
             <Label Text="Select a Time:" />
             <TimePicker x:Name="horaFin" />
+
+            <Button Text="Mostrar Información de Reserva" Command="{Binding MostrarInfoReservaCommand}" />
+
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
