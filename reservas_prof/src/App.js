@@ -13,6 +13,7 @@ const App = () => {
   const [horaFin, setHoraFin] = useState('07:30'); // Hora final
   const [errorHoraInicio, setErrorHoraInicio] = useState(false); // Estado para controlar el mensaje de error de horaInicio
   const [errorHoraFin, setErrorHoraFin] = useState(false); // Estado para controlar el mensaje de error de horaFin
+  const [informacion, setInformacion] = useState(""); // Estado para almacenar la información a mostrar
 
   const onDateChange = fecha => {
     setFecha(fecha);
@@ -61,7 +62,8 @@ const App = () => {
       fechaHoraFin.setHours(horaFinSeleccionada);
       fechaHoraFin.setMinutes(minutosFinSeleccionados);
 
-      alert(`Fecha y hora de inicio: ${fechaHoraInicio}\nFecha y hora de fin: ${fechaHoraFin}`);
+      // Actualizar el estado para mostrar la información en el label
+      setInformacion(`Fecha seleccionada: ${fecha.toLocaleDateString()} | Hora de inicio: ${horaInicio} | Hora de fin: ${horaFin}`);
     }
   };
 
@@ -136,6 +138,8 @@ const App = () => {
         </div>
         <br />
         <input type="button" value="Mostrar Fecha y Hora" className="btn btn-primary" onClick={mostrarFechaHora}/>
+        <br />
+        <label>{informacion}</label>
       </div>
     </div>
   );
