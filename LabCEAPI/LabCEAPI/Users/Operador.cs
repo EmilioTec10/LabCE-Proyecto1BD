@@ -746,10 +746,42 @@ namespace LabCEAPI.Users
 
 
         //Metodo para ver las horas laboradas del operador
-        public ReporteOperador ver_horas_laboradas(DateTime dia, Operador operador, string detalles, LinkedList<HorasLaboradas> horasLaboradas)
+        public LinkedList<HorasLaboradas> ver_horas_laboradas(string email_op)
         {
-            ReporteOperador reporteOperador = new ReporteOperador(dia, operador, detalles, horasLaboradas);
-            return reporteOperador;
+            LinkedList<HorasLaboradas> horasLaboradas = new LinkedList<HorasLaboradas>();
+
+            // Consulta SQL para seleccionar los turnos del operador
+            string query = "SELECT fecha_hora_inicio, fecha_hora_fin FROM Turno WHERE email_op = @EmailOp";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer el parámetro
+                    command.Parameters.AddWithValue("@EmailOp", email_op);
+
+                    // Ejecutar la consulta y obtener los resultados
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Iterar sobre los resultados
+                        while (reader.Read())
+                        {
+                            // Obtener las fechas de inicio y fin del turno
+                            DateTime horaInicio = reader.GetDateTime(0);
+                            DateTime horaFin = reader.GetDateTime(1);
+                            // Crear una instancia de HorasLaboradas y agregarla a la lista
+                            horasLaboradas.AddLast(new HorasLaboradas(horaInicio, horaFin));
+                        }
+                    }
+                }
+            }
+
+            return horasLaboradas;
         }
     }
 }

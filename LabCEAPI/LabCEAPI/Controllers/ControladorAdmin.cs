@@ -90,11 +90,11 @@ namespace LabCEAPI.Controllers
             return Ok("Nueva contraseña generada exitosamente y enviada por correo electrónico");
         }
 
-        [HttpPost("generar-reporte")]
+        [HttpGet("generar-reporte")]
         public IActionResult GenerarReporte()
         {
-            admin.generar_reporte();
-            return Ok("Reporte generado exitosamente");
+            LinkedList<ReporteOperador> reporte_operadores =  admin.generar_reporte();
+            return Ok(reporte_operadores);
         }
 
         public class LoginData

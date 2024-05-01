@@ -161,11 +161,12 @@ namespace LabCEAPI.Controllers
             operador.reportar_averia_activo(placa, descripcion, email_prof, email_est);
             return Ok("Avería de activo reportada correctamente");
         }
-        [HttpPost("ver-horas-laboradas")]
-        public IActionResult VerHorasLaboradas([FromBody] VerHorasLaboradasData verHorasLaboradasData)
+        [HttpGet("ver-horas-laboradas")]
+        public IActionResult VerHorasLaboradas(string email_op)
         {
             // Aquí deberías obtener las horas laboradas del operador de la base de datos o de alguna otra fuente de datos
-            return Ok(verHorasLaboradasData);
+            LinkedList<HorasLaboradas> horas_laboradas= operador.ver_horas_laboradas(email_op);
+            return Ok(horas_laboradas);
         }
 
         public class OperadorDataRequest

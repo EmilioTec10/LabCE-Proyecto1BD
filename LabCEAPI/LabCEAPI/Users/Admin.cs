@@ -335,11 +335,68 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que genera el reporte de horas laboradas por los operadores
-        public void generar_reporte()
+        public LinkedList<ReporteOperador> generar_reporte()
         {
-            ReporteGeneral reporteGeneral = new ReporteGeneral();   
+            LinkedList<ReporteOperador> reporte = new LinkedList<ReporteOperador>();
 
+            // Consulta SQL para seleccionar los turnos de los operadores y ordenarlos por email_op
+            string query = "SELECT email_op, fecha_hora_inicio, fecha_hora_fin FROM Turno ORDER BY email_op";
+
+            // Variables para mantener el estado del operador anterior
+            string operadorAnterior = ""; // Inicializamos con una cadena vacía
+            string emailOp = null;
+            LinkedList<HorasLaboradas> horasLaboradas = null;
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Ejecutar la consulta y obtener los resultados
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Iterar sobre los resultados
+                        while (reader.Read())
+                        {
+                            // Obtener los datos del turno
+                            emailOp = reader.GetString(0);
+                            DateTime horaInicio = reader.GetDateTime(1);
+                            DateTime horaFin = reader.GetDateTime(2);
+
+                            // Verificar si es un nuevo operador
+                            if (!operadorAnterior.Equals(emailOp))
+                            {
+                                // Si no es el primer operador, agregar el reporte anterior a la lista
+                                if (horasLaboradas != null)
+                                {
+                                    reporte.AddLast(new ReporteOperador(DateTime.Now, horasLaboradas, operadorAnterior));
+                                }
+
+                                // Actualizar el operador actual y crear una nueva lista de horas laboradas
+                                operadorAnterior = emailOp;
+                                horasLaboradas = new LinkedList<HorasLaboradas>();
+                            }
+
+                            // Agregar las horas laboradas del turno actual a la lista
+                            horasLaboradas.AddLast(new HorasLaboradas(horaInicio, horaFin));
+                        }
+                    }
+
+                    // Agregar el último reporte a la lista
+                    if (horasLaboradas != null)
+                    {
+                        reporte.AddLast(new ReporteOperador(DateTime.Now, horasLaboradas, operadorAnterior));
+                    }
+                }
+            }
+
+            return reporte;
         }
+
 
     }
 }
