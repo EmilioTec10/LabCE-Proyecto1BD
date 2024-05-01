@@ -157,7 +157,7 @@ const DataTableContainer = styled.div`
   margin-right: auto;
 `;
 
-class Aprobacion_operadores extends React.Component {
+class Cambio_contrasenna extends React.Component {
   
   state = {
     data: data,
@@ -181,23 +181,11 @@ class Aprobacion_operadores extends React.Component {
   };
 
   eliminar_luego_de_aceptar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas aceptar al operador" + dato.cedula);
-    if (opcion === true) {
-      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-      this.setState({ data: arreglo, modalActualizar: false });
-    }
+    var opcion = window.confirm("Estás Seguro que deseas cambiar la contraseña del operador" + dato.cedula);
+    
   };
 
-  eliminar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas rechazar al operador " + dato.cedula);
-    if (opcion === true) {
-      // Guardar el email antes de eliminar el row
-      this.guardarEmail(dato.correo, dato);
-      // Eliminar el row después de guardar el email
-      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-      this.setState({ data: arreglo, modalActualizar: false });
-    }
-  };
+  
   
 
   render() {
@@ -236,7 +224,7 @@ class Aprobacion_operadores extends React.Component {
           <Container>
             <br />
             <br />
-            <h1>Aprobacion de Operadores</h1>
+            <h1>Cambio de Contraseña</h1>
             <Table>
               <thead>
                 <tr>
@@ -262,9 +250,9 @@ class Aprobacion_operadores extends React.Component {
                         color="primary"
                         onClick={() => this.guardarEmail(dato.correo, dato)}
                       >
-                        Aprobar
+                        Cambiar Contraseña
                       </Button>{" "}
-                      <Button color="danger" onClick={()=> this.eliminar(dato)}>Denegar</Button>
+                      
                     </td>
                   </tr>
                 ))}
@@ -276,4 +264,4 @@ class Aprobacion_operadores extends React.Component {
     );
   }
 }
-export default Aprobacion_operadores;
+export default Cambio_contrasenna;

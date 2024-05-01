@@ -53,7 +53,7 @@ const linksArray = [
   {
     label: 'Cambio Contraseña',
     icon: <MdOutlineAnalytics />,
-    to: '/gestion_laboratorios',
+    to: '/cambio_contrasenna',
   },
   {
     label: 'Reportes',
