@@ -15,32 +15,48 @@ namespace LabCEAPI.Controllers
         Admin admin = new Admin();
 
         [HttpPost("ingresar")]
-        public IActionResult IngresarAdmin([FromBody] LoginData loginData)
+        public IActionResult IngresarAdmin(string email, string contraseña)
         {
-            admin.ingresar_admin(loginData.Email, loginData.Contraseña);
-            return Ok("Admin ingresado exitosamente");
+            try
+            {
+                bool accesoPermitido = admin.ingresar_admin(email, contraseña);
+
+                if (accesoPermitido)
+                {
+                    return Ok("Inicio de sesión exitoso");
+                }
+                else
+                {
+                    return Unauthorized("Credenciales inválidas");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost("registrar-profesor")]
         public IActionResult RegistrarProfesor([FromBody] ProfesorData profesorData)
         {
-            admin.registrar_profesor(profesorData.Cedula, profesorData.Nombre, profesorData.Apellidos, profesorData.FechaDeNacimiento, profesorData.Edad, profesorData.Email);
+
+            DateOnly fecha_de_nacimiento = new DateOnly(profesorData.FechaDeNacimiento.Year, profesorData.FechaDeNacimiento.Month, profesorData.FechaDeNacimiento.Day);
+            admin.registrar_profesor(profesorData.Cedula, profesorData.Nombre, profesorData.Apellidos, fecha_de_nacimiento, profesorData.Edad, profesorData.Email);
             return Ok("Profesor registrado exitosamente");
         }
 
         [HttpPut("modificar-profesor")]
-        public IActionResult ModificarProfesor([FromBody] ModificarProfesorData modificarProfesorData)
+        public IActionResult ModificarProfesor([FromBody] Profesor profesor)
         {
-            admin.modificar_profesor(modificarProfesorData.profesor, modificarProfesorData.NewEmail, modificarProfesorData.NewContraseña);
+            admin.modificar_profesor(profesor);
             return Ok("Profesor modificado exitosamente");
         }
 
         [HttpDelete("eliminar-profesor")]
-        public IActionResult EliminarProfesor([FromBody] ProfesorData profesorData)
+        public IActionResult EliminarProfesor(string email)
         {
-            Profesor profesor = new Profesor();
-            profesor.email = profesorData.Email;
-            admin.eliminar_profesor(profesor);
+    
+            admin.eliminar_profesor(email);
             return Ok("Profesor eliminado exitosamente");
         }
         [HttpGet("ver-operadores-registrados")]
@@ -93,17 +109,11 @@ namespace LabCEAPI.Controllers
             public int Cedula { get; set; }
             public string Nombre { get; set; }
             public string Apellidos { get; set; }
-            public DateOnly FechaDeNacimiento { get; set; }
+            public DateTime FechaDeNacimiento { get; set; }
             public int Edad { get; set; }
             public string Email { get; set; }
         }
 
-        public class ModificarProfesorData
-        {
-            public Profesor profesor { get; set; }
-            public string NewEmail { get; set; }
-            public string NewContraseña { get; set; }
-        }
 
         public class OperadorData
         {

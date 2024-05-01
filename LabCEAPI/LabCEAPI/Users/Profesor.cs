@@ -8,15 +8,15 @@ namespace LabCEAPI.Users
     
     public class Profesor
     {
-        private int cedula {  get; set; }
+        public int cedula {  get; set; }
 
-        private string nombre { get; set; }
+        public string nombre { get; set; }
 
-        private string apellidos { get; set; }
+        public string apellidos { get; set; }
 
-        private DateOnly fecha_de_nacimiento { get; set; }
+        public DateOnly fecha_de_nacimiento { get; set; }
 
-        private int edad {  get; set; }
+        public int edad {  get; set; }
 
         public string email {  get; set; }
 
@@ -34,8 +34,6 @@ namespace LabCEAPI.Users
             string contraseña)
         {
             //Registra los datos en la base
-            // Cadena de conexión a tu base de datos SQL Server
-            string connectionString = "Data Source=LAPTOP-GB4ACP2F;Initial Catalog=LabCE;Integrated Security=True;Encrypt=False";
 
             // Consulta SQL para insertar un nuevo profesor
             string query = "INSERT INTO Profesor (email_prof, nombre, apellido1, apellido2, cedula, password_prof) " +
@@ -330,30 +328,172 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que acepta la solicitud de un prestamos a un estudiante
-        public void aceptar_solicitud_prestamo(PrestamoActivo prestamo)
+        public void aceptar_solicitud_prestamo(string ID_activo, string email_estudiante)
         {
-            prestamo.aprobado = true;
+            // Estado a asignar al préstamo
+            string nuevoEstado = "Aprobado";
+
+            // Consulta SQL para actualizar el estado del préstamo
+            string query = "UPDATE Prestamo SET estado = @NuevoEstado " +
+                           "WHERE ID_activo = @IDActivo AND email_est = @EmailEstudiante";
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos los parámetros
+                    command.Parameters.AddWithValue("@NuevoEstado", nuevoEstado);
+                    command.Parameters.AddWithValue("@IDActivo", ID_activo);
+                    command.Parameters.AddWithValue("@EmailEstudiante", email_estudiante);
+
+                    // Ejecutamos la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verificamos si se actualizó correctamente el estado del préstamo
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Solicitud de préstamo aprobada correctamente.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No se pudo aprobar la solicitud de préstamo.");
+                    }
+                }
+            }
         }
 
         //Metodo que rechaza la solicitud de un prestamos a un estudiante
-        public void rechazar_solicitud_prestamo(PrestamoActivo prestamo)
+        public void rechazar_solicitud_prestamo(string ID_activo, string email_estudiante)
         {
-            prestamo.aprobado = false;
+            // Estado a asignar al préstamo
+            string nuevoEstado = "Rechazado";
+
+            // Consulta SQL para actualizar el estado del préstamo
+            string query = "UPDATE Prestamo SET estado = @NuevoEstado " +
+                           "WHERE ID_activo = @IDActivo AND email_est = @EmailEstudiante";
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos los parámetros
+                    command.Parameters.AddWithValue("@NuevoEstado", nuevoEstado);
+                    command.Parameters.AddWithValue("@IDActivo", ID_activo);
+                    command.Parameters.AddWithValue("@EmailEstudiante", email_estudiante);
+
+                    // Ejecutamos la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verificamos si se actualizó correctamente el estado del préstamo
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Solicitud de préstamo aprobada correctamente.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No se pudo aprobar la solicitud de préstamo.");
+                    }
+                }
+            }
         }
+
 
         //Metodo que devuelve los laboratorios que estan disponibles
         public LinkedList<Laboratorio> ver_labs_disponibles()
         {
-            return Laboratorio.labs;
+            LinkedList<Laboratorio> laboratorios = new LinkedList<Laboratorio>();
+
+            // Consulta SQL con alias para que coincidan con los nombres de las propiedades en la clase Laboratorio
+            string query = "SELECT ID_lab, capacidad, facilidades FROM Laboratorio";
+
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Ejecutamos la consulta
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Iteramos sobre los resultados de la consulta
+                        while (reader.Read())
+                        {
+                            // Creamos una instancia de Laboratorio con los datos de la fila actual
+                            Laboratorio lab = new Laboratorio(reader.GetString(0), reader.GetInt32(1), reader.GetString(2));
+
+                            // Agregamos el laboratorio a la lista de laboratorios disponibles
+                            laboratorios.AddLast(lab);
+                        }
+                    }
+                }
+            }
+
+            // Devolvemos la lista de laboratorios disponibles
+            return laboratorios;
         }
 
         //Metodo que reserva un laboratorio por parte del profesor
-        public ReservarLab reservar_laboratorio(Laboratorio lab, DateOnly dia, DateTime hora_inicio, DateTime hora_fin)
+        public bool reservar_laboratorio(Laboratorio lab, DateTime dia, DateTime hora_inicio, DateTime hora_fin, string descripcion)
         {
-            ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora_inicio, hora_fin);
-            return reservarLab;
+            // Definir el estado inicial de la reserva
+            string estadoReserva = "Reservado";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Consulta SQL para insertar la reserva
+                string query = @"INSERT INTO Reserva (fecha, hora_inicio, hora_fin, ID_lab, email_prof, estado, descripcion, palmada) 
+                        VALUES (@Fecha, @HoraInicio, @HoraFin, @IDLab, @EmailProf, @Estado, @Descripcion, @Palmada)";
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer los parámetros
+                    command.Parameters.AddWithValue("@Fecha", dia);
+                    command.Parameters.AddWithValue("@HoraInicio", hora_inicio);
+                    command.Parameters.AddWithValue("@HoraFin", hora_fin);
+                    command.Parameters.AddWithValue("@IDLab", lab.nombre);
+                    command.Parameters.AddWithValue("@EmailProf", "manuelemilio1011@gmail.com");
+                    command.Parameters.AddWithValue("@Estado", estadoReserva);
+                    command.Parameters.AddWithValue("@Descripcion", descripcion);
+                    command.Parameters.AddWithValue("@Palmada", false);
+
+                    // Ejecutar la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verificar si se realizó la inserción correctamente
+                    if (rowsAffected > 0)
+                    {
+                        // La reserva se realizó con éxito
+                        return true;
+                    }
+                    else
+                    {
+                        // La reserva no se pudo realizar
+                        return false;
+                    }
+                }
+            }
         }
 
- 
+
+
     }
 }

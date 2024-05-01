@@ -10,25 +10,40 @@ namespace LabCEAPI.Users
     public class Operador
     {
         public static LinkedList<Operador> operadores = new LinkedList<Operador>();
-        private int cedula { get; set; }
+        public string cedula { get; set; }
 
-        private int carne { get; set; }
+        public string carne { get; set; }
 
-        private string nombre { get; set; }
+        public string nombre { get; set; }
 
-        private string apellidos {  get; set; }
+        public string apellidos {  get; set; }
 
-        private DateOnly fecha_de_nacimiento { get; set; }
+        public DateTime fecha_de_nacimiento { get; set; }
 
         private int edad;
 
-        private string email {  get; set; }
+        public string email {  get; set; }
 
-        private string contraseña { get; set; }
+        public string contraseña { get; set; }
 
         HorasLaboradas actual_hora { get; set; }
 
         LinkedList<HorasLaboradas> HorasLaboradas { get; set; }
+
+        public Operador (string cedula, string carne, string nombre, string apellidos, DateTime fecha_de_nacimiento, string email)
+        {
+            this.cedula = cedula;
+            this.carne = carne;
+            this.nombre = nombre;
+            this.apellidos = apellidos;
+            this.fecha_de_nacimiento = fecha_de_nacimiento;
+            this.email = email;
+        }
+
+        public Operador()
+        {
+
+        }
 
 
         //Metodo que registra un nuevo operador y lo guarda en la base de datos
@@ -66,10 +81,10 @@ namespace LabCEAPI.Users
         }
 
         //Metodo para reservar un laboratorio en una fecha determinada
-        public ReservarLab reservar_laboratorio(Laboratorio lab, DateOnly dia, DateTime hora_inicio, DateTime hora_fin)
+        public void reservar_laboratorio(Laboratorio lab, DateTime dia, DateTime hora_inicio, DateTime hora_fin)
         {
-            ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora_inicio, hora_fin);
-            return reservarLab;
+           // ReservarLab reservarLab = new ReservarLab(lab, this, dia, hora_inicio, hora_fin);
+           // return reservarLab;
         }
 
         //Metodo para ver los activos que actualmente estan disponibles

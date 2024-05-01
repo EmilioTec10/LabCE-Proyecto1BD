@@ -5,6 +5,7 @@ using LabCEAPI.NewFolder;
 using LabCEAPI.Prestamos;
 using LabCEAPI.Reservaciones;
 using LabCEAPI.Users;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace LabCEAPI.Controllers
 {
@@ -69,16 +70,15 @@ namespace LabCEAPI.Controllers
         [HttpPost("aceptar-solicitud-prestamo")]
         public IActionResult AceptarSolicitudPrestamo([FromBody] PrestamoData prestamo_data)
         {
-            PrestamoActivo prestamo = new PrestamoActivo(new Activo(prestamo_data.Activo.Nombre, prestamo_data.Activo.Marca, prestamo_data.Activo.estado, prestamo_data.Activo.placa), new Profesor(), DateOnly.FromDateTime(DateTime.Now), DateTime.Now);
-            profesor.aceptar_solicitud_prestamo(prestamo);
+
+            profesor.aceptar_solicitud_prestamo(prestamo_data.ID_activo, prestamo_data.email_estudiante);
             return Ok("Solicitud de préstamo de activo aceptada correctamente");
         }
 
         [HttpPost("rechazar-solicitud-prestamo")]
         public IActionResult RechazarSolicitudPrestamo([FromBody] PrestamoData prestamo_data)
-        {
-            PrestamoActivo prestamo = new PrestamoActivo(new Activo(prestamo_data.Activo.Nombre, prestamo_data.Activo.Marca, prestamo_data.Activo.estado, prestamo_data.Activo.placa), new Profesor(), DateOnly.FromDateTime(DateTime.Now), DateTime.Now);
-            profesor.rechazar_solicitud_prestamo(prestamo);
+        { 
+            profesor.rechazar_solicitud_prestamo(prestamo_data.ID_activo, prestamo_data.email_estudiante);
             return Ok("Solicitud de préstamo de activo rechazada correctamente");
         }
 
@@ -92,9 +92,23 @@ namespace LabCEAPI.Controllers
         [HttpPost("reservar-laboratorio")]
         public IActionResult ReservarLaboratorio([FromBody] ReservaLabData reserva_data)
         {
+            // Crear una instancia de Laboratorio utilizando el nombre proporcionado en reserva_data
             Laboratorio lab = new Laboratorio(reserva_data.Nombre);
-            ReservarLab reserva = profesor.reservar_laboratorio(lab, reserva_data.Dia, reserva_data.HoraInicio, reserva_data.HoraFin);
-            return Ok("Laboratorio reservado correctamente para el día " + reserva_data.Dia.ToString() + " de " + reserva_data.HoraInicio.ToString() + " hasta " + reserva_data.HoraFin.ToString());
+
+            // Invocar el método reservar_laboratorio de la clase Profesor para realizar la reserva
+            bool reservado = profesor.reservar_laboratorio(lab, reserva_data.Dia, reserva_data.HoraInicio, reserva_data.HoraFin, reserva_data.descripcion);
+
+            // Verificar si la reserva se realizó correctamente
+            if (reservado)
+            {
+                // Si se realizó correctamente, devolver un mensaje de éxito
+                return Ok("Laboratorio reservado correctamente para el día " + reserva_data.Dia.ToString() + " de " + reserva_data.HoraInicio.ToString() + " hasta " + reserva_data.HoraFin.ToString());
+            }
+            else
+            {
+                // Si no se pudo realizar la reserva, devolver un mensaje de error
+                return BadRequest("No se pudo reservar el laboratorio. Por favor, inténtelo de nuevo.");
+            }
         }
 
 
@@ -117,7 +131,8 @@ namespace LabCEAPI.Controllers
 
         public class PrestamoData
         {
-            public ActivoData Activo { get; set; }
+            public string ID_activo { get; set; }
+            public string email_estudiante {  get; set; }
         }
 
         public class ActivoData
@@ -131,9 +146,11 @@ namespace LabCEAPI.Controllers
         public class ReservaLabData
         {
             public string Nombre { get; set; } // Nombre del laboratorio
-            public DateOnly Dia { get; set; } // Fecha de la reserva
-            public DateTime HoraInicio { get; set; } 
-            public DateTime HoraFin { get; set; } 
+            public DateTime Dia { get; set; } // Fecha de la reserva
+            public DateTime HoraInicio { get; set; }
+            public DateTime HoraFin { get; set; }
+
+            public string descripcion {  get; set; }
         }
 
     }

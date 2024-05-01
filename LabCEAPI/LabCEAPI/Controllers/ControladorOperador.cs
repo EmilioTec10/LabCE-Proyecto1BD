@@ -50,7 +50,7 @@ namespace LabCEAPI.Controllers
         public IActionResult ReservarLaboratorio([FromBody] ReservaLabData reservaLabData)
         {
             Laboratorio lab = new Laboratorio(reservaLabData.Nombre);
-            ReservarLab reservaLab = operador.reservar_laboratorio(lab, reservaLabData.Dia, reservaLabData.HoraInicio, reservaLabData.HoraFin);
+            //ReservarLab reservaLab = operador.reservar_laboratorio(lab, reservaLabData.Dia, reservaLabData.HoraInicio, reservaLabData.HoraFin);
             return Ok("Laboratorio reservado correctamente para el día " + reservaLabData.Dia.ToString() + " de " + reservaLabData.HoraInicio.ToString() + " hasta las " + reservaLabData.HoraFin.ToString());
         }
 
