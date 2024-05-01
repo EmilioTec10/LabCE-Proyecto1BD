@@ -5,7 +5,7 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleAdminLogin = () => {
-    navigate('/menu_gestion_profesores');
+    navigate('/gestion_profesores');
   };
 
   const handleOperatorLogin = () => {
