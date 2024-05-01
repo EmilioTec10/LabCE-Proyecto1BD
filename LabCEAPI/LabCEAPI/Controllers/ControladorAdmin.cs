@@ -67,27 +67,26 @@ namespace LabCEAPI.Controllers
         }
 
         [HttpPost("aceptar-operador")]
-        public IActionResult AceptarOperador([FromBody] OperadorData operadorData)
+        public IActionResult AceptarOperador(string email_op)
         {
             // Aquí deberías obtener el operador de la base de datos o de alguna otra fuente de datos
-            Operador operador = new Operador();
-            admin.aceptar_operador(operador);
+   
+            admin.aceptar_operador(email_op);
             return Ok("Operador aceptado exitosamente");
         }
 
         [HttpPost("rechazar-operador")]
-        public IActionResult RechazarOperador([FromBody] OperadorData operadorData)
+        public IActionResult RechazarOperador(string email_op)
         {
-            // Aquí deberías obtener el operador de la base de datos o de alguna otra fuente de datos
-            Operador operador = new Operador();
-            admin.rechazar_operador(operador);
+
+            admin.rechazar_operador(email_op);
             return Ok("Operador rechazado exitosamente");
         }
 
         [HttpPost("generar-nueva-contrasena")]
-        public IActionResult GenerarNuevaContraseña()
+        public IActionResult GenerarNuevaContraseña(string email_admin)
         {
-            admin.generar_nueva_contraseña();
+            admin.generar_nueva_contraseña(email_admin);
             return Ok("Nueva contraseña generada exitosamente y enviada por correo electrónico");
         }
 

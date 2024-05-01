@@ -226,23 +226,112 @@ namespace LabCEAPI.Users
 
 
         //Metodo que acepta un operador ingresado en la aplicacion
-        public void aceptar_operador(Operador operador)
+        public void aceptar_operador(string email_op)
         {
-            
+            // Consulta SQL para actualizar el operador con el correo electrónico proporcionado
+            string query = "UPDATE Operador SET aprovado = 1, revisado = 1 WHERE email_op = @EmailOp";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer el parámetro para el correo electrónico
+                    command.Parameters.AddWithValue("@EmailOp", email_op);
+
+                    // Ejecutar la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verificar si se realizó la actualización correctamente
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Operador aceptado correctamente.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No se pudo aceptar el operador.");
+                    }
+                }
+            }
         }
 
-        //Metodo que rechaza un operador ingresado en la aplicacion
-        public void rechazar_operador(Operador operador)
-        {
 
+        //Metodo que rechaza un operador ingresado en la aplicacion
+        public void rechazar_operador(string email_op)
+        {
+            // Consulta SQL para actualizar el operador con el correo electrónico proporcionado
+            string query = "UPDATE Operador SET aprovado = 0, revisado = 1 WHERE email_op = @EmailOp";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer el parámetro para el correo electrónico
+                    command.Parameters.AddWithValue("@EmailOp", email_op);
+
+                    // Ejecutar la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verificar si se realizó la actualización correctamente
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Operador aceptado correctamente.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No se pudo aceptar el operador.");
+                    }
+                }
+            }
         }
 
         //Metodo que genera una nueva contraseña aleatoria para el administrador
-        public void generar_nueva_contraseña()
+        public void generar_nueva_contraseña(string email)
         {
-            this.contraseña =  GeneradorContraseña.NuevaContraseña();
+            this.contraseña = GeneradorContraseña.NuevaContraseña();
 
-            GeneradorContraseña.mandar_correo(this.email, this.contraseña);
+            GeneradorContraseña.mandar_correo(email, this.contraseña);
+
+            // Consulta SQL para actualizar la contraseña del profesor
+            string query = "UPDATE Profesor SET password_prof = @NuevaContraseña WHERE email_prof = @Email";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer los parámetros
+                    this.contraseña = EncriptacionMD5.encriptar(this.contraseña);
+                    command.Parameters.AddWithValue("@NuevaContraseña", this.contraseña);
+                    command.Parameters.AddWithValue("@Email", email);
+
+                    // Ejecutar la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verificar si se realizó la actualización correctamente
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Contraseña actualizada correctamente.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No se pudo actualizar la contraseña.");
+                    }
+                }
+            }
         }
 
         //Metodo que genera el reporte de horas laboradas por los operadores
