@@ -10,6 +10,7 @@ import 'react-time-picker/dist/TimePicker.css';
 const App = () => {
   const [fecha, setFecha] = useState(new Date());
   const [hora, setHora] = useState('12:00'); // Hora inicial, puedes cambiarla según tus necesidades
+  const [errorHora, setErrorHora] = useState(false); // Estado para controlar el mensaje de error
 
   const onDateChange = fecha => {
     setFecha(fecha);
@@ -20,11 +21,21 @@ const App = () => {
   };
 
   const mostrarFechaHora = () => {
-    const fechaHora = new Date(fecha);
     const horaSplit = hora.split(':');
-    fechaHora.setHours(parseInt(horaSplit[0], 10));
-    fechaHora.setMinutes(parseInt(horaSplit[1], 10));
-    alert(fechaHora);
+    const horaSeleccionada = parseInt(horaSplit[0], 10);
+    const minutosSeleccionados = parseInt(horaSplit[1], 10);
+
+    // Verificar si la hora cumple con las condiciones (de 7:00 a 20:30, y solo minutos 00 o 30)
+    if ((horaSeleccionada >= 7 && horaSeleccionada <= 20) &&
+        (minutosSeleccionados === 0 || minutosSeleccionados === 30)) {
+      const fechaHora = new Date(fecha);
+      fechaHora.setHours(horaSeleccionada);
+      fechaHora.setMinutes(minutosSeleccionados);
+      alert(fechaHora);
+      setErrorHora(false); // Restablecer el estado de error
+    } else {
+      setErrorHora(true); // Mostrar mensaje de error
+    }
   };
 
   const hoy = new Date();
@@ -59,8 +70,19 @@ const App = () => {
             clearIcon={null} // Quita el botón de limpiar
             clockIcon={null} // Quita el botón de reloj
             format="HH:mm" // Formato de 24 horas
+            clockClassName="custom-clock"
+            disableClock={true} // Deshabilita el reloj analógico
+            hourPlaceholder="hh"
+            minutePlaceholder="mm"
             className="time-picker"
+            minTime="07:00" // Hora mínima
+            maxTime="20:30" // Hora máxima
+            clockClassName="custom-clock"
+            clockHourClassName="custom-clock-hour"
+            clockMinuteClassName="custom-clock-minute"
+            clockSecondClassName="custom-clock-second"
           />
+          {errorHora && <p className="error-message">Por favor, ingrese una hora válida (de 07:00 a 20:30, y solo minutos 00 o 30).</p>}
         </div>
         <br />
         <input type="button" value="Mostrar Fecha y Hora" className="btn btn-primary" onClick={mostrarFechaHora}/>
