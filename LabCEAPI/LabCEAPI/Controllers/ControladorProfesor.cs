@@ -60,17 +60,16 @@ namespace LabCEAPI.Controllers
         }
 
         [HttpPost("solicitar-prestamo")]
-        public IActionResult SolicitarPrestamoActivo([FromBody] ActivoData activo_data)
+        public IActionResult SolicitarPrestamoActivo(string placa)
         {
-            Activo activo = new Activo(activo_data.Nombre, activo_data.Marca, activo_data.Modelo, activo_data.Disponible, activo_data.PrestadoA);
-            profesor.solicitar_prestamo_activo(activo);
+            profesor.solicitar_prestamo_activo(placa);
             return Ok("Solicitud de préstamo de activo realizada correctamente");
         }
 
         [HttpPost("aceptar-solicitud-prestamo")]
         public IActionResult AceptarSolicitudPrestamo([FromBody] PrestamoData prestamo_data)
         {
-            PrestamoActivo prestamo = new PrestamoActivo(new Activo(prestamo_data.Activo.Nombre, prestamo_data.Activo.Marca, prestamo_data.Activo.Modelo, prestamo_data.Activo.Disponible, prestamo_data.Activo.PrestadoA), new Profesor(), DateOnly.FromDateTime(DateTime.Now), DateTime.Now);
+            PrestamoActivo prestamo = new PrestamoActivo(new Activo(prestamo_data.Activo.Nombre, prestamo_data.Activo.Marca, prestamo_data.Activo.estado, prestamo_data.Activo.placa), new Profesor(), DateOnly.FromDateTime(DateTime.Now), DateTime.Now);
             profesor.aceptar_solicitud_prestamo(prestamo);
             return Ok("Solicitud de préstamo de activo aceptada correctamente");
         }
@@ -78,7 +77,7 @@ namespace LabCEAPI.Controllers
         [HttpPost("rechazar-solicitud-prestamo")]
         public IActionResult RechazarSolicitudPrestamo([FromBody] PrestamoData prestamo_data)
         {
-            PrestamoActivo prestamo = new PrestamoActivo(new Activo(prestamo_data.Activo.Nombre, prestamo_data.Activo.Marca, prestamo_data.Activo.Modelo, prestamo_data.Activo.Disponible, prestamo_data.Activo.PrestadoA), new Profesor(), DateOnly.FromDateTime(DateTime.Now), DateTime.Now);
+            PrestamoActivo prestamo = new PrestamoActivo(new Activo(prestamo_data.Activo.Nombre, prestamo_data.Activo.Marca, prestamo_data.Activo.estado, prestamo_data.Activo.placa), new Profesor(), DateOnly.FromDateTime(DateTime.Now), DateTime.Now);
             profesor.rechazar_solicitud_prestamo(prestamo);
             return Ok("Solicitud de préstamo de activo rechazada correctamente");
         }
@@ -125,9 +124,8 @@ namespace LabCEAPI.Controllers
         {
             public string Nombre { get; set; }
             public string Marca { get; set; }
-            public string Modelo { get; set; }
-            public bool Disponible { get; set; }
-            public string PrestadoA { get; set; }
+            public string placa { get; set; }
+            public string estado { get; set; }
         }
 
         public class ReservaLabData

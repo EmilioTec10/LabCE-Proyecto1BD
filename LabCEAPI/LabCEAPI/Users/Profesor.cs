@@ -84,7 +84,7 @@ namespace LabCEAPI.Users
         {
 
             // Consulta SQL para buscar al profesor por email
-            string query = "SELECT password_prof FROM Profesor WHERE email_prof = @Email";
+            string query = "SELECT password_prof, email_prof FROM Profesor WHERE email_prof = @Email";
 
             // Variable para almacenar la contraseña recuperada de la base de datos
             string contraseñaBaseDeDatos = null;
@@ -107,6 +107,7 @@ namespace LabCEAPI.Users
                         if (reader.Read())
                         {
                             contraseñaBaseDeDatos = reader.GetString(0); // Suponiendo que la contraseña está en la primera columna
+                            this.email = reader.GetString(1);
                         }
                     }
                 }
@@ -169,15 +170,163 @@ namespace LabCEAPI.Users
         //Metodo que muestra todos los activos que actualemente estan prestados
         public LinkedList<Activo> ver_activos_prestados()
         {
-            return Activo.activos_prestados;
+            LinkedList<Activo> activosPrestados = new LinkedList<Activo>();
+
+            // Consulta SQL para seleccionar los activos prestados
+            string query = "SELECT tipo, marca, estado, ID_activo FROM Activos WHERE estado = 'Prestado'";
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Ejecutamos la consulta
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Iteramos sobre los resultados de la consulta
+                        while (reader.Read())
+                        {
+                            // Creamos una instancia de Activo con los datos de la fila actual
+                            Activo activo = new Activo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3));
+         
+
+                            // Agregamos el activo a la lista de activos prestados
+                            activosPrestados.AddLast(activo);
+                        }
+                    }
+                }
+            }
+
+            // Devolvemos la lista de activos prestados
+            return activosPrestados;
         }
 
         //Metodo que solicita por parte del profesor un prestamo de un activo
-        public void solicitar_prestamo_activo(Activo activo)
+        public void solicitar_prestamo_activo(string placa)
         {
-            PrestamoActivo prestamo = new PrestamoActivo(activo, this, DateOnly.FromDateTime(DateTime.Now), DateTime.Now);
-            Activo.activos_disponibles.Remove(activo);
-            Activo.activos_prestados.AddFirst(activo);
+            // Obtener la placa del activo
+            string placaActivo = placa;
+
+            // Verificar si el activo existe
+            if (!ExisteActivo(placaActivo))
+            {
+                Console.WriteLine("El activo no existe.");
+                return; // Salir del método si el activo no existe
+            }
+            ModificarEstadoActivo(placaActivo, "Prestado");
+
+            // Obtener la fecha y hora actual
+            DateTime fechaHoraSolicitud = DateTime.Now;
+
+            // Estado del préstamo (por ejemplo, "En espera")
+            string estadoPrestamo = "Aprobado";
+
+            // Email del profesor
+            string emailProfesor = "manuelemilio1011@gmail.com";
+
+            // Consulta SQL para insertar el préstamo
+            string query = "INSERT INTO Prestamo (ID_activo, Fecha_Hora_Solicitud, estado, activo, email_prof) " +
+                           "VALUES (@IDActivo, @FechaHoraSolicitud, @EstadoPrestamo, 1, @EmailProfesor)";
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos los parámetros
+                    command.Parameters.AddWithValue("@IDActivo", placaActivo); // Suponiendo que la placa del activo es el ID_activo en la tabla
+                    command.Parameters.AddWithValue("@FechaHoraSolicitud", fechaHoraSolicitud);
+                    command.Parameters.AddWithValue("@EstadoPrestamo", estadoPrestamo);
+                    command.Parameters.AddWithValue("@EmailProfesor", emailProfesor);
+
+                    // Ejecutamos la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verificamos si se insertó correctamente el préstamo
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Préstamo solicitado correctamente.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No se pudo solicitar el préstamo.");
+                    }
+                }
+            }
+        }
+
+        // Método para verificar si un activo existe en la base de datos
+        private bool ExisteActivo(string placaActivo)
+        {
+
+            // Consulta SQL para verificar si el activo existe
+            string query = "SELECT COUNT(*) FROM Activos WHERE ID_activo = @IDActivo";
+
+            // Variable para almacenar el resultado de la consulta
+            int count = 0;
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos el parámetro
+                    command.Parameters.AddWithValue("@IDActivo", placaActivo);
+
+                    // Ejecutamos la consulta y obtenemos el resultado
+                    count = (int)command.ExecuteScalar();
+                }
+            }
+
+            // Si count es mayor que cero, el activo existe
+            return count > 0;
+        }
+
+        private void ModificarEstadoActivo(string placaActivo, string nuevoEstado)
+        {
+
+            // Consulta SQL para actualizar el estado del activo
+            string query = "UPDATE Activos SET estado = @NuevoEstado WHERE ID_activo = @IDActivo";
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos los parámetros
+                    command.Parameters.AddWithValue("@NuevoEstado", nuevoEstado);
+                    command.Parameters.AddWithValue("@IDActivo", placaActivo);
+
+                    // Ejecutamos la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verificamos si se actualizó correctamente el estado del activo
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Estado del activo actualizado correctamente.");
+                    }
+                    else
+                    {
+                        Console.WriteLine("No se pudo actualizar el estado del activo.");
+                    }
+                }
+            }
         }
 
         //Metodo que acepta la solicitud de un prestamos a un estudiante

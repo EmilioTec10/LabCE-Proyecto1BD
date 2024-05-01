@@ -128,7 +128,7 @@ namespace LabCEAPI.Users
         //Metodo para reportar una averia de un activo
         public Activo reportar_averia_activo(Activo activo, string detalle)
         {
-            activo.dañado = true;
+            activo.estado = "Dañado";
             activo.dellate_dañado = detalle;
             return activo;
         }

@@ -6,7 +6,7 @@ INSERT INTO Laboratorio (ID_lab, capacidad, computadoras, facilidades)
 VALUES 
     ('F2-07', 26, 10, '2 Proyector, 2 pizarra, interactivo'),
     ('F2-08', 30, 15, '1 Pizarra, 1Proyector'),
-    ('F2-09', 26, 24, '1 Pizarra, 1Proyector, 1 Pantalla ');
+    ('F2-09', 28, 24, '1 Pizarra, 1Proyector, 1 Pantalla ');
 
 -- Insertar datos en la tabla Estudiante
 INSERT INTO Estudiante (email_est, nombre, apellido1, apellido2, carnet)
@@ -43,7 +43,7 @@ VALUES
 	('operador11@estudiantec.cr', 'contraseña2', 'Laura', 'Martínez', 'Fernández', '987654321', '2019077916', '2000-08-20',0,1,0),
     ('operador13@estudiantec.cr', 'contraseña3', 'Ana', 'Gómez', 'López', '567890123', '2022019916', '2005-12-10',0,0,0),
 	('operador43@estudiantec.cr', 'contraseña2', 'Laura', 'Martínez', 'Fernández', '987654321', '2019077916', '2000-08-20',1,1,1),
-    ('operador41@estudiantec.cr', 'contraseña3', 'Ana', 'Gómez', 'López', '567890123', '2022019916', '2005-12-10',0,1,1)
+    ('operador41@estudiantec.cr', 'contraseña3', 'Ana', 'Gómez', 'López', '567890123', '2022019916', '2005-12-10',0,1,1),
 	('operador4@estudiantec.cr', 'contraseña5', 'María', 'González', 'Sánchez', '987654321', '2019077922', '2000-09-15', 0,1,1),
     ('saraym.rojas@estudiantec.cr', 'contraseña1', 'Mariana', 'Rojas', 'Rojas', '118480103', '2020076936', '2002-07-19',1,1,1);
 
