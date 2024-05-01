@@ -14,6 +14,7 @@ const App = () => {
   const [errorHoraInicio, setErrorHoraInicio] = useState(false); // Estado para controlar el mensaje de error de horaInicio
   const [errorHoraFin, setErrorHoraFin] = useState(false); // Estado para controlar el mensaje de error de horaFin
   const [informacion, setInformacion] = useState(""); // Estado para almacenar la información a mostrar
+  const [mostrarTabla, setMostrarTabla] = useState(false); // Estado para controlar la visualización de la tabla
 
   const onDateChange = fecha => {
     setFecha(fecha);
@@ -21,10 +22,14 @@ const App = () => {
 
   const onHoraInicioChange = horaInicio => {
     setHoraInicio(horaInicio);
+    // Al cambiar la hora de inicio, reiniciamos el mensaje de error
+    setErrorHoraInicio(false);
   };
 
   const onHoraFinChange = horaFin => {
     setHoraFin(horaFin);
+    // Al cambiar la hora de fin, reiniciamos el mensaje de error
+    setErrorHoraFin(false);
   };
 
   const mostrarFechaHora = () => {
@@ -64,6 +69,9 @@ const App = () => {
 
       // Actualizar el estado para mostrar la información en el label
       setInformacion(`Fecha seleccionada: ${fecha.toLocaleDateString()} | Hora de inicio: ${horaInicio} | Hora de fin: ${horaFin}`);
+
+      // Mostrar la tabla
+      setMostrarTabla(true);
     }
   };
 
@@ -74,6 +82,10 @@ const App = () => {
   const esDiaHabil = date => {
     const diaSemana = date.getDay();
     return diaSemana >= 1 && diaSemana <= 6; // Lunes a sábado
+  };
+
+  const seleccionarLaboratorio = (laboratorio) => {
+    alert(`Información seleccionada:\nFecha: ${fecha.toLocaleDateString()} | Hora de inicio: ${horaInicio} | Hora de fin: ${horaFin} | Laboratorio: ${laboratorio}`);
   };
 
   return (
@@ -137,7 +149,45 @@ const App = () => {
           {errorHoraFin && <p className="error-message">Por favor, ingrese una hora válida de fin (de 07:30 a 21:00, y solo minutos 00 o 30).</p>}
         </div>
         <br />
-        <input type="button" value="Mostrar Fecha y Hora" className="btn btn-primary" onClick={mostrarFechaHora}/>
+        {(errorHoraInicio || errorHoraFin) ? (
+          <p className="error-message">Por favor, corrija la hora seleccionada.</p>
+        ) : (
+          <input type="button" value="Mostrar Fecha y Hora" className="btn btn-primary" onClick={mostrarFechaHora}/>
+        )}
+        <br />
+        {mostrarTabla && !errorHoraInicio && !errorHoraFin && (
+          <table className="table">
+            <thead>
+              <tr>
+                <th>Sin Laboratorio</th>
+                <th>Capacidad</th>
+                <th>Computadores</th>
+                <th>Activos</th>
+                <th>Facilidades</th>
+                <th>Seleccionar</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>f2-07</td>
+                <td>30</td>
+                <td>15</td>
+                <td>proyector</td>
+                <td>proector hacia la pared</td>
+                <td><button onClick={() => seleccionarLaboratorio('f2-07')}>Seleccionar</button></td>
+              </tr>
+              <tr>
+                <td>f2-08</td>
+                <td>14</td>
+                <td>14</td>
+                <td>proyy</td>
+                <td>pantalla</td>
+                <td><button onClick={() => seleccionarLaboratorio('f2-08')}>Seleccionar</button></td>
+              </tr>
+              {/* Agrega más filas aquí si es necesario */}
+            </tbody>
+          </table>
+        )}
         <br />
         <label>{informacion}</label>
       </div>
