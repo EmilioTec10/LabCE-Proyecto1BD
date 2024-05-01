@@ -4,6 +4,7 @@ using LabCEAPI.Prestamos;
 using LabCEAPI.Reservaciones;
 using Microsoft.Data.SqlClient;
 using System;
+using System.Numerics;
 using System.Runtime.CompilerServices;
 
 namespace LabCEAPI.Users
@@ -351,12 +352,89 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que solicita a un profesor el prestamo de un activo a un estudiante
-        public PrestamoActivo solicitar_activo_estudiante(Activo activo, Profesor profesor)
+        public void solicitar_activo_estudiante(string placa, string email_est, string email_prof)
         {
-            DateOnly fechaActual = DateOnly.FromDateTime(DateTime.Now);
-            DateTime ahora = DateTime.Now;
-            PrestamoActivo prestamoActivo = new PrestamoActivo(activo, profesor, fechaActual, ahora);
-            return prestamoActivo;
+            // Obtener la placa del activo
+            string placaActivo = placa;
+
+            // Verificar si el activo existe
+            if (!ExisteActivo(placaActivo))
+            {
+                Console.WriteLine("El activo no existe.");
+                return; // Salir del método si el activo no existe
+            }
+
+            // Obtener la fecha y hora actual
+            DateTime fechaHoraSolicitud = DateTime.Now;
+
+            // Estado del préstamo 
+            string estadoPrestamo = "Pendiente";
+
+
+            // Consulta SQL para insertar el préstamo
+            string query = "INSERT INTO Prestamo (ID_activo, Fecha_Hora_Solicitud, estado, activo, email_prof, email_est) " +
+                           "VALUES (@IDActivo, @FechaHoraSolicitud, @EstadoPrestamo, 1, @EmailProfesor, @EmailEst)";
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos los parámetros
+                    command.Parameters.AddWithValue("@IDActivo", placaActivo); // Suponiendo que la placa del activo es el ID_activo en la tabla
+                    command.Parameters.AddWithValue("@FechaHoraSolicitud", fechaHoraSolicitud);
+                    command.Parameters.AddWithValue("@EstadoPrestamo", estadoPrestamo);
+                    command.Parameters.AddWithValue("@EmailProfesor", email_prof);
+                    command.Parameters.AddWithValue("@EmailEst", email_est);
+
+                    // Ejecutamos la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verificamos si se insertó correctamente el préstamo
+                    if (rowsAffected > 0)
+                    {
+                        Console.WriteLine("Se guardo");
+                    }
+                    else
+                    {
+                        Console.WriteLine("NO se guardo");
+                    }
+                }
+            }
+        }
+
+        private bool ExisteActivo(string placaActivo)
+        {
+
+            // Consulta SQL para verificar si el activo existe
+            string query = "SELECT COUNT(*) FROM Activos WHERE ID_activo = @IDActivo";
+
+            // Variable para almacenar el resultado de la consulta
+            int count = 0;
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos el parámetro
+                    command.Parameters.AddWithValue("@IDActivo", placaActivo);
+
+                    // Ejecutamos la consulta y obtenemos el resultado
+                    count = (int)command.ExecuteScalar();
+                }
+            }
+
+            // Si count es mayor que cero, el activo existe
+            return count > 0;
         }
 
         //Metodo que presta el activo al estudiante
@@ -367,10 +445,86 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que presta un activo a un profesor
-        public void prestar_activo_profesor(Activo activo, string contraseña_profesor)
+        public bool prestar_activo_profesor(string placa, string email_prof, string contraseña_profesor)
         {
-            Activo.activos_disponibles.Remove(activo);
-            Activo.activos_prestados.AddFirst(activo);
+            // Verificar si la contraseña del profesor es correcta
+            if (!ValidarContraseña(email_prof, contraseña_profesor))
+            {
+                // La contraseña no es válida, retornar falso
+                return false;
+            }
+
+            // Si la contraseña es válida, procedemos con la inserción en la tabla Prestamo
+            string query = @"
+                INSERT INTO Prestamo (ID_activo, Fecha_Hora_Solicitud, estado, activo, email_prof) 
+                VALUES (@ID_activo, @Fecha_Hora_Solicitud, @estado, @activo, @email_prof)";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer los parámetros
+                    command.Parameters.AddWithValue("@ID_activo", placa);
+                    command.Parameters.AddWithValue("@Fecha_Hora_Solicitud", DateTime.Now);
+                    command.Parameters.AddWithValue("@estado", "Aprobado");
+                    command.Parameters.AddWithValue("@activo", true);
+                    command.Parameters.AddWithValue("@email_prof", email_prof);
+
+                    // Ejecutar la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Retornar true si se realizó el préstamo correctamente (al menos una fila afectada)
+                    return rowsAffected > 0;
+                }
+            }
+        }
+
+
+        private bool ValidarContraseña(string email_prof, string contraseña_profesor)
+        {
+            // Consultar la contraseña almacenada en la base de datos para el profesor con el email dado
+            string query = "SELECT password_prof FROM Profesor WHERE email_prof = @Email";
+
+            // Variable para almacenar la contraseña recuperada de la base de datos
+            string contraseñaBaseDeDatos = null;
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer el parámetro para el correo electrónico
+                    command.Parameters.AddWithValue("@Email", email_prof);
+
+                    // Ejecutar la consulta y obtener la contraseña almacenada en la base de datos
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            contraseñaBaseDeDatos = reader.GetString(0); // Suponiendo que la contraseña está en la primera columna
+                        }
+                    }
+                }
+            }
+
+            // Si no se encontró ningún profesor con ese correo electrónico, o la contraseña no coincide, retornar falso
+            contraseñaBaseDeDatos = EncriptacionMD5.desencriptar(contraseñaBaseDeDatos);
+            if (contraseñaBaseDeDatos == null || contraseña_profesor != contraseñaBaseDeDatos)
+            {
+                return false;
+            }
+
+            // La contraseña coincide
+            return true;
         }
 
         //Metodo que deja ver los activos prestados
@@ -421,21 +575,175 @@ namespace LabCEAPI.Users
         }
 
         //Metodo para registrar la devolucion de un activo por parte de un profesor
-        public RetornoActivo devolucion_activo_profesor(Activo activo, string contraseña_profesor)
+        public bool validar_contraseña_profesor(string email_prof, string contraseña_prof)
         {
-            DateOnly fechaActual = DateOnly.FromDateTime(DateTime.Now);
-            DateTime ahora = DateTime.Now;
-            RetornoActivo retornoActivo = new RetornoActivo(activo, fechaActual, ahora);
-            return retornoActivo;
+            // Variable para almacenar el resultado de la validación
+            bool contraseñaValida = false;
+
+            // Consulta SQL para obtener la contraseña del profesor
+            string query = "SELECT password_prof FROM Profesor WHERE email_prof = @EmailProf";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer el parámetro
+                    command.Parameters.AddWithValue("@EmailProf", email_prof);
+
+                    // Ejecutar la consulta y obtener el resultado
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Si se encontró el profesor
+                        if (reader.Read())
+                        {
+                            // Obtener la contraseña del profesor
+                            string contraseñaBaseDeDatos = EncriptacionMD5.desencriptar(reader.GetString(0));
+
+                            // Validar la contraseña
+                            if (contraseña_prof == contraseñaBaseDeDatos)
+                            {
+                                // La contraseña es válida
+                                contraseñaValida = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Devolver el resultado de la validación de la contraseña
+            return contraseñaValida;
+        }
+
+        public bool devolucion_activo_profesor(string placa, string email_prof, string contraseña_prof)
+        {
+            // Validar la contraseña del profesor
+            bool contraseñaValida = validar_contraseña_profesor(email_prof, contraseña_prof);
+
+            // Si la contraseña no es válida, retornar falso
+            if (!contraseñaValida)
+            {
+                return false;
+            }
+
+            // Variable para almacenar el resultado de la devolución
+            bool devolucionExitosa = false;
+
+            // Actualizar la tabla Prestamo con la fecha y hora actual en Fecha_Hora_Devolucion y activo = 0
+            string updateQuery = "UPDATE Prestamo SET Fecha_Hora_Devolucion = @FechaHoraDevolucion, activo = 0 WHERE ID_activo = @Placa AND email_prof = @EmailProf";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(updateQuery, connection))
+                {
+                    // Establecer los parámetros
+                    command.Parameters.AddWithValue("@FechaHoraDevolucion", DateTime.Now);
+                    command.Parameters.AddWithValue("@Placa", placa);
+                    command.Parameters.AddWithValue("@EmailProf", email_prof);
+
+                    // Ejecutar la consulta de actualización
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Si al menos una fila fue afectada, la devolución fue exitosa
+                    devolucionExitosa = rowsAffected > 0;
+                }
+            }
+
+            return devolucionExitosa;
         }
 
         //Metodo para reportar una averia de un activo
-        public Activo reportar_averia_activo(Activo activo, string detalle)
+        public bool reportar_averia_activo(string placa, string descripcion, string email_prof, string email_est)
         {
-            activo.estado = "Dañado";
-            activo.dellate_dañado = detalle;
-            return activo;
+            // Variable para almacenar el ID del préstamo
+            int idPrestamo = -1;
+
+            // Consulta SQL para obtener el ID del préstamo
+            string selectPrestamoQuery = "SELECT ID_prestamo FROM Prestamo " +
+                                         "WHERE ID_activo = @Placa AND (email_prof = @EmailProf OR email_est = @EmailEst)";
+
+            // Consulta SQL para actualizar el estado del activo
+            string updateActivoQuery = "UPDATE Activos SET estado = 'Dañado' WHERE ID_activo = @Placa";
+
+            // Consulta SQL para insertar el registro en la tabla Averia
+            string insertAveriaQuery = "INSERT INTO Averia (ID_prestamo, descripcion) VALUES (@IdPrestamo, @Descripcion)";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Iniciar una transacción
+                SqlTransaction transaction = connection.BeginTransaction();
+
+                try
+                {
+                    // Obtener el ID del préstamo
+                    using (SqlCommand selectPrestamoCommand = new SqlCommand(selectPrestamoQuery, connection, transaction))
+                    {
+                        // Establecer los parámetros
+                        selectPrestamoCommand.Parameters.AddWithValue("@Placa", placa);
+                        selectPrestamoCommand.Parameters.AddWithValue("@EmailProf", email_prof);
+                        selectPrestamoCommand.Parameters.AddWithValue("@EmailEst", email_est);
+
+                        // Ejecutar la consulta y obtener el ID del préstamo
+                        idPrestamo = (int)selectPrestamoCommand.ExecuteScalar();
+                    }
+
+                    // Si no se encontró el prést
+                    if (idPrestamo == -1)
+                    {
+                        // No se encontró el préstamo, revertir la transacción y salir
+                        transaction.Rollback();
+                        return false;
+                    }
+
+                    // Actualizar el estado del activo a "Dañado"
+                    using (SqlCommand updateActivoCommand = new SqlCommand(updateActivoQuery, connection, transaction))
+                    {
+                        // Establecer los parámetros
+                        updateActivoCommand.Parameters.AddWithValue("@Placa", placa);
+
+                        // Ejecutar la consulta
+                        updateActivoCommand.ExecuteNonQuery();
+                    }
+
+                    // Insertar el registro en la tabla Averia
+                    using (SqlCommand insertAveriaCommand = new SqlCommand(insertAveriaQuery, connection, transaction))
+                    {
+                        // Establecer los parámetros
+                        insertAveriaCommand.Parameters.AddWithValue("@IdPrestamo", idPrestamo);
+                        insertAveriaCommand.Parameters.AddWithValue("@Descripcion", descripcion);
+
+                        // Ejecutar la consulta
+                        insertAveriaCommand.ExecuteNonQuery();
+                    }
+
+                    // Confirmar la transacción
+                    transaction.Commit();
+
+                    return true;
+                }
+                catch (Exception)
+                {
+                    // Ocurrió un error, revertir la transacción y lanzar la excepción
+                    transaction.Rollback();
+                    throw;
+                }
+            }
         }
+
+
 
         //Metodo para ver las horas laboradas del operador
         public ReporteOperador ver_horas_laboradas(DateTime dia, Operador operador, string detalles, LinkedList<HorasLaboradas> horasLaboradas)

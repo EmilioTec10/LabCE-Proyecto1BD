@@ -94,12 +94,10 @@ namespace LabCEAPI.Controllers
 
         
         [HttpPost("solicitar-activo-estudiante")]
-        public IActionResult SolicitarActivoEstudiante([FromBody] SolicitarActivoData solicitarActivoData)
+        public IActionResult SolicitarActivoEstudiante(string placa, string email_prof, string email_est)
         {
             // Aquí deberías obtener el profesor de la base de datos o de alguna otra fuente de datos
-            Profesor profesor = new Profesor();
-            Activo activo = new Activo(solicitarActivoData.Nombre, solicitarActivoData.Marca, solicitarActivoData.Modelo, solicitarActivoData.estado);
-            PrestamoActivo prestamoActivo = operador.solicitar_activo_estudiante(activo, profesor);
+            operador.solicitar_activo_estudiante(placa, email_est, email_prof);
             return Ok("Solicitud de activo para estudiante realizada correctamente");
         }
         
@@ -113,11 +111,18 @@ namespace LabCEAPI.Controllers
         }
 
         [HttpPost("prestar-activo-profesor")]
-        public IActionResult PrestarActivoProfesor([FromBody] ActivoDataOperador activoData)
+        public IActionResult PrestarActivoProfesor(string placa, string email_prof, string contra_prof)
         {
-            Activo activo = new Activo(activoData.Nombre, activoData.Marca, activoData.Modelo, activoData.estado);
-            operador.prestar_activo_profesor(activo, activoData.ContraseñaProfesor);
-            return Ok("Activo prestado a profesor correctamente");
+            bool prestado = operador.prestar_activo_profesor(placa, email_prof, contra_prof);
+
+            if (prestado) {
+                return Ok("Activo prestado a profesor correctamente");
+            }
+            else
+            {
+                return BadRequest("No se pudo prestar activo al profesor");
+            }
+            
         }
 
         [HttpGet("ver-activos-prestados")]
@@ -135,18 +140,25 @@ namespace LabCEAPI.Controllers
         }
 
         [HttpPost("devolucion-activo-profesor")]
-        public IActionResult DevolucionActivoProfesor([FromBody] DevolucionActivoData devolucionActivoData)
+        public IActionResult DevolucionActivoProfesor(string placa, string email_prof, string contraseña_prof)
         {
-            Activo activo = new Activo(devolucionActivoData.Activo.Nombre, devolucionActivoData.Activo.Marca, devolucionActivoData.Activo.estado, devolucionActivoData.Activo.placa);
-            operador.devolucion_activo_profesor(activo, devolucionActivoData.ContraseñaOperador);
-            return Ok("Devolución de activo por parte del profesor registrada correctamente");
+            bool devolucionExitosa = operador.devolucion_activo_profesor(placa, email_prof, contraseña_prof);
+
+            if (devolucionExitosa)
+            {
+                return Ok("Devolución de activo por parte del profesor registrada correctamente");
+            }
+            else
+            {
+                return BadRequest("No se pudo realizar la devolución del activo. Por favor, verifique las credenciales del profesor.");
+            }
         }
 
+
         [HttpPost("reportar-averia")]
-        public IActionResult ReportarAveria([FromBody] AveriaActivoData averiaActivoData)
+        public IActionResult ReportarAveria(string placa, string descripcion, string email_prof, string email_est)
         {
-            Activo activo = new Activo(averiaActivoData.Activo.Nombre, averiaActivoData.Activo.Marca, averiaActivoData.Activo.estado, averiaActivoData.Activo.placa);
-            operador.reportar_averia_activo(activo, averiaActivoData.Detalle);
+            operador.reportar_averia_activo(placa, descripcion, email_prof, email_est);
             return Ok("Avería de activo reportada correctamente");
         }
         [HttpPost("ver-horas-laboradas")]

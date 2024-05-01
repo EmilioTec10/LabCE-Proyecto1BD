@@ -204,7 +204,7 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que solicita por parte del profesor un prestamo de un activo
-        public void solicitar_prestamo_activo(string placa)
+        public void solicitar_prestamo_activo(string placa, string email_prof)
         {
             // Obtener la placa del activo
             string placaActivo = placa;
@@ -223,9 +223,6 @@ namespace LabCEAPI.Users
             // Estado del préstamo (por ejemplo, "En espera")
             string estadoPrestamo = "Aprobado";
 
-            // Email del profesor
-            string emailProfesor = "manuelemilio1011@gmail.com";
-
             // Consulta SQL para insertar el préstamo
             string query = "INSERT INTO Prestamo (ID_activo, Fecha_Hora_Solicitud, estado, activo, email_prof) " +
                            "VALUES (@IDActivo, @FechaHoraSolicitud, @EstadoPrestamo, 1, @EmailProfesor)";
@@ -243,7 +240,7 @@ namespace LabCEAPI.Users
                     command.Parameters.AddWithValue("@IDActivo", placaActivo); // Suponiendo que la placa del activo es el ID_activo en la tabla
                     command.Parameters.AddWithValue("@FechaHoraSolicitud", fechaHoraSolicitud);
                     command.Parameters.AddWithValue("@EstadoPrestamo", estadoPrestamo);
-                    command.Parameters.AddWithValue("@EmailProfesor", emailProfesor);
+                    command.Parameters.AddWithValue("@EmailProfesor", email_prof);
 
                     // Ejecutamos la consulta
                     int rowsAffected = command.ExecuteNonQuery();

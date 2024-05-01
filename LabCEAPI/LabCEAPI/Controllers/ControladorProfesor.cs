@@ -61,9 +61,9 @@ namespace LabCEAPI.Controllers
         }
 
         [HttpPost("solicitar-prestamo")]
-        public IActionResult SolicitarPrestamoActivo(string placa)
+        public IActionResult SolicitarPrestamoActivo(string placa, string email_prof)
         {
-            profesor.solicitar_prestamo_activo(placa);
+            profesor.solicitar_prestamo_activo(placa, email_prof);
             return Ok("Solicitud de préstamo de activo realizada correctamente");
         }
 
