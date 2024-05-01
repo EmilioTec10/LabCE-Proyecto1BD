@@ -13,7 +13,7 @@ const linksArray = [
   {
     label: 'Gestion Profesores',
     icon: <AiOutlineHome />,
-    to: '/menu_gestion_profesores',
+    to: '/gestion_profesores',
   },
   {
     label: 'Gestion Laboratorios',
@@ -34,6 +34,11 @@ const linksArray = [
     label: 'Cambio Contraseña',
     icon: <MdOutlineAnalytics />,
     to: '/gestion_laboratorios',
+  },
+  {
+    label: 'Reportes',
+    icon: <MdOutlineAnalytics />,
+    to: '/reportes',
   },
 ];
 
@@ -153,9 +158,6 @@ const Gestion_laboratorios = () => {
           <div className="Themecontent">
             <div className="Togglecontent">
               <div className="grid theme-container">
-                <div className="content">
-                  <button onClick={CambiarTheme}>Cambiar Tema</button>
-                </div>
               </div>
             </div>
           </div>

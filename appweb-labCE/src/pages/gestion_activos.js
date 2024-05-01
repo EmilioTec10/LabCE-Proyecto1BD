@@ -13,7 +13,7 @@ const linksArray = [
   {
     label: 'Gestion Profesores',
     icon: <AiOutlineHome />,
-    to: '/menu_gestion_profesores',
+    to: '/gestion_profesores',
   },
   {
     label: 'Gestion Laboratorios',
@@ -34,6 +34,11 @@ const linksArray = [
     label: 'Cambio Contraseña',
     icon: <MdOutlineAnalytics />,
     to: '/gestion_laboratorios',
+  },
+  {
+    label: 'Reportes',
+    icon: <MdOutlineAnalytics />,
+    to: '/reportes',
   },
 ];
 

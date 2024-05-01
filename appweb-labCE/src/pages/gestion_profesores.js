@@ -55,6 +55,11 @@ const linksArray = [
     icon: <MdOutlineAnalytics />,
     to: '/gestion_laboratorios',
   },
+  {
+    label: 'Reportes',
+    icon: <MdOutlineAnalytics />,
+    to: '/reportes',
+  },
 ];
 
 const secondarylinksArray = [

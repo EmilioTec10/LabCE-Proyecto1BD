@@ -46,7 +46,7 @@ const linksArray = [
     to: '/gestion_activos',
   },
   {
-    label: 'Aprobacion Operadores',
+    label: 'Aprobar Operadores',
     icon: <MdOutlineAnalytics />,
     to: '/aprobacion_operadores',
   },
@@ -54,6 +54,12 @@ const linksArray = [
     label: 'Cambio Contraseña',
     icon: <MdOutlineAnalytics />,
     to: '/gestion_laboratorios',
+  },
+  ,
+  {
+    label: 'Reportes',
+    icon: <MdOutlineAnalytics />,
+    to: '/reportes',
   },
 ];
 
@@ -173,7 +179,7 @@ class Aprobacion_operadores extends React.Component {
     // Eliminar el row después de guardar el email
     this.eliminar_luego_de_aceptar(dato);
   };
-  
+
   eliminar_luego_de_aceptar = (dato) => {
     var opcion = window.confirm("Estás Seguro que deseas aceptar al operador" + dato.cedula);
     if (opcion === true) {
@@ -224,15 +230,7 @@ class Aprobacion_operadores extends React.Component {
             </div>
           ))}
           <Divider />
-          <div className="Themecontent">
-            <span className="titletheme">Tema:</span>
-            <div className="Togglecontent" onClick={this.props.toggleTheme}>
-              <input type="checkbox" className="checkbox" id="checkbox" />
-              <label htmlFor="checkbox" className="label">
-                <div className="ball"></div>
-              </label>
-            </div>
-          </div>
+          
         </Sidebar>
         <Content> 
           <Container>
