@@ -96,7 +96,7 @@ namespace LabCEAPI.Controllers
             Laboratorio lab = new Laboratorio(reserva_data.Nombre);
 
             // Invocar el método reservar_laboratorio de la clase Profesor para realizar la reserva
-            bool reservado = profesor.reservar_laboratorio(lab, reserva_data.Dia, reserva_data.HoraInicio, reserva_data.HoraFin, reserva_data.descripcion);
+            bool reservado = profesor.reservar_laboratorio(lab, reserva_data.Dia, reserva_data.HoraInicio, reserva_data.HoraFin, reserva_data.Descripcion, reserva_data.Palmada, reserva_data.email_prof);
 
             // Verificar si la reserva se realizó correctamente
             if (reservado)
@@ -149,8 +149,10 @@ namespace LabCEAPI.Controllers
             public DateTime Dia { get; set; } // Fecha de la reserva
             public DateTime HoraInicio { get; set; }
             public DateTime HoraFin { get; set; }
-
-            public string descripcion {  get; set; }
+            public string Descripcion {  get; set; }
+            public bool Palmada { get; set; }
+            public string email_est {  get; set; }
+            public string email_prof {  get; set; }
         }
 
     }

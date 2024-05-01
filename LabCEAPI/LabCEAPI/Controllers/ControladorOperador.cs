@@ -27,16 +27,38 @@ namespace LabCEAPI.Controllers
 
         [HttpPost("ingresar")]
         public IActionResult IngresarOperador([FromBody] LoginDataOperador loginData)
-        {
-            operador.ingresar_operador(loginData.Email, loginData.Contraseña);
-            return Ok("Operador ingresado exitosamente");
+        {  
+            try
+            {
+                bool accesoPermitido = operador.ingresar_operador(loginData.Email, loginData.Contraseña);
+
+                if (accesoPermitido)
+                {
+                    return Ok("Inicio de sesión exitoso");
+                }
+                else
+                {
+                    return Unauthorized("Credenciales inválidas");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
-        [HttpPost("salir")]
-        public IActionResult SalirOperador()
+        [HttpPost("marcar-entrada")]
+        public IActionResult MarcarHoraEntrada(string email_op)
         {
-            operador.salir_operador();
-            return Ok("Operador ha salido exitosamente");
+            operador.marcar_hora_entrada(email_op);
+            return Ok("Operador a marcado horas exitosamente");
+        }
+
+        [HttpPost("marcar-salida")]
+        public IActionResult MarcarHorasSalida(string email_op)
+        {
+            operador.marcar_hora_salida(email_op);
+            return Ok("Operador a marcado horas exitosamente");
         }
 
         [HttpGet("ver-labs-disponibles")]
@@ -49,9 +71,18 @@ namespace LabCEAPI.Controllers
         [HttpPost("reservar-laboratorio")]
         public IActionResult ReservarLaboratorio([FromBody] ReservaLabData reservaLabData)
         {
-            Laboratorio lab = new Laboratorio(reservaLabData.Nombre);
-            //ReservarLab reservaLab = operador.reservar_laboratorio(lab, reservaLabData.Dia, reservaLabData.HoraInicio, reservaLabData.HoraFin);
-            return Ok("Laboratorio reservado correctamente para el día " + reservaLabData.Dia.ToString() + " de " + reservaLabData.HoraInicio.ToString() + " hasta las " + reservaLabData.HoraFin.ToString());
+            bool reservado = operador.reservar_laboratorio(reservaLabData.Nombre, reservaLabData.Dia, reservaLabData.HoraInicio, reservaLabData.HoraFin, reservaLabData.Descripcion, reservaLabData.Palmada, reservaLabData.email_est);
+            // Verificar si la reserva se realizó correctamente
+            if (reservado)
+            {
+                // Si se realizó correctamente, devolver un mensaje de éxito
+                return Ok("Laboratorio reservado correctamente para el día " + reservaLabData.Dia.ToString() + " de " + reservaLabData.HoraInicio.ToString() + " hasta " + reservaLabData.HoraFin.ToString());
+            }
+            else
+            {
+                // Si no se pudo realizar la reserva, devolver un mensaje de error
+                return BadRequest("No se pudo reservar el laboratorio. Por favor, inténtelo de nuevo.");
+            }
         }
 
         [HttpGet("ver-activos-disponibles")]
@@ -131,7 +162,7 @@ namespace LabCEAPI.Controllers
             public int Carne { get; set; }
             public string Nombre { get; set; }
             public string Apellidos { get; set; }
-            public DateOnly FechaDeNacimiento { get; set; }
+            public DateTime FechaDeNacimiento { get; set; }
             public int Edad { get; set; }
             public string Email { get; set; }
             public string Contraseña { get; set; }

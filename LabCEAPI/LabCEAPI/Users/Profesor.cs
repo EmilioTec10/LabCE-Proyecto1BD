@@ -447,7 +447,7 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que reserva un laboratorio por parte del profesor
-        public bool reservar_laboratorio(Laboratorio lab, DateTime dia, DateTime hora_inicio, DateTime hora_fin, string descripcion)
+        public bool reservar_laboratorio(Laboratorio lab, DateTime dia, DateTime hora_inicio, DateTime hora_fin, string descripcion, bool palmada, string email_prof)
         {
             // Definir el estado inicial de la reserva
             string estadoReserva = "Reservado";
@@ -470,10 +470,10 @@ namespace LabCEAPI.Users
                     command.Parameters.AddWithValue("@HoraInicio", hora_inicio);
                     command.Parameters.AddWithValue("@HoraFin", hora_fin);
                     command.Parameters.AddWithValue("@IDLab", lab.nombre);
-                    command.Parameters.AddWithValue("@EmailProf", "manuelemilio1011@gmail.com");
+                    command.Parameters.AddWithValue("@EmailProf", email_prof);
                     command.Parameters.AddWithValue("@Estado", estadoReserva);
                     command.Parameters.AddWithValue("@Descripcion", descripcion);
-                    command.Parameters.AddWithValue("@Palmada", false);
+                    command.Parameters.AddWithValue("@Palmada", palmada);
 
                     // Ejecutar la consulta
                     int rowsAffected = command.ExecuteNonQuery();
@@ -492,8 +492,5 @@ namespace LabCEAPI.Users
                 }
             }
         }
-
-
-
     }
 }
