@@ -9,32 +9,59 @@ import 'react-time-picker/dist/TimePicker.css';
 
 const App = () => {
   const [fecha, setFecha] = useState(new Date());
-  const [hora, setHora] = useState('12:00'); // Hora inicial, puedes cambiarla según tus necesidades
-  const [errorHora, setErrorHora] = useState(false); // Estado para controlar el mensaje de error
+  const [horaInicio, setHoraInicio] = useState('07:00'); // Hora inicial
+  const [horaFin, setHoraFin] = useState('07:30'); // Hora final
+  const [errorHoraInicio, setErrorHoraInicio] = useState(false); // Estado para controlar el mensaje de error de horaInicio
+  const [errorHoraFin, setErrorHoraFin] = useState(false); // Estado para controlar el mensaje de error de horaFin
 
   const onDateChange = fecha => {
     setFecha(fecha);
   };
 
-  const onTimeChange = hora => {
-    setHora(hora);
+  const onHoraInicioChange = horaInicio => {
+    setHoraInicio(horaInicio);
+  };
+
+  const onHoraFinChange = horaFin => {
+    setHoraFin(horaFin);
   };
 
   const mostrarFechaHora = () => {
-    const horaSplit = hora.split(':');
-    const horaSeleccionada = parseInt(horaSplit[0], 10);
-    const minutosSeleccionados = parseInt(horaSplit[1], 10);
+    const horaInicioSplit = horaInicio.split(':');
+    const horaInicioSeleccionada = parseInt(horaInicioSplit[0], 10);
+    const minutosInicioSeleccionados = parseInt(horaInicioSplit[1], 10);
 
-    // Verificar si la hora cumple con las condiciones (de 7:00 a 20:30, y solo minutos 00 o 30)
-    if ((horaSeleccionada >= 7 && horaSeleccionada <= 20) &&
-        (minutosSeleccionados === 0 || minutosSeleccionados === 30)) {
-      const fechaHora = new Date(fecha);
-      fechaHora.setHours(horaSeleccionada);
-      fechaHora.setMinutes(minutosSeleccionados);
-      alert(fechaHora);
-      setErrorHora(false); // Restablecer el estado de error
+    const horaFinSplit = horaFin.split(':');
+    const horaFinSeleccionada = parseInt(horaFinSplit[0], 10);
+    const minutosFinSeleccionados = parseInt(horaFinSplit[1], 10);
+
+    // Verificar si la hora de inicio cumple con las condiciones (de 7:00 a 20:30)
+    if ((horaInicioSeleccionada >= 7 && horaInicioSeleccionada <= 20) &&
+        (minutosInicioSeleccionados === 0 || minutosInicioSeleccionados === 30)) {
+      setErrorHoraInicio(false);
     } else {
-      setErrorHora(true); // Mostrar mensaje de error
+      setErrorHoraInicio(true);
+    }
+
+    // Verificar si la hora de fin cumple con las condiciones (de 7:30 a 21:00)
+    if ((horaFinSeleccionada >= 7 && horaFinSeleccionada <= 21) &&
+        (minutosFinSeleccionados === 0 || minutosFinSeleccionados === 30)) {
+      setErrorHoraFin(false);
+    } else {
+      setErrorHoraFin(true);
+    }
+
+    // Si ambas horas cumplen con las condiciones, mostrar la fecha y hora seleccionadas
+    if (!errorHoraInicio && !errorHoraFin) {
+      const fechaHoraInicio = new Date(fecha);
+      fechaHoraInicio.setHours(horaInicioSeleccionada);
+      fechaHoraInicio.setMinutes(minutosInicioSeleccionados);
+
+      const fechaHoraFin = new Date(fecha);
+      fechaHoraFin.setHours(horaFinSeleccionada);
+      fechaHoraFin.setMinutes(minutosFinSeleccionados);
+
+      alert(`Fecha y hora de inicio: ${fechaHoraInicio}\nFecha y hora de fin: ${fechaHoraFin}`);
     }
   };
 
@@ -62,27 +89,50 @@ const App = () => {
           />
         </div>
         <br />
-        <label className="label-time-picker">Seleccione la hora:</label>
+        <label className="label-time-picker">Seleccione la hora de inicio:</label>
         <div className="time-picker-container">
           <TimePicker
-            onChange={onTimeChange}
-            value={hora}
-            clearIcon={null} // Quita el botón de limpiar
-            clockIcon={null} // Quita el botón de reloj
-            format="HH:mm" // Formato de 24 horas
+            onChange={onHoraInicioChange}
+            value={horaInicio}
+            clearIcon={null}
+            clockIcon={null}
+            format="HH:mm"
             clockClassName="custom-clock"
-            disableClock={true} // Deshabilita el reloj analógico
+            disableClock={true}
             hourPlaceholder="hh"
             minutePlaceholder="mm"
             className="time-picker"
-            minTime="07:00" // Hora mínima
-            maxTime="20:30" // Hora máxima
+            minTime="07:00"
+            maxTime="20:30"
             clockClassName="custom-clock"
             clockHourClassName="custom-clock-hour"
             clockMinuteClassName="custom-clock-minute"
             clockSecondClassName="custom-clock-second"
           />
-          {errorHora && <p className="error-message">Por favor, ingrese una hora válida (de 07:00 a 20:30, y solo minutos 00 o 30).</p>}
+          {errorHoraInicio && <p className="error-message">Por favor, ingrese una hora válida de inicio (de 07:00 a 20:30, y solo minutos 00 o 30).</p>}
+        </div>
+        <br />
+        <label className="label-time-picker">Seleccione la hora de fin:</label>
+        <div className="time-picker-container">
+          <TimePicker
+            onChange={onHoraFinChange}
+            value={horaFin}
+            clearIcon={null}
+            clockIcon={null}
+            format="HH:mm"
+            clockClassName="custom-clock"
+            disableClock={true}
+            hourPlaceholder="hh"
+            minutePlaceholder="mm"
+            className="time-picker"
+            minTime="07:30"
+            maxTime="21:00"
+            clockClassName="custom-clock"
+            clockHourClassName="custom-clock-hour"
+            clockMinuteClassName="custom-clock-minute"
+            clockSecondClassName="custom-clock-second"
+          />
+          {errorHoraFin && <p className="error-message">Por favor, ingrese una hora válida de fin (de 07:30 a 21:00, y solo minutos 00 o 30).</p>}
         </div>
         <br />
         <input type="button" value="Mostrar Fecha y Hora" className="btn btn-primary" onClick={mostrarFechaHora}/>
