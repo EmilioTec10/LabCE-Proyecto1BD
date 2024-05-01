@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../App';
-const Login_profesor = () => {
-  const [email, setEmailInput, setEmail] = useState('');
+
+const Login_operador = ({ setLoggedIn, setEmail }) => {
+  const [email, setEmailInput] = useState(''); // Define setEmailInput aquí
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
+  const { theme } = useContext(ThemeContext);
 
   const onButtonClick = async () => {
     setEmailError('');
@@ -32,12 +34,12 @@ const Login_profesor = () => {
       isValid = false;
     }
     
-    // Validación de las credenciales del chef
+    
     if (isValid) {
       if (email === "1@gmail.com" && password === "1") {
-        
+       // setLoggedIn(true);
         //setEmail(email);
-        navigate('/');
+        navigate('/reserva_laboratorio');
       } else {
         setEmailError('Invalid email or password');
         setPassword('');
@@ -55,7 +57,7 @@ const Login_profesor = () => {
         <input
           value={email}
           placeholder="Enter your email here"
-          onChange={(ev) => setEmailInput(ev.target.value)}
+          onChange={(ev) => setEmailInput(ev.target.value)} // Utiliza setEmailInput para actualizar el estado del email
           className="inputBox"
         />
         <label className="errorLabel">{emailError}</label>
@@ -78,4 +80,4 @@ const Login_profesor = () => {
   );
 };
 
-export default Login_profesor;
+export default Login_operador;

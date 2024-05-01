@@ -9,6 +9,8 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 
 import {
   Table,
@@ -20,42 +22,49 @@ import {
   ModalFooter,
 } from "reactstrap";
 
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 const data = [
-  { cedula: 504560886, nombreyapellidos: "Emmanuel esquivel Chavarria", edad: "19", fechanacimiento: "28/10/04", correo: "prueba@gmail.com" },
-  { cedula: 103450879, nombreyapellidos: "Carlos", edad: "20", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 103410687, nombreyapellidos: "Juan", edad: "80", fechanacimiento: "23/06/97", correo: "ema@gmail.com"},
-  { cedula: 119200368, nombreyapellidos: "Pepe", edad: "45", fechanacimiento: "23/08/97", correo: "ema@gmail.com" },
-  { cedula: 123467809, nombreyapellidos: "Emilio", edad: "21", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 345676557, nombreyapellidos: "Naruto", edad: "89", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
+  {  
+    nombreyapellidos: "Emmanuel esquivel Chavarria",  
+    turnos: [
+      { dia: "02/05/2024", hora: "8:00-12:00" },
+      { dia: "04/05/2024", hora: "10:00-14:00" },
+      { dia: "06/05/2024", hora: "14:00-18:00" }
+    ]
+  },
+  { 
+    nombreyapellidos: "Carlos",  
+    turnos: [
+      { dia: "03/05/2024", hora: "9:00-13:00" },
+      { dia: "05/05/2024", hora: "11:00-15:00" },
+      { dia: "07/05/2024", hora: "13:00-17:00" }
+    ]
+  },
+  // Agrega más objetos de operadores aquí con sus respectivos turnos
 ];
 
 const linksArray = [
   {
-    label: 'Gestion Profesores',
+    label: 'Reserva Laboratorio',
     icon: <AiOutlineHome />,
-    to: '/gestion_profesores',
+    to: '/reserva_laboratorio',
   },
   {
-    label: 'Gestion Laboratorios',
+    label: 'Prestamo Profesor',
     icon: <MdOutlineAnalytics />,
-    to: '/gestion_laboratorios',
+    to: '/prestamo_profesor',
   },
   {
-    label: 'Gestion Activos',
+    label: 'Prestamo Estudiante',
     icon: <AiOutlineApartment />,
-    to: '/gestion_activos',
+    to: '/prestamo_estudiante',
   },
   {
-    label: 'Aprobar Operadores',
+    label: 'Devolucion Activo',
     icon: <MdOutlineAnalytics />,
-    to: '/aprobacion_operadores',
+    to: '/devolucion_activo',
   },
-  {
-    label: 'Cambio Contraseña',
-    icon: <MdOutlineAnalytics />,
-    to: '/cambio_contrasenna',
-  },
-  ,
   {
     label: 'Reportes',
     icon: <MdOutlineAnalytics />,
@@ -144,20 +153,18 @@ const Content = styled.div`
   flex-grow: 1; // Permitir que el contenido crezca para llenar el espacio restante
 `;
 
-const Divider = styled.div`
-  height: 1px;
-  width: 100%;
-  background: ${(props) => props.theme.bg3};
-  margin: 20px 0;
-`;
-
 const DataTableContainer = styled.div`
   width: 80%;
   margin-left: auto;
   margin-right: auto;
 `;
 
-class Cambio_contrasenna extends React.Component {
+const NameColumn = styled.td`
+  padding-left: 30px;
+  vertical-align: top;
+`;
+
+class Reportes extends React.Component {
   
   state = {
     data: data,
@@ -173,24 +180,31 @@ class Cambio_contrasenna extends React.Component {
     },
   };
 
-  guardarEmail = (email, dato) => {
-    // Aquí implementa la lógica para guardar el email relacionado a este row
-    console.log('Email guardado:', email);
-    // Eliminar el row después de guardar el email
-    this.eliminar_luego_de_aceptar(dato);
-  };
-
-  eliminar_luego_de_aceptar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas cambiar la contraseña del operador" + dato.cedula);
-    
-  };
-
+  generatePDF = () => {
+    const docDefinition = {
+      content: [
+        { text: 'Reporte de Operadores', style: 'header' },
+        {
+          ul: this.state.data.map((operador) => ({
+            text: `${operador.nombreyapellidos}: ${operador.turnos.map(turno => `${turno.dia} - ${turno.hora}`).join(', ')}`
+          }))
+        }
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10]
+        }
+      }
+    };
   
-  
+    pdfMake.createPdf(docDefinition).open();
+  };
 
   render() {
     const themeStyle = this.props.theme === 'dark' ? Light : Dark;
-    
+
     return (
       <ThemeProvider theme={themeStyle}>
         <Sidebar>
@@ -208,7 +222,6 @@ class Cambio_contrasenna extends React.Component {
               </NavLink>
             </div>
           ))}
-          <Divider />
           {secondarylinksArray.map(({ icon, label, to }) => (
             <div className="LinkContainer" key={label}>
               <NavLink to={to} className="Links" activeClassName="active">
@@ -217,51 +230,45 @@ class Cambio_contrasenna extends React.Component {
               </NavLink>
             </div>
           ))}
-          <Divider />
-          
         </Sidebar>
         <Content> 
           <Container>
             <br />
             <br />
-            <h1>Cambio de Contraseña</h1>
+            <h1>Reportes</h1>
             <Table>
               <thead>
                 <tr>
-                  <th>Cedula</th>
-                  <th>Nombre y Apellidos</th>
-                  <th>Edad</th>
-                  <th>Fecha de Nacimiento</th>
-                  <th>Correo</th>
-                  <th>Acciones</th>
+                  <th>Operador</th>
+                  <th>Fecha</th>
+                  <th>Entrada</th>
+                  <th>Salida</th>
                 </tr>
               </thead>
-  
               <tbody>
-                {this.state.data.map((dato) => (
-                  <tr key={dato.cedula}>
-                    <td>{dato.cedula}</td>
-                    <td>{dato.nombreyapellidos}</td>
-                    <td>{dato.edad}</td>
-                    <td>{dato.fechanacimiento}</td>
-                    <td>{dato.correo}</td>
-                    <td>
-                      <Button
-                        color="primary"
-                        onClick={() => this.guardarEmail(dato.correo, dato)}
-                      >
-                        Cambiar Contraseña
-                      </Button>{" "}
-                      
-                    </td>
-                  </tr>
+                {this.state.data.map((operador, index) => (
+                  <React.Fragment key={index}>
+                    <tr>
+                      <NameColumn>{operador.nombreyapellidos}</NameColumn>
+                    </tr>
+                    {operador.turnos.map((turno, i) => (
+                      <tr key={i}>
+                        <td style={{ paddingLeft: '30px' }}></td>
+                        <td>{turno.dia}</td>
+                        <td>{turno.hora.split('-')[0]}</td>
+                        <td>{turno.hora.split('-')[1]}</td>
+                      </tr>
+                    ))}
+                    {index < this.state.data.length - 1 && <tr><td colSpan="4" style={{ height: '20px' }}></td></tr>}
+                  </React.Fragment>
                 ))}
               </tbody>
             </Table>
+            <Button color="primary" onClick={this.generatePDF}>Generar PDF</Button>
           </Container>
         </Content> 
       </ThemeProvider>
     );
   }
 }
-export default Cambio_contrasenna;
+export default Reportes;

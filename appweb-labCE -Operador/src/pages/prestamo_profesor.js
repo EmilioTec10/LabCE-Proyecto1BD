@@ -11,29 +11,24 @@ import Paper from '@mui/material/Paper';
 
 const linksArray = [
   {
-    label: 'Gestion Profesores',
+    label: 'Reserva Laboratorio',
     icon: <AiOutlineHome />,
-    to: '/gestion_profesores',
+    to: '/reserva_laboratorio',
   },
   {
-    label: 'Gestion Laboratorios',
+    label: 'Prestamo Profesor',
     icon: <MdOutlineAnalytics />,
-    to: '/gestion_laboratorios',
+    to: '/prestamo_profesor',
   },
   {
-    label: 'Gestion Activos',
+    label: 'Prestamo Estudiante',
     icon: <AiOutlineApartment />,
-    to: '/gestion_activos',
+    to: '/prestamo_estudiante',
   },
   {
-    label: 'Aprobar Operadores',
+    label: 'Devolucion Activo',
     icon: <MdOutlineAnalytics />,
-    to: '/aprobacion_operadores',
-  },
-  {
-    label: 'Cambio Contraseña',
-    icon: <MdOutlineAnalytics />,
-    to: '/cambio_contrasenna',
+    to: '/devolucion_activo',
   },
   {
     label: 'Reportes',
@@ -50,68 +45,80 @@ const secondarylinksArray = [
   },
 ];
 
-const Gestion_activos = () => {
+const Prestamo_profesor = () => {
   const [passwordError, setPasswordError] = useState('');
   const { setTheme, theme } = useContext(ThemeContext);
   const themeStyle = theme === 'dark' ? Light : Dark;
 
+  const CambiarTheme = () => {
+    setTheme((theme) => (theme === 'light' ? 'dark' : 'light'));
+  };
+
   const columnas = [
     {
-      name: 'Placa',
-      selector: row => row.placa,
+      name: 'Nombre',
+      selector: row => row.nombre,
       sortable: true
     },
     {
-      name: 'Tipo',
-      selector: row => row.tipo,
+      name: 'Capacidad',
+      selector: row => row.capacidad,
       sortable: true
     },
     {
-      name: 'Marca',
-      selector: row => row.marca,
+      name: 'Computadores',
+      selector: row => row.computadores,
       sortable: true
     },
     {
-      name: 'Fecha de Compra',
-      selector: row => row.fechaCompra,
+      name: 'Facilidades',
+      selector: row => row.facilidades,
       sortable: true
     },
     {
-      name: 'Requiere Aprobador',
-      selector: row => row.requiereAprobador,
-      sortable: true,
-      cell: row => <input type="checkbox" checked={row.requiereAprobador} disabled />
-    }
+      name: 'Horario',
+      selector: row => row.horario,
+      sortable: true
+    },
+    {
+      name: 'Activos',
+      selector: row => row.activos,
+      sortable: true
+    },
   ];
 
   const data = [
     {
-      placa: '2234',
-      tipo: 'Proyector',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
+      nombre: 'F2-07',
+      capacidad: '30',
+      computadores: '30',
+      facilidades: 'xxx',
+      horario: 'xxx',
+      activos: 'xxx',
     },
     {
-      placa: '2235',
-      tipo: 'Proyector',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
+      nombre: 'F2-08',
+      capacidad: '30',
+      computadores: '30',
+      facilidades: 'xxx',
+      horario: 'xxx',
+      activos: 'xxx',
     },
     {
-      placa:'2236',
-      tipo: 'Control de Proyector',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
+      nombre: 'F2-09',
+      capacidad: '30',
+      computadores: '30',
+      facilidades: 'xxx',
+      horario: 'xxx',
+      activos: 'xxx',
     },
     {
-      placa: '2237',
-      tipo: 'Control de Tele',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
+      nombre: 'F2-10',
+      capacidad: '30',
+      computadores: '30',
+      facilidades: 'xxx',
+      horario: 'xxx',
+      activos: 'xxx',
     },
   ];
 
@@ -146,7 +153,6 @@ const Gestion_activos = () => {
           <div className="Themecontent">
             <div className="Togglecontent">
               <div className="grid theme-container">
-            
               </div>
             </div>
           </div>
@@ -265,4 +271,4 @@ const DataTableContainer = styled.div`
   margin-right: auto;
 `;
 
-export default Gestion_activos;
+export default Prestamo_profesor;

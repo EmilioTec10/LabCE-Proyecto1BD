@@ -8,7 +8,13 @@ import { Light, Dark } from '../styles/themes';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
-import { Button } from "reactstrap";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import TimePicker from 'react-time-picker';
+import 'react-time-picker/dist/TimePicker.css';
+
+
+
 
 import {
   Table,
@@ -18,44 +24,32 @@ import {
   ModalBody,
   FormGroup,
   ModalFooter,
+  Button,
 } from "reactstrap";
 
-const data = [
-  { cedula: 504560886, nombreyapellidos: "Emmanuel esquivel Chavarria", edad: "19", fechanacimiento: "28/10/04", correo: "prueba@gmail.com" },
-  { cedula: 103450879, nombreyapellidos: "Carlos", edad: "20", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 103410687, nombreyapellidos: "Juan", edad: "80", fechanacimiento: "23/06/97", correo: "ema@gmail.com"},
-  { cedula: 119200368, nombreyapellidos: "Pepe", edad: "45", fechanacimiento: "23/08/97", correo: "ema@gmail.com" },
-  { cedula: 123467809, nombreyapellidos: "Emilio", edad: "21", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 345676557, nombreyapellidos: "Naruto", edad: "89", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-];
+
 
 const linksArray = [
   {
-    label: 'Gestion Profesores',
+    label: 'Reserva Laboratorio',
     icon: <AiOutlineHome />,
-    to: '/gestion_profesores',
+    to: '/reserva_laboratorio',
   },
   {
-    label: 'Gestion Laboratorios',
+    label: 'Prestamo Profesor',
     icon: <MdOutlineAnalytics />,
-    to: '/gestion_laboratorios',
+    to: '/prestamo_profesor',
   },
   {
-    label: 'Gestion Activos',
+    label: 'Prestamo Estudiante',
     icon: <AiOutlineApartment />,
-    to: '/gestion_activos',
+    to: '/prestamo_estudiante',
   },
   {
-    label: 'Aprobar Operadores',
+    label: 'Devolucion Activo',
     icon: <MdOutlineAnalytics />,
-    to: '/aprobacion_operadores',
+    to: '/devolucion_activo',
   },
-  {
-    label: 'Cambio Contraseña',
-    icon: <MdOutlineAnalytics />,
-    to: '/cambio_contrasenna',
-  },
-  ,
   {
     label: 'Reportes',
     icon: <MdOutlineAnalytics />,
@@ -156,52 +150,87 @@ const DataTableContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
 `;
+const data = [
+  { laboratorio: "F2-07", capacidad: "30", facilidades: "19", activos: "30 PC'S, 2 Proyectores, 1 Pantalla"},
+  { laboratorio: "F2-08", capacidad: "30", facilidades: "20", activos: "30 PC'S, 2 Proyectores"},
+  { laboratorio: "F2-09", capacidad: "30", facilidades: "80", activos: "30 PC'S, 2 Proyectores"},
+  { laboratorio:"F2-10", capacidad: "30", facilidades: "45", activos: "30 PC'S, 2 Proyectores, 1 Pantalla"},
+];
 
-class Aprobacion_operadores extends React.Component {
-  
-  state = {
-    data: data,
-    modalActualizar: false,
-    modalInsertar: false,
-    form: {
-      id: "",
-      cedula: "",
-      nombreyapellidos: "",
-      edad: "",
-      fechanacimiento: "",
-      correo: "",
-    },
+class Reserva_laboratorio extends React.Component {
+  mostrarModalActualizar = (dato) => {
+    this.setState({
+      form: dato,
+      modalActualizar: true,
+    });
   };
 
-  guardarEmail = (email, dato) => {
-    // Aquí implementa la lógica para guardar el email relacionado a este row
-    console.log('Email guardado:', email);
-    // Eliminar el row después de guardar el email
-    this.eliminar_luego_de_aceptar(dato);
+  cerrarModalActualizar = () => {
+    this.setState({ modalActualizar: false });
   };
 
-  eliminar_luego_de_aceptar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas aceptar al operador" + dato.cedula);
-    if (opcion === true) {
-      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-      this.setState({ data: arreglo, modalActualizar: false });
-    }
+  mostrarModalInsertar = () => {
+    this.setState({
+      modalInsertar: true,
+    });
   };
 
-  eliminar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas rechazar al operador " + dato.cedula);
-    if (opcion === true) {
-      // Guardar el email antes de eliminar el row
-      this.guardarEmail(dato.correo, dato);
-      // Eliminar el row después de guardar el email
-      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-      this.setState({ data: arreglo, modalActualizar: false });
+  cerrarModalInsertar = () => {
+    this.setState({ modalInsertar: false });
+  };
+
+  editar = (dato) => {
+    var arreglo = [...this.state.data]; // Copia del array de datos
+    var indice = arreglo.findIndex(item => item.laboratorio === dato.laboratorio); // Busca el índice del dato a editar
+    if (indice !== -1) {
+      arreglo[indice] = dato; // Reemplaza el dato en el índice encontrado
+      this.setState({ data: arreglo, modalActualizar: false }); // Actualiza el estado con el nuevo array de datos
     }
   };
   
+  handleChange = (e) => {
+    this.setState({
+      form: {
+        ...this.state.form,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
 
+  CambiarTheme = () => {
+    const { setTheme, theme } = useContext(ThemeContext);
+    setTheme((theme) => (theme === 'light' ? 'dark' : 'light'));
+  };
+
+  //-----------codigo de reserva-----------//
+  constructor(props) {
+    super(props);
+  
+    this.state = {
+      data: data,
+      modalActualizar: false,
+      modalInsertar: false,
+      form: {
+        laboratorio: "",
+        capacidad: "",
+        facilidades: "",
+        activos: "",
+      },
+    };
+  }
+
+  
+
+  
+
+  
+
+  
+  
   render() {
     const themeStyle = this.props.theme === 'dark' ? Light : Dark;
+    
+  
     
     return (
       <ThemeProvider theme={themeStyle}>
@@ -230,50 +259,78 @@ class Aprobacion_operadores extends React.Component {
             </div>
           ))}
           <Divider />
-          
+          <div className="Themecontent">
+            <div className="Togglecontent">
+              <div className="grid theme-container">
+                
+              </div>
+            </div>
+          </div>
         </Sidebar>
         <Content> 
           <Container>
-            <br />
-            <br />
-            <h1>Aprobacion de Operadores</h1>
+            
             <Table>
               <thead>
                 <tr>
-                  <th>Cedula</th>
-                  <th>Nombre y Apellidos</th>
-                  <th>Edad</th>
-                  <th>Fecha de Nacimiento</th>
-                  <th>Correo</th>
+                  <th>Laboratorio</th>
+                  <th>Capacidad</th>
+                  <th>Facilidades</th>
+                  <th>Activos</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
   
               <tbody>
                 {this.state.data.map((dato) => (
-                  <tr key={dato.cedula}>
-                    <td>{dato.cedula}</td>
-                    <td>{dato.nombreyapellidos}</td>
-                    <td>{dato.edad}</td>
-                    <td>{dato.fechanacimiento}</td>
-                    <td>{dato.correo}</td>
+                  <tr key={dato.laboratorio}>
+                    <td>{dato.laboratorio}</td>
+                    <td>{dato.capacidad}</td>
+                    <td>{dato.facilidades}</td>
+                    <td>{dato.activos}</td>
                     <td>
                       <Button
                         color="primary"
-                        onClick={() => this.guardarEmail(dato.correo, dato)}
+                        onClick={() => this.mostrarModalActualizar(dato)}
                       >
-                        Aprobar
+                        Reservar
                       </Button>{" "}
-                      <Button color="danger" onClick={()=> this.eliminar(dato)}>Denegar</Button>
+            
                     </td>
                   </tr>
                 ))}
               </tbody>
             </Table>
           </Container>
+          <Modal isOpen={this.state.modalActualizar}>
+            <ModalHeader>
+            <div><h3>Selecciona la Fecha</h3></div>
+            </ModalHeader>
+  
+            <ModalBody>
+              
+              
+            </ModalBody>
+  
+            <ModalFooter>
+              <Button
+                color="primary"
+                onClick={() => this.editar(this.state.form)}
+              >
+                Reservar
+              </Button>
+              <Button
+                color="danger"
+                onClick={() => this.cerrarModalActualizar()}
+              >
+                Cancelar
+              </Button>
+            </ModalFooter>
+          </Modal>
         </Content> 
+        
       </ThemeProvider>
     );
   }
 }
-export default Aprobacion_operadores;
+export default Reserva_laboratorio;

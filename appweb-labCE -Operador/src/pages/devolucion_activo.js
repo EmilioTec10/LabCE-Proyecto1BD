@@ -9,8 +9,6 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
-import pdfMake from "pdfmake/build/pdfmake";
-import pdfFonts from "pdfmake/build/vfs_fonts";
 
 import {
   Table,
@@ -22,53 +20,35 @@ import {
   ModalFooter,
 } from "reactstrap";
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
-
 const data = [
-  {  
-    nombreyapellidos: "Emmanuel esquivel Chavarria",  
-    turnos: [
-      { dia: "02/05/2024", hora: "8:00-12:00" },
-      { dia: "04/05/2024", hora: "10:00-14:00" },
-      { dia: "06/05/2024", hora: "14:00-18:00" }
-    ]
-  },
-  { 
-    nombreyapellidos: "Carlos",  
-    turnos: [
-      { dia: "03/05/2024", hora: "9:00-13:00" },
-      { dia: "05/05/2024", hora: "11:00-15:00" },
-      { dia: "07/05/2024", hora: "13:00-17:00" }
-    ]
-  },
-  // Agrega más objetos de operadores aquí con sus respectivos turnos
+  { cedula: 504560886, nombreyapellidos: "Emmanuel esquivel Chavarria", edad: "19", fechanacimiento: "28/10/04", correo: "prueba@gmail.com" },
+  { cedula: 103450879, nombreyapellidos: "Carlos", edad: "20", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
+  { cedula: 103410687, nombreyapellidos: "Juan", edad: "80", fechanacimiento: "23/06/97", correo: "ema@gmail.com"},
+  { cedula: 119200368, nombreyapellidos: "Pepe", edad: "45", fechanacimiento: "23/08/97", correo: "ema@gmail.com" },
+  { cedula: 123467809, nombreyapellidos: "Emilio", edad: "21", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
+  { cedula: 345676557, nombreyapellidos: "Naruto", edad: "89", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
 ];
 
 const linksArray = [
   {
-    label: 'Gestion Profesores',
+    label: 'Reserva Laboratorio',
     icon: <AiOutlineHome />,
-    to: '/gestion_profesores',
+    to: '/reserva_laboratorio',
   },
   {
-    label: 'Gestion Laboratorios',
+    label: 'Prestamo Profesor',
     icon: <MdOutlineAnalytics />,
-    to: '/gestion_laboratorios',
+    to: '/prestamo_profesor',
   },
   {
-    label: 'Gestion Activos',
+    label: 'Prestamo Estudiante',
     icon: <AiOutlineApartment />,
-    to: '/gestion_activos',
+    to: '/prestamo_estudiante',
   },
   {
-    label: 'Aprobar Operadores',
+    label: 'Devolucion Activo',
     icon: <MdOutlineAnalytics />,
-    to: '/aprobacion_operadores',
-  },
-  {
-    label: 'Cambio Contraseña',
-    icon: <MdOutlineAnalytics />,
-    to: '/gestion_laboratorios',
+    to: '/devolucion_activo',
   },
   {
     label: 'Reportes',
@@ -158,18 +138,20 @@ const Content = styled.div`
   flex-grow: 1; // Permitir que el contenido crezca para llenar el espacio restante
 `;
 
+const Divider = styled.div`
+  height: 1px;
+  width: 100%;
+  background: ${(props) => props.theme.bg3};
+  margin: 20px 0;
+`;
+
 const DataTableContainer = styled.div`
   width: 80%;
   margin-left: auto;
   margin-right: auto;
 `;
 
-const NameColumn = styled.td`
-  padding-left: 30px;
-  vertical-align: top;
-`;
-
-class Reportes extends React.Component {
+class Devolucion_activo extends React.Component {
   
   state = {
     data: data,
@@ -185,31 +167,36 @@ class Reportes extends React.Component {
     },
   };
 
-  generatePDF = () => {
-    const docDefinition = {
-      content: [
-        { text: 'Reporte de Operadores', style: 'header' },
-        {
-          ul: this.state.data.map((operador) => ({
-            text: `${operador.nombreyapellidos}: ${operador.turnos.map(turno => `${turno.dia} - ${turno.hora}`).join(', ')}`
-          }))
-        }
-      ],
-      styles: {
-        header: {
-          fontSize: 18,
-          bold: true,
-          margin: [0, 0, 0, 10]
-        }
-      }
-    };
-  
-    pdfMake.createPdf(docDefinition).open();
+  guardarEmail = (email, dato) => {
+    // Aquí implementa la lógica para guardar el email relacionado a este row
+    console.log('Email guardado:', email);
+    // Eliminar el row después de guardar el email
+    this.eliminar_luego_de_aceptar(dato);
   };
+
+  eliminar_luego_de_aceptar = (dato) => {
+    var opcion = window.confirm("Estás Seguro que deseas aceptar al operador" + dato.cedula);
+    if (opcion === true) {
+      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
+      this.setState({ data: arreglo, modalActualizar: false });
+    }
+  };
+
+  eliminar = (dato) => {
+    var opcion = window.confirm("Estás Seguro que deseas rechazar al operador " + dato.cedula);
+    if (opcion === true) {
+      // Guardar el email antes de eliminar el row
+      this.guardarEmail(dato.correo, dato);
+      // Eliminar el row después de guardar el email
+      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
+      this.setState({ data: arreglo, modalActualizar: false });
+    }
+  };
+  
 
   render() {
     const themeStyle = this.props.theme === 'dark' ? Light : Dark;
-
+    
     return (
       <ThemeProvider theme={themeStyle}>
         <Sidebar>
@@ -227,6 +214,7 @@ class Reportes extends React.Component {
               </NavLink>
             </div>
           ))}
+          <Divider />
           {secondarylinksArray.map(({ icon, label, to }) => (
             <div className="LinkContainer" key={label}>
               <NavLink to={to} className="Links" activeClassName="active">
@@ -235,45 +223,51 @@ class Reportes extends React.Component {
               </NavLink>
             </div>
           ))}
+          <Divider />
+          
         </Sidebar>
         <Content> 
           <Container>
             <br />
             <br />
-            <h1>Reportes</h1>
+            <h1>Aprobacion de Operadores</h1>
             <Table>
               <thead>
                 <tr>
-                  <th>Operador</th>
-                  <th>Fecha</th>
-                  <th>Entrada</th>
-                  <th>Salida</th>
+                  <th>Cedula</th>
+                  <th>Nombre y Apellidos</th>
+                  <th>Edad</th>
+                  <th>Fecha de Nacimiento</th>
+                  <th>Correo</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
+  
               <tbody>
-                {this.state.data.map((operador, index) => (
-                  <React.Fragment key={index}>
-                    <tr>
-                      <NameColumn>{operador.nombreyapellidos}</NameColumn>
-                    </tr>
-                    {operador.turnos.map((turno, i) => (
-                      <tr key={i}>
-                        <td style={{ paddingLeft: '30px' }}></td>
-                        <td>{turno.dia}</td>
-                        <td>{turno.hora.split('-')[0]}</td>
-                        <td>{turno.hora.split('-')[1]}</td>
-                      </tr>
-                    ))}
-                    {index < this.state.data.length - 1 && <tr><td colSpan="4" style={{ height: '20px' }}></td></tr>}
-                  </React.Fragment>
+                {this.state.data.map((dato) => (
+                  <tr key={dato.cedula}>
+                    <td>{dato.cedula}</td>
+                    <td>{dato.nombreyapellidos}</td>
+                    <td>{dato.edad}</td>
+                    <td>{dato.fechanacimiento}</td>
+                    <td>{dato.correo}</td>
+                    <td>
+                      <Button
+                        color="primary"
+                        onClick={() => this.guardarEmail(dato.correo, dato)}
+                      >
+                        Aprobar
+                      </Button>{" "}
+                      <Button color="danger" onClick={()=> this.eliminar(dato)}>Denegar</Button>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </Table>
-            <Button color="primary" onClick={this.generatePDF}>Generar PDF</Button>
           </Container>
         </Content> 
       </ThemeProvider>
     );
   }
 }
-export default Reportes;
+export default Devolucion_activo;

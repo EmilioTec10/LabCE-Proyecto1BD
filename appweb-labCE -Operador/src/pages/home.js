@@ -5,19 +5,13 @@ const Home = () => {
   const navigate = useNavigate();
 
   const handleAdminLogin = () => {
-    navigate('/gestion_profesores');
-  };
-
-  const handleOperatorLogin = () => {
     navigate('/login_operador');
   };
 
-  const handleProfessorLogin = () => {
-    navigate('/login_profesor');
+  const handleOperatorLogin = () => {
+    navigate('/registro');
   };
-
   
-
   return (
     <div className="mainContainer">
       <div className="titleContainer">
@@ -29,19 +23,13 @@ const Home = () => {
           className="inputButton"
           type="button"
           onClick={handleOperatorLogin}
-          value={'Continuar como operador'}
+          value={'Registro'}
         />
         <input
           className="inputButton"
           type="button"
           onClick={handleAdminLogin}
-          value="Continuar como administrador"
-        />
-        <input
-          className="inputButton"
-          type="button"
-          onClick={handleProfessorLogin}
-          value="Continuar como Profesor"
+          value="Log In"
         />
       </div>
     </div>

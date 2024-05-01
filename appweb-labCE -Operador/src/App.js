@@ -2,15 +2,13 @@ import React, { useState, useContext} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 import Home from './pages/home';
-import Login_administrador from './pages/login_administrador';
-import Login_profesor from './pages/login_profesor';
 import Login_operador from './pages/login_operador';
-import Cambio_contrasenna from './pages/cambio_contrasenna';
-import Gestion_activos from './pages/gestion_activos';
-import Gestion_profesores from './pages/gestion_profesores';
-import Gestion_laboratorios from './pages/gestion_laboratorios';
-import Aprobacion_operadores from './pages/aprobacion_operadores';
+import Prestamo_estudiante from './pages/prestamo_estudiante';
+import Reserva_laboratorio from './pages/reserva_laboratorio';
+import Prestamo_profesor from './pages/prestamo_profesor';
+import Devolucion_activo from './pages/devolucion_activo';
 import Reportes from './pages/reportes';
+import Registro from './pages/registro';
 import { createContext } from 'react';
 
 // Definimos y exportamos ThemeContext aquí
@@ -42,13 +40,11 @@ function App() {
           <Routes>
             <Route path="/" element={<Home setLoggedIn={setLoggedIn} />} />
             <Route path="/login_operador" element={<Login_operador setLoggedIn={setLoggedIn} />} />
-            <Route path="/login_administrador" element={<Login_administrador setLoggedIn={setLoggedIn} setEmail={setEmail} />} />
-            <Route path="/login_profesor" element={<Login_profesor setLoggedIn={setLoggedIn} />} />
-            <Route path="/cambio_contrasenna" element={<Cambio_contrasenna  />} />
-            <Route path="/gestion_activos" element={<Gestion_activos />} />
-            <Route path="/gestion_profesores" element={<Gestion_profesores />} />
-            <Route path="/gestion_laboratorios" element={<Gestion_laboratorios />} />
-            <Route path="/aprobacion_operadores" element={<Aprobacion_operadores />} />
+            <Route path="/registro" element={<Registro setLoggedIn={setLoggedIn} />} />
+            <Route path="/prestamo_estudiante" element={<Prestamo_estudiante />} />
+            <Route path="/reserva_laboratorio" element={<Reserva_laboratorio />} />
+            <Route path="/prestamo_profesor" element={<Prestamo_profesor />} />
+            <Route path="/devolucion_activo" element={<Devolucion_activo />} />
             <Route path="/reportes" element={<Reportes />} />
           </Routes>
         </ThemeContext.Provider>
