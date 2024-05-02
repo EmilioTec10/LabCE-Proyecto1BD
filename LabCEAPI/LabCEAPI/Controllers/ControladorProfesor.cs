@@ -19,8 +19,16 @@ namespace LabCEAPI.Controllers
         public IActionResult RegistrarProfesor(
             [FromBody] ProfesorDataRequest profesor_data)
         {
-            profesor.registrar_profesor(profesor_data.Cedula, profesor_data.Nombre, profesor_data.Apellidos, profesor_data.Edad, profesor_data.Email, profesor_data.Contraseña);
-            return Ok("Profesor registrado exitosamente");
+            bool registrado =  profesor.registrar_profesor(profesor_data.Cedula, profesor_data.Nombre, profesor_data.Apellidos, profesor_data.Edad, profesor_data.Email, profesor_data.Contraseña, profesor_data.FechaDeNacimiento);
+            if (registrado)
+            {
+                return Ok("Profesor registrado exitosamente");
+            } 
+            else 
+            { 
+                return BadRequest("No se pudo registrar el profesor en la base de datos"); 
+            }
+            
         }
 
         // Endpoint para que un profesor ingrese a la aplicación
@@ -49,8 +57,16 @@ namespace LabCEAPI.Controllers
         [HttpPost("generar-nueva-contrasena")]
         public IActionResult GenerarNuevaContrasena(string email)
         {
-            profesor.generar_nueva_contraseña(email);
-            return Ok("Nueva contraseña generada exitosamente y enviada por correo electrónico");
+            bool generada =  profesor.generar_nueva_contraseña(email);
+            if (generada)
+            {
+                return Ok("Nueva contraseña generada exitosamente y enviada por correo electrónico");
+            }
+            else
+            {
+                return BadRequest("No se pudo generar la nueva contraseña");
+            }
+            
         }
 
         [HttpGet("ver-activos-prestados")]
@@ -67,18 +83,25 @@ namespace LabCEAPI.Controllers
             return Ok("Solicitud de préstamo de activo realizada correctamente");
         }
 
+        [HttpGet("ver-prestamos-pendientes")]
+        public IActionResult VerPrestamosPendientes()
+        {
+            LinkedList<PrestamoActivo> prestamos_pendientes = profesor.ver_prestamos_pendientes();
+            return Ok(prestamos_pendientes);
+        }
+
         [HttpPost("aceptar-solicitud-prestamo")]
         public IActionResult AceptarSolicitudPrestamo([FromBody] PrestamoData prestamo_data)
         {
 
-            profesor.aceptar_solicitud_prestamo(prestamo_data.ID_activo, prestamo_data.email_estudiante);
+            profesor.aceptar_solicitud_prestamo(prestamo_data.ID_activo, prestamo_data.email_estudiante, prestamo_data.email_prof);
             return Ok("Solicitud de préstamo de activo aceptada correctamente");
         }
 
         [HttpPost("rechazar-solicitud-prestamo")]
         public IActionResult RechazarSolicitudPrestamo([FromBody] PrestamoData prestamo_data)
         { 
-            profesor.rechazar_solicitud_prestamo(prestamo_data.ID_activo, prestamo_data.email_estudiante);
+            profesor.rechazar_solicitud_prestamo(prestamo_data.ID_activo, prestamo_data.email_estudiante, prestamo_data.email_prof);
             return Ok("Solicitud de préstamo de activo rechazada correctamente");
         }
 
@@ -117,7 +140,7 @@ namespace LabCEAPI.Controllers
             public int Cedula { get; set; }
             public string Nombre { get; set; }
             public string Apellidos { get; set; }
-           // public DateOnly FechaDeNacimiento { get; set; }
+            public DateTime FechaDeNacimiento { get; set; }
             public int Edad { get; set; }
             public string Email { get; set; }
             public string Contraseña { get; set; }
@@ -133,14 +156,18 @@ namespace LabCEAPI.Controllers
         {
             public string ID_activo { get; set; }
             public string email_estudiante {  get; set; }
+            public string email_prof {  get; set; }
         }
 
         public class ActivoData
         {
-            public string Nombre { get; set; }
-            public string Marca { get; set; }
+            public string tipo { get; set; }
+            public string marca { get; set; }
             public string placa { get; set; }
             public string estado { get; set; }
+            public string lab {  get; set; }
+            public DateTime purchase_date { get; set; }
+            public bool necesita_aprobador {  get; set; }
         }
 
         public class ReservaLabData

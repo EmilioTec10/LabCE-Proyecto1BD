@@ -5,22 +5,20 @@ namespace LabCEAPI.NewFolder
 {
     public class PrestamoActivo
     {
-        private Activo activo {  get; set; }
+        public string email_est {  get; set; }
 
-        private Profesor aprobador { get; set; }
+        public string email_prof { get; set; }
 
-        public bool aprobado { get; set; }
+        public string estado { get; set; }
 
-        private DateOnly dia { get; set; }
+        public DateTime fecha_hora_solicitud { get; set; }
 
-        private DateTime hora { get; set; }
-
-        public PrestamoActivo(Activo activo, Profesor aprobador, DateOnly dia, DateTime hora)
+        public PrestamoActivo(string email_est, string email_prof, DateTime fecha_hora_solicitud, string estado)
         {
-            this.activo = activo;
-            this.aprobador = aprobador;
-            this.dia = dia;
-            this.hora = hora;
+            this.email_est = email_est;
+            this.email_prof = email_prof;
+            this.fecha_hora_solicitud = fecha_hora_solicitud;
+            this.estado = estado;
         }
     }
 }

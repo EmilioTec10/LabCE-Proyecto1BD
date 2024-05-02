@@ -25,19 +25,20 @@ namespace LabCEAPI.Users
         public const string connectionString = "Data Source=LAPTOP-GB4ACP2F;Initial Catalog=LabCE;Integrated Security=True;Encrypt=False";
 
         //Metodo que registra a un profesor en la base de datos
-        public void registrar_profesor(
+        public bool registrar_profesor(
             int cedula, 
             string nombre, 
             string apellidos,  
             int edad, 
             string email, 
-            string contraseña)
+            string contraseña,
+            DateTime fecha_de_nacimiento)
         {
             //Registra los datos en la base
 
             // Consulta SQL para insertar un nuevo profesor
-            string query = "INSERT INTO Profesor (email_prof, nombre, apellido1, apellido2, cedula, password_prof) " +
-                           "VALUES (@Email, @Nombre, @Apellido1, @Apellido2, @Cedula, @Contraseña)";
+            string query = "INSERT INTO Profesor (email_prof, nombre, apellido1, apellido2, cedula, password_prof, fecha_de_nacimiento) " +
+                           "VALUES (@Email, @Nombre, @Apellido1, @Apellido2, @Cedula, @Contraseña, @FechaNacimiento)";
 
             // Utilizamos using para garantizar que los recursos se liberen correctamente
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -60,6 +61,7 @@ namespace LabCEAPI.Users
                     contraseña = EncriptacionMD5.encriptar(contraseña);
 
                     command.Parameters.AddWithValue("@Contraseña", contraseña);
+                    command.Parameters.AddWithValue("@FechaNacimiento", new DateOnly(fecha_de_nacimiento.Year, fecha_de_nacimiento.Month, fecha_de_nacimiento.Day));
 
                     // Ejecutamos la consulta
                     int rowsAffected = command.ExecuteNonQuery();
@@ -67,11 +69,11 @@ namespace LabCEAPI.Users
                     // Verificamos si se insertaron correctamente los datos
                     if (rowsAffected > 0)
                     {
-                        Console.WriteLine("Profesor registrado correctamente.");
+                        return true;
                     }
                     else
                     {
-                        Console.WriteLine("No se pudo registrar al profesor.");
+                        return false;
                     }
                 }
             }
@@ -123,7 +125,7 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que genera una contraseña nueva aleatoriamente y la almacena en la base de datos
-        public void generar_nueva_contraseña(string email)
+        public bool generar_nueva_contraseña(string email)
         {
             this.contraseña = GeneradorContraseña.NuevaContraseña();
             
@@ -155,11 +157,11 @@ namespace LabCEAPI.Users
                     // Verificamos si se actualizó correctamente la contraseña
                     if (rowsAffected > 0)
                     {
-                        Console.WriteLine("Contraseña actualizada correctamente.");
+                        return true;
                     }
                     else
                     {
-                        Console.WriteLine("No se pudo actualizar la contraseña.");
+                        return false;
                     }
                 }
             }
@@ -171,7 +173,7 @@ namespace LabCEAPI.Users
             LinkedList<Activo> activosPrestados = new LinkedList<Activo>();
 
             // Consulta SQL para seleccionar los activos prestados
-            string query = "SELECT tipo, marca, estado, ID_activo FROM Activos WHERE estado = 'Prestado'";
+            string query = "SELECT tipo, marca, estado, ID_activo, ID_lab FROM Activos WHERE estado = 'Prestado'";
 
             // Utilizamos using para garantizar que los recursos se liberen correctamente
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -189,7 +191,7 @@ namespace LabCEAPI.Users
                         while (reader.Read())
                         {
                             // Creamos una instancia de Activo con los datos de la fila actual
-                            Activo activo = new Activo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3));
+                            Activo activo = new Activo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4));
          
 
                             // Agregamos el activo a la lista de activos prestados
@@ -324,15 +326,43 @@ namespace LabCEAPI.Users
             }
         }
 
+        //Metodo para devolver los prestamos que no han sido aprobados ni rechazados
+        public LinkedList<PrestamoActivo> ver_prestamos_pendientes()
+        {
+            LinkedList<PrestamoActivo> prestamosPendientes = new LinkedList<PrestamoActivo>();
+
+            string query = "SELECT email_est, email_prof, fecha_hora_solicitud, estado FROM Prestamo WHERE estado = 'Pendiente'";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    string emailEst = reader["email_est"].ToString();
+                    string emailProf = reader["email_prof"].ToString();
+                    DateTime fechaHoraSolicitud = (DateTime)reader["fecha_hora_solicitud"];
+                    string estado = reader["estado"].ToString();
+
+                    PrestamoActivo prestamo = new PrestamoActivo(emailEst, emailProf, fechaHoraSolicitud, estado);
+                    prestamosPendientes.AddLast(prestamo);
+                }
+                reader.Close();
+            }
+
+            return prestamosPendientes;
+        }
+
         //Metodo que acepta la solicitud de un prestamos a un estudiante
-        public void aceptar_solicitud_prestamo(string ID_activo, string email_estudiante)
+        public void aceptar_solicitud_prestamo(string ID_activo, string email_estudiante, string email_prof)
         {
             // Estado a asignar al préstamo
             string nuevoEstado = "Aprobado";
 
             // Consulta SQL para actualizar el estado del préstamo
             string query = "UPDATE Prestamo SET estado = @NuevoEstado " +
-                           "WHERE ID_activo = @IDActivo AND email_est = @EmailEstudiante";
+                           "WHERE ID_activo = @IDActivo AND email_est = @EmailEstudiante AND email_prof = @EmailProfe";
 
             // Utilizamos using para garantizar que los recursos se liberen correctamente
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -347,6 +377,7 @@ namespace LabCEAPI.Users
                     command.Parameters.AddWithValue("@NuevoEstado", nuevoEstado);
                     command.Parameters.AddWithValue("@IDActivo", ID_activo);
                     command.Parameters.AddWithValue("@EmailEstudiante", email_estudiante);
+                    command.Parameters.AddWithValue("@EmailProfe", email_prof);
 
                     // Ejecutamos la consulta
                     int rowsAffected = command.ExecuteNonQuery();
@@ -365,14 +396,14 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que rechaza la solicitud de un prestamos a un estudiante
-        public void rechazar_solicitud_prestamo(string ID_activo, string email_estudiante)
+        public void rechazar_solicitud_prestamo(string ID_activo, string email_estudiante, string email_prof)
         {
             // Estado a asignar al préstamo
             string nuevoEstado = "Rechazado";
 
             // Consulta SQL para actualizar el estado del préstamo
             string query = "UPDATE Prestamo SET estado = @NuevoEstado " +
-                           "WHERE ID_activo = @IDActivo AND email_est = @EmailEstudiante";
+                           "WHERE ID_activo = @IDActivo AND email_est = @EmailEstudiante AND email_prof = @EmailProfe";
 
             // Utilizamos using para garantizar que los recursos se liberen correctamente
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -387,6 +418,7 @@ namespace LabCEAPI.Users
                     command.Parameters.AddWithValue("@NuevoEstado", nuevoEstado);
                     command.Parameters.AddWithValue("@IDActivo", ID_activo);
                     command.Parameters.AddWithValue("@EmailEstudiante", email_estudiante);
+                    command.Parameters.AddWithValue("@EmailProfe", email_prof);
 
                     // Ejecutamos la consulta
                     int rowsAffected = command.ExecuteNonQuery();

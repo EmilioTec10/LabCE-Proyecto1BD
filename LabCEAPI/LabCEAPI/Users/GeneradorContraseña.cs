@@ -57,5 +57,33 @@ namespace LabCEAPI.Users
             
         }
 
+        public static void mandar_correo_sistema(string email, string cuerpo)
+        {
+            mensaje_email = new MailMessage();
+            mensaje_email.From = new MailAddress(email_envio, alias_envio, System.Text.Encoding.UTF8);
+            mensaje_email.To.Add(email);
+            mensaje_email.Subject = "Sistema LabCE";
+            mensaje_email.Body = cuerpo;
+            mensaje_email.Priority = MailPriority.High;
+
+            try
+            {
+                SmtpClient smtp = new SmtpClient();
+                smtp.UseDefaultCredentials = false;
+                smtp.Port = 587;
+                smtp.Host = "smtp.gmail.com";
+                smtp.Credentials = new System.Net.NetworkCredential(email_envio, contra_envio);
+                ServicePointManager.ServerCertificateValidationCallback = delegate (object s, X509Certificate certificate, X509Chain chain, SslPolicyErrors errors) { return true; };
+                smtp.EnableSsl = true;
+                smtp.Send(mensaje_email);
+                Console.WriteLine("Enviado");
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
+        }
+
     }
 }

@@ -394,6 +394,7 @@ namespace LabCEAPI.Users
                     // Ejecutamos la consulta
                     int rowsAffected = command.ExecuteNonQuery();
 
+
                     // Verificamos si se insertó correctamente el préstamo
                     if (rowsAffected > 0)
                     {

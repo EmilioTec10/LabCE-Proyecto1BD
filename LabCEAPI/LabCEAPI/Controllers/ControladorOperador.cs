@@ -134,7 +134,7 @@ namespace LabCEAPI.Controllers
         [HttpPost("devolucion-activo-estudiante")]
         public IActionResult DevolucionActivoEstudiante([FromBody] DevolucionActivoData devolucionActivoData)
         {
-            Activo activo = new Activo(devolucionActivoData.Activo.Nombre, devolucionActivoData.Activo.Marca, devolucionActivoData.Activo.estado, devolucionActivoData.Activo.placa);
+            Activo activo = new Activo(devolucionActivoData.Activo.tipo, devolucionActivoData.Activo.marca, devolucionActivoData.Activo.estado, devolucionActivoData.Activo.placa);
             operador.devolucion_activo_estudiante(activo, devolucionActivoData.ContraseñaOperador);
             return Ok("Devolución de activo por parte del estudiante registrada correctamente");
         }

@@ -5,6 +5,7 @@ using LabCEAPI.Reportes_de_Horas;
 using LabCEAPI.Users;
 using static LabCEAPI.Controllers.ControladorProfesor;
 using LabCEAPI.Reservaciones;
+using LabCEAPI.Prestamos;
 
 namespace LabCEAPI.Controllers
 {
@@ -45,20 +46,81 @@ namespace LabCEAPI.Controllers
             return Ok("Profesor registrado exitosamente");
         }
 
+        [HttpPost("crear-activo")]
+        public IActionResult CrearActivo([FromBody] ActivoData activoData)
+        {
+
+            Activo activo = new Activo(activoData.tipo, activoData.marca, activoData.estado, activoData.placa, activoData.lab, activoData.purchase_date, activoData.necesita_aprobador);
+
+            if (activo == null)
+            {
+                return BadRequest("El activo proporcionado es nulo.");
+            }
+
+            bool insercionExitosa = admin.crear_activo(activo);
+
+            if (insercionExitosa)
+            {
+                return Ok("El activo se creó exitosamente.");
+            }
+            else
+            {
+                return StatusCode(500, "Error al crear el activo.");
+            }
+        }
+
+        [HttpPut("modificar-activo")]
+        public IActionResult ModificarActivo([FromBody] ActivoData activoData)
+        {
+            Activo activo = new Activo(activoData.tipo, activoData.marca, activoData.estado, activoData.placa, activoData.lab, activoData.purchase_date, activoData.necesita_aprobador);
+
+            if (activo == null)
+            {
+                return BadRequest("El activo proporcionado es nulo.");
+            }
+
+            bool modificacionExitosa = admin.modificar_activo(activo);
+
+            if (modificacionExitosa)
+            {
+                return Ok("El activo se modificó exitosamente.");
+            }
+            else
+            {
+                return StatusCode(500, "Error al modificar el activo.");
+            }
+        }
+
         [HttpPut("modificar-profesor")]
         public IActionResult ModificarProfesor([FromBody] Profesor profesor)
         {
-            admin.modificar_profesor(profesor);
-            return Ok("Profesor modificado exitosamente");
+            bool modificacion_profesor = admin.modificar_profesor(profesor);
+            if (modificacion_profesor)
+            {
+                return Ok("El profesor se modificó exitosamente.");
+            }
+            else
+            {
+                return StatusCode(500, "Error al modificar el profesor.");
+            }
         }
 
         [HttpDelete("eliminar-profesor")]
         public IActionResult EliminarProfesor(string email)
         {
     
-            admin.eliminar_profesor(email);
-            return Ok("Profesor eliminado exitosamente");
+            bool eliminado = admin.eliminar_profesor(email);
+            if (eliminado)
+            {
+                return Ok("Profesor eliminado exitosamente");
+            } else
+            {
+                return BadRequest("No se pudo eliminar el profesor de la base de datos");
+            }
+            
         }
+
+        // Devuelve la lista de operadores que se han registrado pero no se a revisado por un administrador
         [HttpGet("ver-operadores-registrados")]
         public IActionResult VerOperadoresRegistrados()
         {
@@ -66,28 +128,57 @@ namespace LabCEAPI.Controllers
             return Ok(operadoresRegistrados);
         }
 
+        // Acepta el operador registrado en el sistema
         [HttpPost("aceptar-operador")]
         public IActionResult AceptarOperador(string email_op)
         {
             // Aquí deberías obtener el operador de la base de datos o de alguna otra fuente de datos
    
-            admin.aceptar_operador(email_op);
-            return Ok("Operador aceptado exitosamente");
-        }
+            bool aceptado = admin.aceptar_operador(email_op);
 
+            if (aceptado)
+            {
+                return Ok("Operador aceptado exitosamente");
+            }
+            else
+            {
+                return BadRequest("No se pudo aceptar el operador");
+            }
+            
+        }
+        
+        //Rechaza el operador registrado en el sistema
         [HttpPost("rechazar-operador")]
         public IActionResult RechazarOperador(string email_op)
         {
 
-            admin.rechazar_operador(email_op);
-            return Ok("Operador rechazado exitosamente");
+            bool rechazado = admin.rechazar_operador(email_op);
+
+            if (rechazado)
+            {
+                return Ok("Operador rechazado exitosamente");
+            }
+            else
+            {
+                return BadRequest("No se pudo rechazado el operador");
+            }
         }
+
 
         [HttpPost("generar-nueva-contrasena")]
         public IActionResult GenerarNuevaContraseña(string email_admin)
         {
-            admin.generar_nueva_contraseña(email_admin);
-            return Ok("Nueva contraseña generada exitosamente y enviada por correo electrónico");
+            bool generada = admin.generar_nueva_contraseña(email_admin);
+
+            if (generada)
+            {
+                return Ok("Nueva contraseña generada exitosamente y enviada por correo electrónico");
+            }
+            else
+            {
+                return BadRequest("No se pudo generar la contraseña nueva");
+            }
+            
         }
 
         [HttpGet("generar-reporte")]

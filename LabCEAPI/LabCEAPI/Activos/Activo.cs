@@ -10,17 +10,16 @@ namespace LabCEAPI.Prestamos
         public static LinkedList<Activo> activos_prestados = new LinkedList<Activo>();
         public string tipo {  get; set; }
 
-        public int ID { get; set; }
+        public string lab {  get; set; }
 
-        private DateOnly purchase_date {  get; set; }
+        public DateTime purchase_date {  get; set; }
 
         public string marca { get; set; }
 
         public string placa { get; set; }
 
         public string estado { get; set; }
-
-        public string dellate_dañado { get; set; }
+        public bool necesita_aprobacion {  get; set; }
 
         public Activo (string tipo, string marca, string estado)
         {
@@ -35,6 +34,26 @@ namespace LabCEAPI.Prestamos
             this.marca = marca;
             this.placa = placa;
             this.estado = estado;
+        }
+
+        public Activo(string tipo, string marca, string estado, string placa, string lab)
+        {
+            this.tipo = tipo;
+            this.marca = marca;
+            this.placa = placa;
+            this.estado = estado;
+            this.lab = lab;
+        }
+
+        public Activo(string tipo, string marca, string estado, string placa, string lab, DateTime purchase_date, bool necesita_aprobacion)
+        {
+            this.tipo = tipo;
+            this.marca = marca;
+            this.placa = placa;
+            this.estado = estado;
+            this.lab = lab;
+            this.purchase_date = purchase_date;
+            this.necesita_aprobacion = necesita_aprobacion;
         }
     }
 }
