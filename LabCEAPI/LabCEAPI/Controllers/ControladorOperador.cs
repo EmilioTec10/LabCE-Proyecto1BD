@@ -21,8 +21,16 @@ namespace LabCEAPI.Controllers
         [HttpPost("registrar")]
         public IActionResult RegistrarOperador([FromBody] OperadorDataRequest operadorData)
         {
-            operador.registrar_operador(operadorData.Cedula, operadorData.Carne, operadorData.Nombre, operadorData.Apellidos, operadorData.FechaDeNacimiento, operadorData.Edad, operadorData.Email, operadorData.Contraseña);
-            return Ok("Operador registrado exitosamente");
+            bool registrado = operador.registrar_operador(operadorData.Cedula, operadorData.Carne, operadorData.Nombre, operadorData.Apellidos, operadorData.FechaDeNacimiento, operadorData.Edad, operadorData.Email, operadorData.Contraseña);
+            if (registrado)
+            {
+                return Ok("Operador registrado exitosamente");
+            }
+            else
+            {
+                return BadRequest("No se pudo registrar correctamente el operador");
+            }
+            
         }
 
         [HttpPost("ingresar")]
@@ -50,15 +58,30 @@ namespace LabCEAPI.Controllers
         [HttpPost("marcar-entrada")]
         public IActionResult MarcarHoraEntrada(string email_op)
         {
-            operador.marcar_hora_entrada(email_op);
-            return Ok("Operador a marcado horas exitosamente");
+            bool marcado = operador.marcar_hora_entrada(email_op);
+            if (marcado)
+            {
+                return Ok("Operador a marcado horas exitosamente");
+            }
+            else
+            {
+                return BadRequest("No se pudo marcar horas correctamente");
+            }
+            
         }
 
         [HttpPost("marcar-salida")]
         public IActionResult MarcarHorasSalida(string email_op)
         {
-            operador.marcar_hora_salida(email_op);
-            return Ok("Operador a marcado horas exitosamente");
+            bool marcado = operador.marcar_hora_salida(email_op);
+            if (marcado)
+            {
+                return Ok("Operador a marcado horas exitosamente");
+            }
+            else
+            {
+                return BadRequest("No se pudo marcar horas correctamente");
+            }
         }
 
         [HttpGet("ver-labs-disponibles")]
@@ -97,17 +120,52 @@ namespace LabCEAPI.Controllers
         public IActionResult SolicitarActivoEstudiante(string placa, string email_prof, string email_est)
         {
             // Aquí deberías obtener el profesor de la base de datos o de alguna otra fuente de datos
-            operador.solicitar_activo_estudiante(placa, email_est, email_prof);
-            return Ok("Solicitud de activo para estudiante realizada correctamente");
+            bool solicitado = operador.solicitar_activo_estudiante(placa, email_est, email_prof);
+            if (solicitado)
+            {
+                return Ok("Solicitud de activo para estudiante realizada correctamente");
+            }
+            else
+            {
+                return BadRequest("No se pudo solicitar el activo para el estudiante");
+            }
         }
-        
+
+        [HttpGet("aprobados")]
+        public IActionResult VerPrestamosAprobados()
+        {
+            try
+            {
+                LinkedList<PrestamoActivo> prestamosAprobados = operador.ver_prestamos_aprobados();
+                return Ok(prestamosAprobados);
+            }
+            catch (Exception ex)
+            {
+                // Manejar el error de alguna manera, aquí simplemente lo devolvemos como respuesta
+                return StatusCode(500, $"Error al obtener los prestamos aprobados: {ex.Message}");
+            }
+        }
 
         [HttpPost("prestar-activo-estudiante")]
-        public IActionResult PrestarActivoEstudiante([FromBody] ActivoDataOperador activoData)
+        public IActionResult PrestarActivoEstudiante(string email, string contraseña)
         {
-            Activo activo = new Activo(activoData.Nombre, activoData.Marca, activoData.Modelo, activoData.estado);
-            operador.prestar_activo_estudiante(activo, activoData.ContraseñaOperador);
-            return Ok("Activo prestado a estudiante correctamente");
+            try
+            {
+                bool prestamoExitoso = operador.prestar_activo_estudiante(email, contraseña);
+                if (prestamoExitoso)
+                {
+                    return Ok("El activo fue prestado exitosamente.");
+                }
+                else
+                {
+                    return BadRequest("No se pudo realizar el préstamo del activo. Verifique sus credenciales.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejar el error de alguna manera, aquí simplemente lo devolvemos como respuesta
+                return StatusCode(500, $"Error al realizar el préstamo del activo: {ex.Message}");
+            }
         }
 
         [HttpPost("prestar-activo-profesor")]

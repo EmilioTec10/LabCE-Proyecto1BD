@@ -50,7 +50,7 @@ namespace LabCEAPI.Users
 
 
         //Metodo que registra un nuevo operador y lo guarda en la base de datos
-        public void registrar_operador(
+        public bool registrar_operador(
             int cedula,
             int carne,
             string nombre,
@@ -93,11 +93,11 @@ namespace LabCEAPI.Users
                     // Verificamos si se insertaron correctamente los datos
                     if (rowsAffected > 0)
                     {
-                        Console.WriteLine("Profesor registrado correctamente.");
+                        return true;
                     }
                     else
                     {
-                        Console.WriteLine("No se pudo registrar al profesor.");
+                        return false;
                     }
                 }
             }
@@ -106,7 +106,6 @@ namespace LabCEAPI.Users
         //Metodo para ingresar como operador en la aplicacion
         public bool ingresar_operador(string email, string contraseña)
         {
-           // actual_hora = new HorasLaboradas(DateTime.Now, DateOnly.FromDateTime(DateTime.Now));
 
             // Consulta SQL para buscar al operador por email
             string query = "SELECT contrasena_op, email_op FROM Operador WHERE email_op = @Email";
@@ -150,7 +149,7 @@ namespace LabCEAPI.Users
         }
 
         // Metodo que registra la hora de entrada del turno de un operador
-        public void marcar_hora_entrada(string email_op)
+        public bool marcar_hora_entrada(string email_op)
         {
             // Obtener la fecha y hora actual
             DateTime fechaHoraActual = DateTime.Now;
@@ -178,17 +177,17 @@ namespace LabCEAPI.Users
                     // Verificar si se realizó la inserción correctamente
                     if (rowsAffected > 0)
                     {
-                        Console.WriteLine("Turno iniciado correctamente.");
+                        return true;
                     }
                     else
                     {
-                        Console.WriteLine("No se pudo iniciar el turno.");
+                        return false;
                     }
                 }
             }
         }
 
-        public void marcar_hora_salida(string email_op)
+        public bool marcar_hora_salida(string email_op)
         {
             // Obtener la fecha y hora actual
             DateTime fechaHoraActual = DateTime.Now;
@@ -217,11 +216,11 @@ namespace LabCEAPI.Users
                     // Verificar si se realizó la actualización correctamente
                     if (rowsAffected > 0)
                     {
-                        Console.WriteLine("Hora de salida marcada correctamente.");
+                        return true;
                     }
                     else
                     {
-                        Console.WriteLine("No se pudo marcar la hora de salida.");
+                        return false;
                     }
                 }
             }
@@ -352,7 +351,7 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que solicita a un profesor el prestamo de un activo a un estudiante
-        public void solicitar_activo_estudiante(string placa, string email_est, string email_prof)
+        public bool solicitar_activo_estudiante(string placa, string email_est, string email_prof)
         {
             // Obtener la placa del activo
             string placaActivo = placa;
@@ -361,7 +360,7 @@ namespace LabCEAPI.Users
             if (!ExisteActivo(placaActivo))
             {
                 Console.WriteLine("El activo no existe.");
-                return; // Salir del método si el activo no existe
+                return false; // Salir del método si el activo no existe
             }
 
             // Obtener la fecha y hora actual
@@ -398,11 +397,11 @@ namespace LabCEAPI.Users
                     // Verificamos si se insertó correctamente el préstamo
                     if (rowsAffected > 0)
                     {
-                        Console.WriteLine("Se guardo");
+                        return true;
                     }
                     else
                     {
-                        Console.WriteLine("NO se guardo");
+                        return false;
                     }
                 }
             }
@@ -438,11 +437,94 @@ namespace LabCEAPI.Users
             return count > 0;
         }
 
-        //Metodo que presta el activo al estudiante
-        public void prestar_activo_estudiante(Activo activo, string contraseña_operador)
+        // Metodo que devuelve una lista de prestamos de activos que hayan sido aprobados
+        public LinkedList<PrestamoActivo> ver_prestamos_aprobados()
         {
-            Activo.activos_disponibles.Remove(activo);
-            
+            // Lista para almacenar los prestamos aprobados
+            LinkedList<PrestamoActivo> prestamosAprobados = new LinkedList<PrestamoActivo>();
+
+            // Query SQL para seleccionar los prestamos aprobados
+            string query = @"SELECT p.email_est, p.email_prof, p.Fecha_Hora_Solicitud, p.estado, p.ID_activo
+                     FROM Prestamo p
+                     WHERE p.estado = 'Aprobado' AND p.activo = 1";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Ejecutar la consulta y obtener los resultados
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Iterar sobre los resultados y mapearlos a objetos PrestamoActivo
+                        while (reader.Read())
+                        {
+                            string email_est = reader.IsDBNull(0) ? string.Empty : reader.GetString(0);
+                            string email_prof = reader.IsDBNull(1) ? string.Empty : reader.GetString(1);
+                            DateTime fecha_hora_solicitud = reader.IsDBNull(2) ? DateTime.MinValue : reader.GetDateTime(2);
+                            string estado = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
+                            string placa = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
+
+                            // Crear un objeto PrestamoActivo y agregarlo a la lista
+                            PrestamoActivo prestamo = new PrestamoActivo(email_est, email_prof, fecha_hora_solicitud, estado, placa);
+                            prestamosAprobados.AddLast(prestamo);
+                        }
+
+                    }
+                }
+            }
+
+            // Devolver la lista de prestamos aprobados
+            return prestamosAprobados;
+        }
+
+        //Metodo que presta el activo al estudiante
+        public bool prestar_activo_estudiante(string email, string contraseña)
+        {
+            // Consulta SQL para buscar al operador por email
+            string query = "SELECT contrasena_op, email_op FROM Operador WHERE email_op = @Email";
+
+            // Variable para almacenar la contraseña recuperada de la base de datos
+            string contraseñaBaseDeDatos = null;
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos el parámetro para el correo electrónico
+                    command.Parameters.AddWithValue("@Email", email);
+
+                    // Ejecutamos la consulta y obtenemos la contraseña almacenada en la base de datos
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            contraseñaBaseDeDatos = reader.GetString(0); // Suponiendo que la contraseña está en la primera columna
+                            this.email = reader.GetString(1);
+                        }
+                    }
+                }
+            }
+
+            // Si no se encontró ningún profesor con ese correo electrónico
+            if (contraseñaBaseDeDatos == null)
+            {
+                return false;
+            }
+
+            // Comparamos la contraseña proporcionada con la contraseña almacenada en la base de datos
+            contraseñaBaseDeDatos = EncriptacionMD5.desencriptar(contraseñaBaseDeDatos);
+            return contraseña == contraseñaBaseDeDatos;
+
         }
 
         //Metodo que presta un activo a un profesor
