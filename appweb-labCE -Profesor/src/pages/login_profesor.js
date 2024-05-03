@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios'; // Importa Axios para hacer solicitudes HTTP
 import { ThemeContext } from '../App';
+
 const Login_profesor = () => {
   const [email, setEmailInput, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -34,13 +36,22 @@ const Login_profesor = () => {
     
     // Validación de las credenciales del chef
     if (isValid) {
-      if (email === "1@gmail.com" && password === "1") {
-        
-        //setEmail(email);
-        navigate('/aprobacion_prestamo');
-      } else {
-        setEmailError('Invalid email or password');
-        setPassword('');
+      
+      try {
+        const response = await axios.post('http://localhost:5129/api/ControladorProfesor/ingresar', {
+          email: email,
+          contraseña: password,
+        });
+
+        if (response.status === 200) {
+          navigate('/aprobacion_prestamo');
+        } else {
+          setEmailError('Invalid email or password');
+          setPassword('');
+        }
+      } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        setEmailError('Error al iniciar sesión');
       }
     }
   };
