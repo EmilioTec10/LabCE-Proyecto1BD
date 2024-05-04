@@ -133,6 +133,43 @@ namespace LabCEAPI.Users
             }
         }
 
+        //Metodo que devulve una lista con todos los activos
+        public LinkedList<Activo> ver_activos()
+        {
+            LinkedList<Activo> activos = new LinkedList<Activo>();
+
+            // Consulta SQL para seleccionar los operadores con revisado = 0
+            string query = "SELECT ID_activo, ID_lab, tipo, estado, necesita_aprovacion, fecha_compra, marca FROM Activos";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Ejecutar la consulta y obtener los resultados
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Iterar sobre los resultados
+                        while (reader.Read())
+                        {
+                            // Crear una instancia de Operador con los datos recuperados
+                            Activo activo = new Activo(reader.GetString(2), reader.GetString(6), reader.GetString(3), reader.GetString(0), reader.GetString(1), reader.GetDateTime(5), reader.GetBoolean(4));
+
+                            // Agregar el operador a la lista
+                            activos.AddLast(activo);
+                        }
+                    }
+                }
+            }
+
+            return activos;
+        }
+
+
         //Permite crear un activo y guardarlo en la base de datos
         public bool crear_activo(Activo activo)
         {

@@ -245,18 +245,32 @@ class Gestion_profesores extends React.Component {
     return edad;
 }
 
-  eliminar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas Eliminar el elemento " + dato.cedula);
-    if (opcion === true) {
+eliminar = (dato) => {
+  var opcion = window.confirm("Estás seguro que deseas eliminar al profesor " + dato.nombre + " " + dato.apellidos);
+  if (opcion === true) {
+    // Realizar la solicitud DELETE a la API
+    axios.delete('http://localhost:5129/api/ControladorAdmin/eliminar-profesor', {
+      params: {
+        email: dato.email
+      }
+    })
+    .then(response => {
+      console.log(response.data); // Puedes imprimir la respuesta en la consola
+      // Si la respuesta indica éxito, puedes actualizar el estado o realizar otras acciones
       var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
       this.setState({ data: arreglo, modalActualizar: false });
-    }
-  };
+    })
+    .catch(error => {
+      // Manejas el error en caso de que ocurra
+      console.error(error);
+    });
+  }
+};
+
 
   insertar = () => {
     var valorNuevo = { ...this.state.form };
-    console.log(valorNuevo)
-    valorNuevo.cedula = parseInt(valorNuevo.cedula); // Aseguramos que la cédula sea un número
+    console.log(valorNuevo);
 
     axios.post('http://localhost:5129/api/ControladorAdmin/registrar-profesor', {
       Cedula: valorNuevo.cedula,
@@ -526,7 +540,7 @@ class Gestion_profesores extends React.Component {
                   className="form-control"
                   name="fecha_de_nacimiento"
                   type="text"
-                  
+                  onChange={this.handleChange} 
                 />
               </FormGroup>
               <FormGroup>

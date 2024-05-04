@@ -160,7 +160,7 @@ const DataTableContainer = styled.div`
 class Aprobacion_operadores extends React.Component {
   
   state = {
-    data: data,
+    data: [],
     modalActualizar: false,
     modalInsertar: false,
     form: {
@@ -172,6 +172,16 @@ class Aprobacion_operadores extends React.Component {
       correo: "",
     },
   };
+
+  componentDidMount() {
+    axios.get('http://localhost:5129/api/ControladorAdmin/ver-operadores-registrados')
+      .then(response => {
+        this.setState({ data: response.data });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
 
   guardarEmail = (email, dato) => {
     // Aquí implementa la lógica para guardar el email relacionado a este row
@@ -241,7 +251,8 @@ class Aprobacion_operadores extends React.Component {
               <thead>
                 <tr>
                   <th>Cedula</th>
-                  <th>Nombre y Apellidos</th>
+                  <th>Nombre</th>
+                  <th>Apellidos</th>
                   <th>Edad</th>
                   <th>Fecha de Nacimiento</th>
                   <th>Correo</th>

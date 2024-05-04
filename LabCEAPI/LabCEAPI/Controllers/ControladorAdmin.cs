@@ -46,6 +46,14 @@ namespace LabCEAPI.Controllers
             return Ok("Profesor registrado exitosamente");
         }
 
+        // Devuelve la lista de todos los activos
+        [HttpGet("ver-activos")]
+        public IActionResult VerActivos()
+        {
+            LinkedList<Activo> activos = admin.ver_activos();
+            return Ok(activos);
+        }
+
         [HttpPost("crear-activo")]
         public IActionResult CrearActivo([FromBody] ActivoData activoData)
         {

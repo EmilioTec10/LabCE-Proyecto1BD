@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Light, Dark } from '../styles/themes';
 import logo from '../assets/react.svg';
@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import DataTable from 'react-data-table-component';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
 
 const linksArray = [
   {
@@ -51,9 +52,21 @@ const secondarylinksArray = [
 ];
 
 const Gestion_activos = () => {
+  var [data, setData] = useState([]); // Define el estado para almacenar la lista de activos
   const [passwordError, setPasswordError] = useState('');
   const { setTheme, theme } = useContext(ThemeContext);
   const themeStyle = theme === 'dark' ? Light : Dark;
+
+  useEffect(() => {
+    // Realizar la solicitud GET a la API al cargar el componente
+    axios.get('http://localhost:5129/api/ControladorAdmin/ver-activos')
+      .then(response => {
+        setData(response.data); // Actualizar el estado con los datos recibidos
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }, []); // Ejecutar solo una vez al cargar el componente
 
   const columnas = [
     {
@@ -73,48 +86,18 @@ const Gestion_activos = () => {
     },
     {
       name: 'Fecha de Compra',
-      selector: row => row.fechaCompra,
+      selector: row => row.purchase_date.slice(0, 10),
       sortable: true
     },
     {
       name: 'Requiere Aprobador',
-      selector: row => row.requiereAprobador,
+      selector: row => row.necesita_aprobacion,
       sortable: true,
-      cell: row => <input type="checkbox" checked={row.requiereAprobador} disabled />
+      cell: row => <input type="checkbox" checked={row.necesita_aprobacion} disabled />
     }
   ];
 
-  const data = [
-    {
-      placa: '2234',
-      tipo: 'Proyector',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
-    },
-    {
-      placa: '2235',
-      tipo: 'Proyector',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
-    },
-    {
-      placa:'2236',
-      tipo: 'Control de Proyector',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
-    },
-    {
-      placa: '2237',
-      tipo: 'Control de Tele',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
-    },
-  ];
-
+ 
   return (
     <ThemeProvider theme={themeStyle}>
       <Container>
