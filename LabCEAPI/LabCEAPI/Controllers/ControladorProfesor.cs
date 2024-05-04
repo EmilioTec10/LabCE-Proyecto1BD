@@ -85,7 +85,7 @@ namespace LabCEAPI.Controllers
             return Ok("Solicitud de préstamo de activo realizada correctamente");
         }
 
-        [HttpGet("ver-prestamos-pendientes/{email:string}")]
+        [HttpGet("ver-prestamos-pendientes")]
         public IActionResult VerPrestamosPendientes(string email)
         {
             LinkedList<PrestamoActivo> prestamos_pendientes = profesor.ver_prestamos_pendientes(email);

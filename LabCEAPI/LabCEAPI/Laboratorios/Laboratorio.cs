@@ -11,7 +11,7 @@ namespace LabCEAPI.Reservaciones
 
         public string facilidades { get; set; }
 
-        public LinkedList<Activo> Activos { get; set; }
+       // public LinkedList<Activo> Activos { get; set; }
 
         public Laboratorio(string nombre)
         {

@@ -162,15 +162,18 @@ class Aprobacion_prestamo extends React.Component {
 
   componentDidMount() {
     // Realiza la solicitud HTTP para obtener los datos de la API
-    axios.get('http://localhost:5129/api/ControladorProfesor/ver-prestamos-pendientes/${email}')
-      .then(response => {
-        // Actualiza el estado con los datos recibidos de la API
-        console.log(response.data)
-        this.setState({ data: response.data });
-      })
-      .catch(error => {
-        console.error('Error al obtener los datos:', error);
-      });
+    axios.get('http://localhost:5129/api/ControladorProfesor/ver-prestamos-pendientes', {
+      params: {
+        email: email
+      }
+    })
+    .then(response => {
+      console.log(response.data);
+      this.setState({ data: response.data });
+    })
+    .catch(error => {
+      console.error(error);
+    });
   }
   
 
@@ -249,14 +252,14 @@ class Aprobacion_prestamo extends React.Component {
   
               <tbody>
               {this.state.data.map((dato) => (
-                <tr key={dato.nombreyapellidos}>
-                  <td>{dato.nombreyapellidos}</td>
-                  <td>{dato.correo}</td>
+                <tr key={dato.nombre}>
+                  <td>{dato.nombre}</td>
+                  <td>{dato.email_est}</td>
                   <td>{dato.placa}</td>
                   <td>
                     <Button
                       color="primary"
-                      onClick={() => this.guardarEmail(dato.correo, dato)}
+                      onClick={() => this.guardarEmail(dato.email_est, dato)}
                     >
                       Aprobar
                     </Button>{" "}

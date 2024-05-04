@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../App';
+import axios from 'axios';
 
 const Login_operador = ({ setLoggedIn, setEmail }) => {
   const [email, setEmailInput] = useState(''); // Define setEmailInput aquí
@@ -36,13 +37,22 @@ const Login_operador = ({ setLoggedIn, setEmail }) => {
     
     
     if (isValid) {
-      if (email === "1@gmail.com" && password === "1") {
-       // setLoggedIn(true);
-        //setEmail(email);
-        navigate('/reserva_laboratorio');
-      } else {
-        setEmailError('Invalid email or password');
-        setPassword('');
+      try {
+        const response = await axios.post('http://localhost:5129/api/Operador/ingresar', {
+          email: email,
+          contraseña: password,
+        });
+
+        if (response.status === 200) {
+          navigate('/reserva_laboratorio');
+          email = email; // Asigna el valor de emailInput a la variable email
+        } else if (response.status === 401) {
+          setEmailError('Invalid email or password');
+          setPassword('');
+        }
+      } catch (error) {
+        console.error('Error al iniciar sesión:', error);
+        setEmailError('Error al iniciar sesión');
       }
     }
   };

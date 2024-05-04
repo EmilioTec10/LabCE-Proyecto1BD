@@ -15,7 +15,6 @@ import 'react-time-picker/dist/TimePicker.css';
 
 
 
-
 import {
   Table,
   Container,
@@ -150,20 +149,36 @@ const DataTableContainer = styled.div`
   margin-left: auto;
   margin-right: auto;
 `;
-const data = [
-  { laboratorio: "F2-07", capacidad: "30", facilidades: "19", activos: "30 PC'S, 2 Proyectores, 1 Pantalla"},
-  { laboratorio: "F2-08", capacidad: "30", facilidades: "20", activos: "30 PC'S, 2 Proyectores"},
-  { laboratorio: "F2-09", capacidad: "30", facilidades: "80", activos: "30 PC'S, 2 Proyectores"},
-  { laboratorio:"F2-10", capacidad: "30", facilidades: "45", activos: "30 PC'S, 2 Proyectores, 1 Pantalla"},
-];
 
 class Reserva_laboratorio extends React.Component {
-  mostrarModalActualizar = (dato) => {
-    this.setState({
-      form: dato,
-      modalActualizar: true,
-    });
-  };
+  constructor(props) {
+    super(props);
+  
+    this.state = {
+      data: [], // Inicialmente, los datos estarán vacíos
+      modalActualizar: false,
+      modalInsertar: false,
+      form: {
+        laboratorio: "",
+        capacidad: "",
+        facilidades: "",
+        activos: "",
+      },
+    };
+  }
+
+  componentDidMount() {
+    // Realizar la solicitud al endpoint de la API para obtener los datos
+    fetch('http://localhost:5129/api/Operador/ver-labs-disponibles')
+      .then(response => response.json())
+      .then(data => {
+        // Actualizar el estado con los datos recibidos
+        this.setState({ data: data });
+      })
+      .catch(error => {
+        console.error('Error al obtener los datos del laboratorio:', error);
+      });
+  }
 
   cerrarModalActualizar = () => {
     this.setState({ modalActualizar: false });
@@ -203,21 +218,7 @@ class Reserva_laboratorio extends React.Component {
   };
 
   //-----------codigo de reserva-----------//
-  constructor(props) {
-    super(props);
-  
-    this.state = {
-      data: data,
-      modalActualizar: false,
-      modalInsertar: false,
-      form: {
-        laboratorio: "",
-        capacidad: "",
-        facilidades: "",
-        activos: "",
-      },
-    };
-  }
+
 
   
 
@@ -284,8 +285,8 @@ class Reserva_laboratorio extends React.Component {
               <tbody>
                 {this.state.data.map((dato) => (
                   <tr key={dato.laboratorio}>
-                    <td>{dato.laboratorio}</td>
-                    <td>{dato.capacidad}</td>
+                    <td>{dato.nombre}</td>
+                    <td>{dato.cantidad_personas}</td>
                     <td>{dato.facilidades}</td>
                     <td>{dato.activos}</td>
                     <td>
@@ -294,8 +295,7 @@ class Reserva_laboratorio extends React.Component {
                         onClick={() => this.mostrarModalActualizar(dato)}
                       >
                         Reservar
-                      </Button>{" "}
-            
+                      </Button>
                     </td>
                   </tr>
                 ))}
