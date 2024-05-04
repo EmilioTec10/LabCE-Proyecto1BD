@@ -7,6 +7,10 @@ namespace LabCEAPI.NewFolder
     {
         public string email_est {  get; set; }
 
+        public string nombre {  get; set; }
+
+        public string apellidos { get; set; }
+
         public string email_prof { get; set; }
 
         public string estado { get; set; }
@@ -15,13 +19,15 @@ namespace LabCEAPI.NewFolder
 
         public DateTime fecha_hora_solicitud { get; set; }
 
-        public PrestamoActivo(string email_est, string email_prof, DateTime fecha_hora_solicitud, string estado, string placa)
+        public PrestamoActivo(string email_est, string email_prof, DateTime fecha_hora_solicitud, string estado, string placa, string nombre, string apellidos)
         {
             this.email_est = email_est;
             this.email_prof = email_prof;
             this.fecha_hora_solicitud = fecha_hora_solicitud;
             this.estado = estado;
             this.placa = placa;
+            this.nombre = nombre;
+            this.apellidos = apellidos;
         }
 
         public PrestamoActivo(string email_est, string email_prof, DateTime fecha_hora_solicitud, string estado)
@@ -30,6 +36,15 @@ namespace LabCEAPI.NewFolder
             this.email_prof = email_prof;
             this.fecha_hora_solicitud = fecha_hora_solicitud;
             this.estado = estado;
+        }
+
+        public PrestamoActivo(string email_est, string email_prof, DateTime fecha_hora_solicitud, string estado, string placa)
+        {
+            this.email_est = email_est;
+            this.email_prof = email_prof;
+            this.fecha_hora_solicitud = fecha_hora_solicitud;
+            this.estado = estado;
+            this.placa = placa;
         }
     }
 }

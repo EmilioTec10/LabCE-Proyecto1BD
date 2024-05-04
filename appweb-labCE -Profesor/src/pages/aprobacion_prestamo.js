@@ -9,6 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
+import axios from "axios";
 
 import {
   Table,
@@ -19,6 +20,8 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
+
+import { email } from './login_profesor';
 
 const data = [
   { nombreyapellidos: "Emmanuel esquivel Chavarria",placa: "2231",  correo: "prueba@gmail.com" },
@@ -144,7 +147,7 @@ const DataTableContainer = styled.div`
 class Aprobacion_prestamo extends React.Component {
   
   state = {
-    data: data,
+    data: [],
     modalActualizar: false,
     modalInsertar: false,
     form: {
@@ -156,6 +159,20 @@ class Aprobacion_prestamo extends React.Component {
       correo: "",
     },
   };
+
+  componentDidMount() {
+    // Realiza la solicitud HTTP para obtener los datos de la API
+    axios.get('http://localhost:5129/api/ControladorProfesor/ver-prestamos-pendientes/${email}')
+      .then(response => {
+        // Actualiza el estado con los datos recibidos de la API
+        console.log(response.data)
+        this.setState({ data: response.data });
+      })
+      .catch(error => {
+        console.error('Error al obtener los datos:', error);
+      });
+  }
+  
 
   guardarEmail = (email, dato) => {
     // Aquí implementa la lógica para guardar el email relacionado a este row
@@ -186,7 +203,6 @@ class Aprobacion_prestamo extends React.Component {
 
   render() {
     const themeStyle = this.props.theme === 'dark' ? Light : Dark;
-    
     return (
       <ThemeProvider theme={themeStyle}>
         <Sidebar>
@@ -232,23 +248,23 @@ class Aprobacion_prestamo extends React.Component {
               </thead>
   
               <tbody>
-                {this.state.data.map((dato) => (
-                  <tr key={dato.nombreyapellidos}>
-                    <td>{dato.nombreyapellidos}</td>
-                    <td>{dato.correo}</td>
-                    <td>{dato.placa}</td>
-                    <td>
-                      <Button
-                        color="primary"
-                        onClick={() => this.guardarEmail(dato.correo, dato)}
-                      >
-                        Aprobar
-                      </Button>{" "}
-                      <Button color="danger" onClick={()=> this.eliminar(dato)}>Denegar</Button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+              {this.state.data.map((dato) => (
+                <tr key={dato.nombreyapellidos}>
+                  <td>{dato.nombreyapellidos}</td>
+                  <td>{dato.correo}</td>
+                  <td>{dato.placa}</td>
+                  <td>
+                    <Button
+                      color="primary"
+                      onClick={() => this.guardarEmail(dato.correo, dato)}
+                    >
+                      Aprobar
+                    </Button>{" "}
+                    <Button color="danger" onClick={() => this.eliminar(dato)}>Denegar</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
             </Table>
           </Container>
         </Content> 

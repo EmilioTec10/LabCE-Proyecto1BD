@@ -326,16 +326,21 @@ namespace LabCEAPI.Users
             }
         }
 
-        //Metodo para devolver los prestamos que no han sido aprobados ni rechazados
-        public LinkedList<PrestamoActivo> ver_prestamos_pendientes()
+        // Metodo para devolver los prestamos pendientes de un profesor específico
+        public LinkedList<PrestamoActivo> ver_prestamos_pendientes(string email_prof)
         {
             LinkedList<PrestamoActivo> prestamosPendientes = new LinkedList<PrestamoActivo>();
 
-            string query = "SELECT email_est, email_prof, fecha_hora_solicitud, estado FROM Prestamo WHERE estado = 'Pendiente'";
+            string query = "SELECT p.email_est, p.email_prof, p.fecha_hora_solicitud, p.estado, p.ID_activo, " +
+                           "e.nombre, e.apellido1, e.apellido2 " +
+                           "FROM Prestamo p " +
+                           "INNER JOIN Estudiante e ON p.email_est = e.email_est " +
+                           "WHERE p.estado = 'Pendiente' AND p.email_prof = @EmailProf";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@EmailProf", email_prof); // Parámetro para el email del profesor
                 connection.Open();
                 SqlDataReader reader = command.ExecuteReader();
                 while (reader.Read())
@@ -344,8 +349,15 @@ namespace LabCEAPI.Users
                     string emailProf = reader["email_prof"].ToString();
                     DateTime fechaHoraSolicitud = (DateTime)reader["fecha_hora_solicitud"];
                     string estado = reader["estado"].ToString();
+                    string placa = reader["ID_activo"].ToString();
+                    string nombreEstudiante = reader["nombre"].ToString();
+                    string apellido1Estudiante = reader["apellido1"].ToString();
+                    string apellido2Estudiante = reader["apellido2"].ToString();
 
-                    PrestamoActivo prestamo = new PrestamoActivo(emailEst, emailProf, fechaHoraSolicitud, estado);
+                    // Concatenar los apellidos si es necesario
+                    string apellidosEstudiante = apellido1Estudiante + " " + apellido2Estudiante;
+
+                    PrestamoActivo prestamo = new PrestamoActivo(emailEst, emailProf, fechaHoraSolicitud, estado, placa, nombreEstudiante, apellidosEstudiante);
                     prestamosPendientes.AddLast(prestamo);
                 }
                 reader.Close();
@@ -353,6 +365,8 @@ namespace LabCEAPI.Users
 
             return prestamosPendientes;
         }
+
+
 
         //Metodo que acepta la solicitud de un prestamos a un estudiante
         public void aceptar_solicitud_prestamo(string ID_activo, string email_estudiante, string email_prof)

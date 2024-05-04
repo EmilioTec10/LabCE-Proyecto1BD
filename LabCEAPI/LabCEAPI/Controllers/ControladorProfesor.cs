@@ -42,6 +42,7 @@ namespace LabCEAPI.Controllers
 
                 if (accesoPermitido)
                 {
+                    profesor.email = login_data.Email;
                     return Ok("Inicio de sesión exitoso");
                 }
                 else
@@ -84,10 +85,10 @@ namespace LabCEAPI.Controllers
             return Ok("Solicitud de préstamo de activo realizada correctamente");
         }
 
-        [HttpGet("ver-prestamos-pendientes")]
-        public IActionResult VerPrestamosPendientes()
+        [HttpGet("ver-prestamos-pendientes/{email:string}")]
+        public IActionResult VerPrestamosPendientes(string email)
         {
-            LinkedList<PrestamoActivo> prestamos_pendientes = profesor.ver_prestamos_pendientes();
+            LinkedList<PrestamoActivo> prestamos_pendientes = profesor.ver_prestamos_pendientes(email);
             return Ok(prestamos_pendientes);
         }
 

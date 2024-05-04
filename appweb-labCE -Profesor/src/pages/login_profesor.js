@@ -3,8 +3,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios'; // Importa Axios para hacer solicitudes HTTP
 import { ThemeContext } from '../App';
 
+export let email = ''; // Declara la variable email fuera del componente
+
 const Login_profesor = () => {
-  const [email, setEmailInput, setEmail] = useState('');
+  const [emailInput, setEmailInput] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -17,10 +19,10 @@ const Login_profesor = () => {
     let isValid = true;
 
     // Validación del correo electrónico
-    if (!email) {
+    if (!emailInput) {
       setEmailError('Please enter your email');
       isValid = false;
-    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
+    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailInput)) {
       setEmailError('Please enter a valid email');
       isValid = false;
     }
@@ -39,12 +41,13 @@ const Login_profesor = () => {
       
       try {
         const response = await axios.post('http://localhost:5129/api/ControladorProfesor/ingresar', {
-          email: email,
+          email: emailInput,
           contraseña: password,
         });
 
         if (response.status === 200) {
           navigate('/aprobacion_prestamo');
+          email = emailInput; // Asigna el valor de emailInput a la variable email
         } else {
           setEmailError('Invalid email or password');
           setPassword('');
@@ -64,7 +67,7 @@ const Login_profesor = () => {
       <br />
       <div className="inputContainer">
         <input
-          value={email}
+          value={emailInput}
           placeholder="Enter your email here"
           onChange={(ev) => setEmailInput(ev.target.value)}
           className="inputBox"
