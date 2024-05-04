@@ -91,9 +91,18 @@ namespace LabCEAPI.Controllers
             }
         }
 
-        [HttpPut("modificar-profesor")]
-        public IActionResult ModificarProfesor([FromBody] Profesor profesor)
+        // Devuelve la lista de operadores que se han registrado pero no se a revisado por un administrador
+        [HttpGet("ver-profesores-registrados")]
+        public IActionResult VerProfesoresRegistrados()
         {
+            LinkedList<Profesor> profesoresRegistrados = admin.ver_profesores_registrados();
+            return Ok(profesoresRegistrados);
+        }
+
+        [HttpPut("modificar-profesor")]
+        public IActionResult ModificarProfesor([FromBody] ProfesorData profesorData)
+        {
+            Profesor profesor = new Profesor(profesorData.Cedula, profesorData.Nombre, profesorData.Apellidos, new DateOnly(profesorData.FechaDeNacimiento.Year, profesorData.FechaDeNacimiento.Month, profesorData.FechaDeNacimiento.Day), profesorData.Email);
             bool modificacion_profesor = admin.modificar_profesor(profesor);
             if (modificacion_profesor)
             {
@@ -196,7 +205,7 @@ namespace LabCEAPI.Controllers
 
         public class ProfesorData
         {
-            public int Cedula { get; set; }
+            public string Cedula { get; set; }
             public string Nombre { get; set; }
             public string Apellidos { get; set; }
             public DateTime FechaDeNacimiento { get; set; }

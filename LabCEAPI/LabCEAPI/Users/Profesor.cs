@@ -8,7 +8,7 @@ namespace LabCEAPI.Users
     
     public class Profesor
     {
-        public int cedula {  get; set; }
+        public string cedula {  get; set; }
 
         public string nombre { get; set; }
 
@@ -24,9 +24,23 @@ namespace LabCEAPI.Users
 
         public const string connectionString = "Data Source=LAPTOP-GB4ACP2F;Initial Catalog=LabCE;Integrated Security=True;Encrypt=False";
 
+        public Profesor()
+        {
+
+        }
+
+        public Profesor(string cedula, string nombre, string apellidos, DateOnly fecha_de_nacimiento, string email)
+        {
+            this.cedula = cedula;
+            this.nombre = nombre;
+            this.apellidos = apellidos;
+            this.fecha_de_nacimiento = fecha_de_nacimiento;
+            this.email = email;
+        }
+
         //Metodo que registra a un profesor en la base de datos
         public bool registrar_profesor(
-            int cedula, 
+            string cedula, 
             string nombre, 
             string apellidos,  
             int edad, 

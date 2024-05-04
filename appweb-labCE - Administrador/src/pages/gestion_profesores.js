@@ -8,6 +8,7 @@ import { Light, Dark } from '../styles/themes';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
+import axios from "axios";
 
 import {
   Table,
@@ -19,15 +20,6 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
-
-const data = [
-  { cedula: 504560886, nombreyapellidos: "Emmanuel esquivel Chavarria", edad: "19", fechanacimiento: "28/10/04", correo: "ema@gmail.com" },
-  { cedula: 103450879, nombreyapellidos: "Carlos", edad: "20", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 103410687, nombreyapellidos: "Juan", edad: "80", fechanacimiento: "23/06/97", correo: "ema@gmail.com"},
-  { cedula: 119200368, nombreyapellidos: "Pepe", edad: "45", fechanacimiento: "23/08/97", correo: "ema@gmail.com" },
-  { cedula: 123467809, nombreyapellidos: "Emilio", edad: "21", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 345676557, nombreyapellidos: "Naruto", edad: "89", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-];
 
 const linksArray = [
   {
@@ -159,18 +151,30 @@ const DataTableContainer = styled.div`
 class Gestion_profesores extends React.Component {
   
   state = {
-    data: data,
+    data: [],
     modalActualizar: false,
     modalInsertar: false,
     form: {
-      id: "",
       cedula: "",
-      nombreyapellidos: "",
+      nombre: "",
+      apellidos: "",
       edad: "",
-      fechanacimiento: "",
-      correo: "",
+      fecha_de_nacimiento: "",
+      email: "",
     },
   };
+
+  componentDidMount() {
+    axios.get('http://localhost:5129/api/ControladorAdmin/ver-profesores-registrados')
+     .then(response => {
+        console.log(response.data);
+        this.setState({ data: response.data, isLoading: false });
+      })
+     .catch(error => {
+        console.error(error);
+        this.setState({ isLoading: false });
+      });
+  }
 
   mostrarModalActualizar = (dato) => {
     this.setState({
@@ -197,17 +201,49 @@ class Gestion_profesores extends React.Component {
     var contador = 0;
     var arreglo = this.state.data;
     arreglo.map((registro) => {
-      if (dato.cedula == registro.cedula) {
+      if (dato.email == registro.email) {
         arreglo[contador].cedula = dato.cedula;
-        arreglo[contador].nombreyapellidos = dato.nombreyapellidos;
-        arreglo[contador].edad = dato.edad;
-        arreglo[contador].fechanacimiento = dato.fechanacimiento;
-        arreglo[contador].correo = dato.correo;
+        arreglo[contador].nombre = dato.nombre;
+        arreglo[contador].apellidos = dato.apellidos;
+        arreglo[contador].edad = this.calcularEdad(dato.fecha_de_nacimiento);
+        arreglo[contador].fechanacimiento = dato.fecha_de_nacimiento;
+        arreglo[contador].correo = dato.email;
+  
+        axios.put('http://localhost:5129/api/ControladorAdmin/modificar-profesor', {
+          Cedula: dato.cedula,
+          Nombre: dato.nombre,
+          Apellidos: dato.apellidos,
+          FechaDeNacimiento: dato.fecha_de_nacimiento,
+          Email: dato.email
+        }, {
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        })
+      .then(response => {
+          if (response.status === 200) {
+            console.log(response.data); // "El profesor se modificó exitosamente."
+            this.setState({ data: arreglo, modalActualizar: false });
+          }
+        })
+      .catch(error => {
+          console.error(error);
+        });
       }
       contador++;
     });
-    this.setState({ data: arreglo, modalActualizar: false });
   };
+  
+  calcularEdad(fechaNacimiento) {
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+    }
+    return edad;
+}
 
   eliminar = (dato) => {
     var opcion = window.confirm("Estás Seguro que deseas Eliminar el elemento " + dato.cedula);
@@ -219,7 +255,27 @@ class Gestion_profesores extends React.Component {
 
   insertar = () => {
     var valorNuevo = { ...this.state.form };
+    console.log(valorNuevo)
     valorNuevo.cedula = parseInt(valorNuevo.cedula); // Aseguramos que la cédula sea un número
+
+    axios.post('http://localhost:5129/api/ControladorAdmin/registrar-profesor', {
+      Cedula: valorNuevo.cedula,
+      Nombre: valorNuevo.nombre,
+      Apellidos: valorNuevo.apellidos,
+      FechaDeNacimiento: valorNuevo.fecha_de_nacimiento,
+      Email: valorNuevo.email
+    })
+        .then(response => {
+            // Manejas la respuesta de la API
+            console.log(response.data); // Puedes imprimir la respuesta en la consola
+            // Si la respuesta indica éxito, puedes actualizar el estado o realizar otras acciones
+            this.setState({ modalInsertar: false });
+        })
+        .catch(error => {
+            // Manejas el error en caso de que ocurra
+            console.error(error);
+        });
+
     var lista = this.state.data;
     lista.push(valorNuevo);
     this.setState({ modalInsertar: false, data: lista });
@@ -288,7 +344,8 @@ class Gestion_profesores extends React.Component {
               <thead>
                 <tr>
                   <th>Cedula</th>
-                  <th>Nombre y Apellidos</th>
+                  <th>Nombre</th>
+                  <th>Apellidos</th>
                   <th>Edad</th>
                   <th>Fecha de Nacimiento</th>
                   <th>Correo</th>
@@ -300,10 +357,11 @@ class Gestion_profesores extends React.Component {
                 {this.state.data.map((dato) => (
                   <tr key={dato.cedula}>
                     <td>{dato.cedula}</td>
-                    <td>{dato.nombreyapellidos}</td>
-                    <td>{dato.edad}</td>
-                    <td>{dato.fechanacimiento}</td>
-                    <td>{dato.correo}</td>
+                    <td>{dato.nombre}</td>
+                    <td>{dato.apellidos}</td>
+                    <td>{this.calcularEdad(dato.fecha_de_nacimiento)}</td>
+                    <td>{dato.fecha_de_nacimiento}</td>
+                    <td>{dato.email}</td>
                     <td>
                       <Button
                         color="primary"
@@ -340,14 +398,27 @@ class Gestion_profesores extends React.Component {
               
               <FormGroup>
                 <label>
-                  Nombre y Apellidos: 
+                  Nombre: 
                 </label>
                 <input
                   className="form-control"
-                  name="nombreyapellidos"
+                  name="nombre"
                   type="text"
                   onChange={this.handleChange}
-                  value={this.state.form.nombreyapellidos}
+                  value={this.state.form.nombre}
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <label>
+                  Apellidos: 
+                </label>
+                <input
+                  className="form-control"
+                  name="apellidos"
+                  type="text"
+                  onChange={this.handleChange}
+                  value={this.state.form.apellidos}
                 />
               </FormGroup>
               
@@ -369,24 +440,13 @@ class Gestion_profesores extends React.Component {
                 </label>
                 <input
                   className="form-control"
-                  name="fechanacimiento"
+                  name="fecha_de_nacimiento"
                   type="text"
                   onChange={this.handleChange}
-                  value={this.state.form.fechanacimiento}
+                  value={this.state.form.fecha_de_nacimiento}
                 />
               </FormGroup>
-              <FormGroup>
-                <label>
-                  Correo: 
-                </label>
-                <input
-                  className="form-control"
-                  name="correo"
-                  type="text"
-                  onChange={this.handleChange}
-                  value={this.state.form.correo}
-                />
-              </FormGroup>
+            
             </ModalBody>
   
             <ModalFooter>
@@ -425,11 +485,23 @@ class Gestion_profesores extends React.Component {
               
               <FormGroup>
                 <label>
-                  Nombre y Apellidos: 
+                  Nombre: 
                 </label>
                 <input
                   className="form-control"
-                  name="nombreyapellidos"
+                  name="nombre"
+                  type="text"
+                  onChange={this.handleChange}
+                />
+              </FormGroup>
+
+              <FormGroup>
+                <label>
+                  Apellidos: 
+                </label>
+                <input
+                  className="form-control"
+                  name="apellidos"
                   type="text"
                   onChange={this.handleChange}
                 />
@@ -452,7 +524,7 @@ class Gestion_profesores extends React.Component {
                 </label>
                 <input
                   className="form-control"
-                  name="fechadenacimiento"
+                  name="fecha_de_nacimiento"
                   type="text"
                   
                 />
@@ -463,7 +535,7 @@ class Gestion_profesores extends React.Component {
                 </label>
                 <input
                   className="form-control"
-                  name="correo"
+                  name="email"
                   type="text"
                   onChange={this.handleChange}
                 />

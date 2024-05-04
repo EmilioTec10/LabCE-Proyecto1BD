@@ -185,21 +185,48 @@ class Aprobacion_prestamo extends React.Component {
   };
 
   eliminar_luego_de_aceptar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas aceptar el prestamo al operador" + dato.nombreyapellidos);
+    var opcion = window.confirm("Estás Seguro que deseas aceptar el prestamo a la estudiante " + dato.nombre);
     if (opcion === true) {
-      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-      this.setState({ data: arreglo, modalActualizar: false });
+    
+      axios.post('http://localhost:5129/api/ControladorProfesor/aceptar-solicitud-prestamo', {
+        ID_activo: dato.placa,
+        email_estudiante: dato.email_est,
+        email_prof: dato.email_prof
+        
+      })
+      .then(response => {
+        if (response.status === 200) {
+          console.log(response.data); // "Solicitud de préstamo de activo aceptada correctamente"
+          var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
+          this.setState({ data: arreglo, modalActualizar: false });
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
     }
   };
 
   eliminar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas rechazar el prestamo al operador " + dato.nombreyapellidos);
+    var opcion = window.confirm("Estás Seguro que deseas rechazar el prestamo al operador " + dato.nombre);
     if (opcion === true) {
-      // Guardar el email antes de eliminar el row
-      this.guardarEmail(dato.correo, dato);
-      // Eliminar el row después de guardar el email
-      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-      this.setState({ data: arreglo, modalActualizar: false });
+    
+      axios.post('http://localhost:5129/api/ControladorProfesor/rechazar-solicitud-prestamo', {
+        ID_activo: dato.placa,
+        email_estudiante: dato.email_est,
+        email_prof: dato.email_prof
+        
+      })
+      .then(response => {
+        if (response.status === 200) {
+          console.log(response.data); // "Solicitud de préstamo de activo aceptada correctamente"
+          var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
+          this.setState({ data: arreglo, modalActualizar: false });
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
     }
   };
   
@@ -244,6 +271,7 @@ class Aprobacion_prestamo extends React.Component {
               <thead>
                 <tr>
                   <th>Nombre</th>
+                  <th>Apellidos</th>
                   <th>Correo</th>
                   <th>Placa Activo</th>
                   <th>Acciones</th>
@@ -254,6 +282,7 @@ class Aprobacion_prestamo extends React.Component {
               {this.state.data.map((dato) => (
                 <tr key={dato.nombre}>
                   <td>{dato.nombre}</td>
+                  <td>{dato.apellidos}</td>
                   <td>{dato.email_est}</td>
                   <td>{dato.placa}</td>
                   <td>

@@ -81,7 +81,7 @@ namespace LabCEAPI.Users
 
         //Metodo que registra a un profesor por parte del administrador y lo guarda en la base de datos
         public void registrar_profesor(
-            int cedula,
+            string cedula,
             string nombre,
             string apellidos,
             DateOnly fecha_de_nacimiento,
@@ -219,6 +219,43 @@ namespace LabCEAPI.Users
             return modificacionExitosa;
         }
 
+        // Metodo que devulve una lista con los profesores registrados
+        public LinkedList<Profesor> ver_profesores_registrados()
+        {
+            LinkedList<Profesor> profesores = new LinkedList<Profesor>();
+
+            // Consulta SQL para seleccionar los operadores con revisado = 0
+            string query = "SELECT cedula, nombre, apellido1, apellido2, fecha_de_nacimiento, email_prof FROM Profesor";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Ejecutar la consulta y obtener los resultados
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Iterar sobre los resultados
+                        while (reader.Read())
+                        {
+                            // Crear una instancia de Operador con los datos recuperados
+                            Profesor profesor = new Profesor(reader.GetString(0), reader.GetString(1), reader.GetString(2) + " " + reader.GetString(3), new DateOnly(reader.GetDateTime(4).Year, reader.GetDateTime(4).Month, reader.GetDateTime(4).Day), reader.GetString(5));
+
+
+                            // Agregar el operador a la lista
+                            profesores.AddLast(profesor);
+                        }
+                    }
+                }
+            }
+
+            return profesores;
+        }
+
         //Metodo que permite modificar datos de un profesor
         public bool modificar_profesor(Profesor profesor)
         {
@@ -227,7 +264,8 @@ namespace LabCEAPI.Users
                              SET nombre = @Nombre, 
                                  apellido1 = @Apellido1, 
                                  apellido2 = @Apellido2, 
-                                 cedula = @Cedula
+                                 cedula = @Cedula,
+                                 fecha_de_nacimiento = @FechaNacimiento
                              WHERE email_prof = @EmailProf";
 
             // Crear la conexión a la base de datos
@@ -245,6 +283,7 @@ namespace LabCEAPI.Users
                     command.Parameters.AddWithValue("@Apellido2", profesor.apellidos.Split(' ')[1]); // Segundo apellido
                     command.Parameters.AddWithValue("@Cedula", profesor.cedula);
                     command.Parameters.AddWithValue("@EmailProf", profesor.email);
+                    command.Parameters.AddWithValue("@FechaNacimiento", profesor.fecha_de_nacimiento);
 
                     // Ejecutar la consulta
                     int rowsAffected = command.ExecuteNonQuery();
