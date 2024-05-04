@@ -14,8 +14,6 @@ import TimePicker from 'react-time-picker';
 import 'react-time-picker/dist/TimePicker.css';
 
 
-
-
 import {
   Table,
   Container,
@@ -28,7 +26,7 @@ import {
 } from "reactstrap";
 
 
-
+ 
 const linksArray = [
   {
     label: 'Reserva Laboratorio',
@@ -158,6 +156,9 @@ const data = [
 ];
 
 class Reserva_laboratorio extends React.Component {
+  
+
+
   mostrarModalActualizar = (dato) => {
     this.setState({
       form: dato,
@@ -216,7 +217,31 @@ class Reserva_laboratorio extends React.Component {
         facilidades: "",
         activos: "",
       },
+      selectedDate: null,
+      startTime: '',
+      endTime: ''
     };
+
+    this.handleDateChange = this.handleDateChange.bind(this);
+    this.handleStartTimeChange = this.handleStartTimeChange.bind(this);
+    this.handleEndTimeChange = this.handleEndTimeChange.bind(this);
+    this.handleReservation = this.handleReservation.bind(this);
+  }
+
+  handleDateChange(date) {
+    this.setState({ selectedDate: date });
+  }
+
+  handleStartTimeChange(time) {
+    this.setState({ startTime: time });
+  }
+
+  handleEndTimeChange(time) {
+    this.setState({ endTime: time });
+  }
+
+  handleReservation() {
+    // Implementa la lógica para reservar el laboratorio aquí
   }
 
   
@@ -302,31 +327,57 @@ class Reserva_laboratorio extends React.Component {
               </tbody>
             </Table>
           </Container>
+          
+            
           <Modal isOpen={this.state.modalActualizar}>
             <ModalHeader>
-            <div><h3>Selecciona la Fecha</h3></div>
+              <div><h3>Selecciona la Fecha y Horas de Reserva</h3></div>
             </ModalHeader>
-  
+
             <ModalBody>
-              
-              
+              <FormGroup>
+                <label>Fecha de Reserva:</label>
+                <DatePicker
+                  selected={this.state.selectedDate}
+                  onChange={this.handleDateChange}
+                  dateFormat="dd/MM/yyyy"
+                  minDate={new Date()}
+                />
+              </FormGroup>
+              <FormGroup>
+                <label>Hora de Inicio:</label>
+                <TimePicker
+                  value={this.state.startTime}
+                  onChange={this.handleStartTimeChange}
+                  disableClock={true}
+                />
+              </FormGroup>
+              <FormGroup>
+                <label>Hora de Fin:</label>
+                <TimePicker
+                  value={this.state.endTime}
+                  onChange={this.handleEndTimeChange}
+                  disableClock={true}
+                />
+              </FormGroup>
             </ModalBody>
-  
+
             <ModalFooter>
               <Button
                 color="primary"
-                onClick={() => this.editar(this.state.form)}
+                onClick={this.handleReservation}
               >
                 Reservar
               </Button>
               <Button
                 color="danger"
-                onClick={() => this.cerrarModalActualizar()}
+                onClick={this.cerrarModalActualizar}
               >
                 Cancelar
               </Button>
             </ModalFooter>
           </Modal>
+          
         </Content> 
         
       </ThemeProvider>
