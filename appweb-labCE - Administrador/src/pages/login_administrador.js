@@ -37,7 +37,7 @@ const Login_administrador = ({ setLoggedIn, setEmail }) => {
       if (email === "1@gmail.com" && password === "1") {
         //setLoggedIn(true);
         //setEmail(email);
-        navigate('/menu_gestion_profesores');
+        navigate('/gestion_profesores');
       } else {
         setEmailError('Invalid email or password');
         setPassword('');
