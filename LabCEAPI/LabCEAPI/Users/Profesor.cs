@@ -16,8 +16,6 @@ namespace LabCEAPI.Users
 
         public DateOnly fecha_de_nacimiento { get; set; }
 
-        public int edad {  get; set; }
-
         public string email {  get; set; }
 
         public string contraseña { get; set; }
@@ -136,6 +134,46 @@ namespace LabCEAPI.Users
             // Comparamos la contraseña proporcionada con la contraseña almacenada en la base de datos
             contraseñaBaseDeDatos = EncriptacionMD5.desencriptar(contraseñaBaseDeDatos);
             return contraseña == contraseñaBaseDeDatos;
+        }
+
+        // Metodo para ver los datos del profesor
+        public Profesor ver_datos_profesor(string email)
+        {
+            // Consulta SQL para buscar al profesor por email
+            string query = "SELECT cedula, nombre, apellido1, apellido2, fecha_de_nacimiento,email_prof FROM Profesor WHERE email_prof = @Email";
+
+            // Variable para almacenar la contraseña recuperada de la base de datos
+            string contraseñaBaseDeDatos = null;
+
+            Profesor profesor = null;
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos el parámetro para el correo electrónico
+                    command.Parameters.AddWithValue("@Email", email);
+
+                    // Ejecutamos la consulta y obtenemos la contraseña almacenada en la base de datos
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            contraseñaBaseDeDatos = reader.GetString(0); // Suponiendo que la contraseña está en la primera columna
+                            this.email = reader.GetString(1);
+                            profesor = new Profesor(reader.GetString(0), reader.GetString(1), reader.GetString(2) + " " + reader.GetString(3), new DateOnly(reader.GetDateTime(4).Year, reader.GetDateTime(4).Month, reader.GetDateTime(4).Day), reader.GetString(5));
+                        }
+                    }
+                }
+            }
+
+            return profesor;
+
         }
 
         //Metodo que genera una contraseña nueva aleatoriamente y la almacena en la base de datos

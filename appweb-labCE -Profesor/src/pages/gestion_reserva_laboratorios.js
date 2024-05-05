@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState , useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Light, Dark } from '../styles/themes';
 import logo from '../assets/react.svg';
@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import DataTable from 'react-data-table-component';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
 
 const linksArray = [
   {
@@ -36,13 +37,46 @@ const secondarylinksArray = [
 ];
 
 const Gestion_laboratorios = () => {
-  const [passwordError, setPasswordError] = useState('');
+  const [laboratorios, setLaboratorios] = useState([]);
   const { setTheme, theme } = useContext(ThemeContext);
   const themeStyle = theme === 'dark' ? Light : Dark;
 
-  const CambiarTheme = () => {
-    setTheme((theme) => (theme === 'light' ? 'dark' : 'light'));
+  useEffect(() => {
+    fetchLaboratorios();
+  }, []);
+
+  const fetchLaboratorios = async () => {
+    try {
+      const response = await axios.get('/ver-laboratorios-disponibles');
+      setLaboratorios(response.data);
+      
+    } catch (error) {
+      console.error('Error al obtener los laboratorios disponibles:', error);
+    }
   };
+
+  const columns = [
+    {
+      name: 'Nombre',
+      selector: 'nombre',
+      sortable: true,
+    },
+    {
+      name: 'Capacidad',
+      selector: 'capacidad',
+      sortable: true,
+    },
+    {
+      name: 'Facilidades',
+      selector: 'facilidades',
+      sortable: true,
+    },
+    {
+      name: 'Computadores',
+      selector: 'computadores',
+      sortable: true,
+    },
+  ];
 
  
 
@@ -82,12 +116,16 @@ const Gestion_laboratorios = () => {
           </div>
         </Sidebar>
         <Content>
-          <DataTableContainer>
-            <DataTable
-              
-            />
-          </DataTableContainer>
-        </Content>
+        <DataTableContainer>
+          <DataTable
+            title="Laboratorios Disponibles"
+            columns={columns}
+            data={laboratorios}
+            pagination
+            highlightOnHover
+          />
+        </DataTableContainer>
+      </Content>
       </Container>
     </ThemeProvider>
   );

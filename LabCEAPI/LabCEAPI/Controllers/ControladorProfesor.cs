@@ -56,10 +56,18 @@ namespace LabCEAPI.Controllers
             }
         }
 
-        [HttpPost("generar-nueva-contrasena")]
-        public IActionResult GenerarNuevaContrasena(string email)
+        [HttpGet("ver-datos-profesor")]
+        public IActionResult VerDatosProfesor(string email)
         {
-            bool generada =  profesor.generar_nueva_contraseña(email);
+            Profesor profesor = this.profesor.ver_datos_profesor(email);
+            return Ok(profesor);
+        }
+
+
+        [HttpPost("generar-nueva-contrasena")]
+        public IActionResult GenerarNuevaContrasena([FromBody] EmailProfesor emailProfesor)
+        {
+            bool generada =  profesor.generar_nueva_contraseña(emailProfesor.email);
             if (generada)
             {
                 return Ok("Nueva contraseña generada exitosamente y enviada por correo electrónico");
@@ -182,6 +190,11 @@ namespace LabCEAPI.Controllers
             public bool Palmada { get; set; }
             public string email_est {  get; set; }
             public string email_prof {  get; set; }
+        }
+
+        public class EmailProfesor
+        {
+            public string email { get; set; }
         }
 
     }

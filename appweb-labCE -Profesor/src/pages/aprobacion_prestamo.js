@@ -10,6 +10,7 @@ import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
 import axios from "axios";
+import { email } from './login_profesor';
 
 import {
   Table,
@@ -21,7 +22,7 @@ import {
   ModalFooter,
 } from "reactstrap";
 
-import { email } from './login_profesor';
+
 
 const data = [
   { nombreyapellidos: "Emmanuel esquivel Chavarria",placa: "2231",  correo: "prueba@gmail.com" },
@@ -161,6 +162,7 @@ class Aprobacion_prestamo extends React.Component {
   };
 
   componentDidMount() {
+    console.log(email);
     // Realiza la solicitud HTTP para obtener los datos de la API
     axios.get('http://localhost:5129/api/ControladorProfesor/ver-prestamos-pendientes', {
       params: {
