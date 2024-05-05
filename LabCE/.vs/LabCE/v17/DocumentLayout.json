@@ -7,16 +7,16 @@
       "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\sqlitehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\model\\authenticationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\authenticationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\model\\authenticationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\authenticationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\model\\profesor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -30,7 +30,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
@@ -48,20 +48,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "SQLiteHelper.cs",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\Model\\SQLiteHelper.cs",
-              "RelativeDocumentMoniker": "LabCE\\Model\\SQLiteHelper.cs",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\Model\\SQLiteHelper.cs",
-              "RelativeToolTip": "LabCE\\Model\\SQLiteHelper.cs",
-              "ViewState": "AQIAAAgAAAAAAAAAAAAqwBEAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-04T23:10:19.391Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "AuthenticationHelper.cs",
               "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\Model\\AuthenticationHelper.cs",
               "RelativeDocumentMoniker": "LabCE\\Model\\AuthenticationHelper.cs",
@@ -75,27 +62,40 @@
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "LoginPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LoginPage.xaml.cs",
-              "RelativeDocumentMoniker": "LabCE\\LoginPage.xaml.cs",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LoginPage.xaml.cs",
-              "RelativeToolTip": "LabCE\\LoginPage.xaml.cs",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAACQAAAAmAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-04T23:04:10.135Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
               "Title": "App.xaml.cs",
               "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\App.xaml.cs",
               "RelativeDocumentMoniker": "LabCE\\App.xaml.cs",
               "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\App.xaml.cs",
               "RelativeToolTip": "LabCE\\App.xaml.cs",
-              "ViewState": "AQIAABIAAAAAAAAAAAAwwB4AAAAJAAAA",
+              "ViewState": "AQIAABIAAAAAAAAAAAAwwCIAAAArAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-28T21:20:56.575Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "SQLiteHelper.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\Model\\SQLiteHelper.cs",
+              "RelativeDocumentMoniker": "LabCE\\Model\\SQLiteHelper.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\Model\\SQLiteHelper.cs",
+              "RelativeToolTip": "LabCE\\Model\\SQLiteHelper.cs",
+              "ViewState": "AQIAABEAAAAAAAAAAAAmwCUAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-04T23:10:19.391Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "LoginPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LoginPage.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\LoginPage.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LoginPage.xaml.cs",
+              "RelativeToolTip": "LabCE\\LoginPage.xaml.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAIBTwCQAAAAmAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-04T23:04:10.135Z",
               "EditorCaption": ""
             }
           ]

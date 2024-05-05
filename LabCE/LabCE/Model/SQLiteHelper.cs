@@ -20,7 +20,11 @@ namespace LabCE.Model
         {
             try
             {
-                var dbPath = @"C:\Users\MRR79\Documents\LabCE-Proyecto1BD\Database\DBsqlite.db";
+
+                var folderApp = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                var dbPath = System.IO.Path.Combine(folderApp, "testdb.db3");
+
+                //var dbPath = @"C:\Users\MRR79\Documents\LabCE-Proyecto1BD\Database\DBsqlite.db";
                 Console.WriteLine("Ruta del archivo de base de datos: " + dbPath);
 
 
