@@ -1,6 +1,7 @@
 ﻿using LabCEAPI.Laboratorios;
 using LabCEAPI.Prestamos;
 using LabCEAPI.Reportes_de_Horas;
+using LabCEAPI.Reservaciones;
 using Microsoft.Data.SqlClient;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -405,6 +406,43 @@ namespace LabCEAPI.Users
             return eliminado;
         }
 
+        public LinkedList<Laboratorio> ver_labs_disponibles()
+        {
+            LinkedList<Laboratorio> laboratorios = new LinkedList<Laboratorio>();
+
+            // Consulta SQL con alias para que coincidan con los nombres de las propiedades en la clase Laboratorio
+            string query = "SELECT ID_lab, capacidad, facilidades, computadoras FROM Laboratorio";
+
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Ejecutamos la consulta
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Iteramos sobre los resultados de la consulta
+                        while (reader.Read())
+                        {
+                            // Creamos una instancia de Laboratorio con los datos de la fila actual
+                            Laboratorio lab = new Laboratorio(reader.GetString(0), reader.GetInt32(1), reader.GetString(2), reader.GetInt32(3));
+
+                            // Agregamos el laboratorio a la lista de laboratorios disponibles
+                            laboratorios.AddLast(lab);
+                        }
+                    }
+                }
+            }
+
+            // Devolvemos la lista de laboratorios disponibles
+            return laboratorios;
+        }
+
 
 
 
@@ -697,9 +735,6 @@ namespace LabCEAPI.Users
 
             return reporte;
         }
-
-
-
 
     }
 }

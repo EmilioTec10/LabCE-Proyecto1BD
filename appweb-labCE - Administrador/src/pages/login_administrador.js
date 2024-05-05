@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 const Login_administrador = ({ setLoggedIn, setEmail }) => {
   const [email, setEmailInput] = useState('');
@@ -34,11 +35,16 @@ const Login_administrador = ({ setLoggedIn, setEmail }) => {
     
     // Validación de las credenciales del chef
     if (isValid) {
-      if (email === "1@gmail.com" && password === "1") {
-        //setLoggedIn(true);
-        //setEmail(email);
-        navigate('/menu_gestion_profesores');
-      } else {
+      try {
+        const response = await axios.post('http://localhost:5129/api/ControladorAdmin/ingresar', { 
+          Email: email,
+          Contraseña: password
+        });
+
+        // Si la solicitud es exitosa, redirige a la página '/gestion_profesores'
+        navigate('/gestion_profesores');
+      } catch (error) {
+        // Si la solicitud falla, muestra el mensaje de error
         setEmailError('Invalid email or password');
         setPassword('');
       }

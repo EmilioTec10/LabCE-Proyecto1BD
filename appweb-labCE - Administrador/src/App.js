@@ -1,10 +1,7 @@
 import React, { useState, useContext} from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
-import Home from './pages/home';
 import Login_administrador from './pages/login_administrador';
-import Login_profesor from './pages/login_profesor';
-import Login_operador from './pages/login_operador';
 import Cambio_contrasenna from './pages/cambio_contrasenna';
 import Gestion_activos from './pages/gestion_activos';
 import Gestion_profesores from './pages/gestion_profesores';
@@ -40,10 +37,7 @@ function App() {
         <ThemeContext.Provider value={{ loggedIn, setLoggedIn, email, setEmail, theme, setTheme }}>
           {/* Rutas y componentes */}
           <Routes>
-            <Route path="/" element={<Home setLoggedIn={setLoggedIn} />} />
-            <Route path="/login_operador" element={<Login_operador setLoggedIn={setLoggedIn} />} />
-            <Route path="/login_administrador" element={<Login_administrador setLoggedIn={setLoggedIn} setEmail={setEmail} />} />
-            <Route path="/login_profesor" element={<Login_profesor setLoggedIn={setLoggedIn} />} />
+            <Route path="/" element={<Login_administrador setLoggedIn={setLoggedIn} setEmail={setEmail} />} /> 
             <Route path="/cambio_contrasenna" element={<Cambio_contrasenna  />} />
             <Route path="/gestion_activos" element={<Gestion_activos />} />
             <Route path="/gestion_profesores" element={<Gestion_profesores />} />

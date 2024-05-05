@@ -49,7 +49,7 @@ const linksArray = [
   {
     label: 'Cambio Contraseña',
     icon: <MdOutlineAnalytics />,
-    to: '/gestion_laboratorios',
+    to: '/cambio_contrasenna',
   },
   {
     label: 'Reportes',
@@ -137,6 +137,13 @@ const Sidebar = styled.div`
 const Content = styled.div`
   margin-left: 300px; // Asegurar que el contenido comience después de la barra lateral
   flex-grow: 1; // Permitir que el contenido crezca para llenar el espacio restante
+`;
+
+const Divider = styled.div`
+  height: 1px;
+  width: 100%;
+  background: ${(props) => props.theme.bg3};
+  margin: 20px 0;
 `;
 
 const DataTableContainer = styled.div`
@@ -260,6 +267,7 @@ class Reportes extends React.Component {
               </NavLink>
             </div>
           ))}
+          <Divider />
           {secondarylinksArray.map(({ icon, label, to }) => (
             <div className="LinkContainer" key={label}>
               <NavLink to={to} className="Links" activeClassName="active">
@@ -268,6 +276,7 @@ class Reportes extends React.Component {
               </NavLink>
             </div>
           ))}
+          <Divider />
         </Sidebar>
         <Content> 
           <Container>

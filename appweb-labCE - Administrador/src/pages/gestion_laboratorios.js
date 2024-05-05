@@ -1,4 +1,5 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect , Button} from 'react';
+import { Table } from 'reactstrap';
 import styled, { ThemeProvider } from 'styled-components';
 import { Light, Dark } from '../styles/themes';
 import logo from '../assets/react.svg';
@@ -8,6 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import DataTable from 'react-data-table-component';
 import Paper from '@mui/material/Paper';
+import axios from 'axios';
 
 const linksArray = [
   {
@@ -42,6 +44,15 @@ const linksArray = [
   },
 ];
 
+const Title = styled.h1`
+  text-align: center; /* Centra el texto horizontalmente */
+`;
+
+const CenteredTable = styled.div`
+  display: flex;
+  justify-content: center; /* Centra el contenido horizontalmente */
+`;
+
 const secondarylinksArray = [
   {
     label: 'Salir',
@@ -54,6 +65,19 @@ const Gestion_laboratorios = () => {
   const [passwordError, setPasswordError] = useState('');
   const { setTheme, theme } = useContext(ThemeContext);
   const themeStyle = theme === 'dark' ? Light : Dark;
+  const [laboratorios, setLaboratorios] = useState([]);
+
+  useEffect(() => {
+    // Realizar la llamada a la API para obtener los laboratorios disponibles
+    axios.get('http://localhost:5129/api/ControladorAdmin/ver-laboratorios-disponibles')
+      .then(response => {
+        // Actualizar el estado de los laboratorios con la respuesta de la API
+        setLaboratorios(response.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
   const CambiarTheme = () => {
     setTheme((theme) => (theme === 'light' ? 'dark' : 'light'));
@@ -92,46 +116,11 @@ const Gestion_laboratorios = () => {
     },
   ];
 
-  const data = [
-    {
-      nombre: 'F2-07',
-      capacidad: '30',
-      computadores: '30',
-      facilidades: 'xxx',
-      horario: 'xxx',
-      activos: 'xxx',
-    },
-    {
-      nombre: 'F2-08',
-      capacidad: '30',
-      computadores: '30',
-      facilidades: 'xxx',
-      horario: 'xxx',
-      activos: 'xxx',
-    },
-    {
-      nombre: 'F2-09',
-      capacidad: '30',
-      computadores: '30',
-      facilidades: 'xxx',
-      horario: 'xxx',
-      activos: 'xxx',
-    },
-    {
-      nombre: 'F2-10',
-      capacidad: '30',
-      computadores: '30',
-      facilidades: 'xxx',
-      horario: 'xxx',
-      activos: 'xxx',
-    },
-  ];
-
   return (
     <ThemeProvider theme={themeStyle}>
       <Container>
         <Sidebar>
-          <div className="Logocontent">
+        <div className="Logocontent">
             <div className="imgcontent">
               <img src={logo} alt="logo" />
             </div>
@@ -163,23 +152,42 @@ const Gestion_laboratorios = () => {
           </div>
         </Sidebar>
         <Content>
-          <DataTableContainer>
-            <DataTable
-              columns={columnas}
-              data={data}
-              fixedHeader
-              noHeader
-              dense
-              style={{ marginTop: '20px' }} // Bajar la tabla en el eje Y
-              customStyles={{
-                table: {
-                  style: {
-                    marginBottom: '400px', // Aumentar el tamaño de la tabla
-                  },
-                },
-              }}
-            />
-          </DataTableContainer>
+        <Container>
+
+          <br />
+          <Table>
+          <Table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Capacidad</th>
+                  <th>Computadores</th>
+                  <th>Facilidades</th>
+                  <th>Horario</th>
+                  <th>Activos</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+  
+              <tbody>
+                {laboratorios.map((lab) => (
+                  <tr key={lab.nombre}>
+                    <td>{lab.nombre}</td>
+                    <td>{lab.capacidad}</td>
+                    <td>{lab.computadores}</td>
+                    <td>{lab.facilidades}</td>
+                    <td>{lab.horario}</td>
+                    <td>{lab.activos}</td>
+                    <td>
+                      {/* Botones de editar y eliminar */}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Table>
+        </Container>
+        {/* Modales para insertar y actualizar */}
         </Content>
       </Container>
     </ThemeProvider>

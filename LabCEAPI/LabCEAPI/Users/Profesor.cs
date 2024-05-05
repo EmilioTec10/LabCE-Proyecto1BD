@@ -471,7 +471,7 @@ namespace LabCEAPI.Users
             LinkedList<Laboratorio> laboratorios = new LinkedList<Laboratorio>();
 
             // Consulta SQL con alias para que coincidan con los nombres de las propiedades en la clase Laboratorio
-            string query = "SELECT ID_lab, capacidad, facilidades FROM Laboratorio";
+            string query = "SELECT ID_lab, capacidad, facilidades, computadoras FROM Laboratorio";
 
 
             // Utilizamos using para garantizar que los recursos se liberen correctamente
@@ -490,7 +490,7 @@ namespace LabCEAPI.Users
                         while (reader.Read())
                         {
                             // Creamos una instancia de Laboratorio con los datos de la fila actual
-                            Laboratorio lab = new Laboratorio(reader.GetString(0), reader.GetInt32(1), reader.GetString(2));
+                            Laboratorio lab = new Laboratorio(reader.GetString(0), reader.GetInt32(1), reader.GetString(2), reader.GetInt32(3));
 
                             // Agregamos el laboratorio a la lista de laboratorios disponibles
                             laboratorios.AddLast(lab);

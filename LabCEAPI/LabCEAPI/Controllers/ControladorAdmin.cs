@@ -17,11 +17,11 @@ namespace LabCEAPI.Controllers
         Admin admin = new Admin();
 
         [HttpPost("ingresar")]
-        public IActionResult IngresarAdmin(string email, string contraseña)
+        public IActionResult IngresarAdmin([FromBody] LoginData login)
         {
             try
             {
-                bool accesoPermitido = admin.ingresar_admin(email, contraseña);
+                bool accesoPermitido = admin.ingresar_admin(login.Email, login.Contraseña);
 
                 if (accesoPermitido)
                 {
@@ -137,6 +137,14 @@ namespace LabCEAPI.Controllers
             }
             
         }
+
+        [HttpGet("ver-laboratorios-disponibles")]
+        public IActionResult VerLaboratoriosDisponibles()
+        {
+            LinkedList<Laboratorio> laboratoriosDisponibles = admin.ver_labs_disponibles();
+            return Ok(laboratoriosDisponibles);
+        }
+
 
         // Devuelve la lista de operadores que se han registrado pero no se a revisado por un administrador
         [HttpGet("ver-operadores-registrados")]
