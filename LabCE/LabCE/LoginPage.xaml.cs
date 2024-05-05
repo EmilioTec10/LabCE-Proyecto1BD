@@ -25,15 +25,15 @@ namespace LabCE
             string correo = txtCorreo.Text;
             string contrasena = txtContrasena.Text;
 
-            bool loggedIn = await AuthenticationHelper.LoginAsync(correo, contrasena);
+            // Verificar las credenciales utilizando DatabaseService
+            SQLiteHelper databaseService = new SQLiteHelper();
+            bool isLoggedIn = databaseService.CheckLoginCredentials(correo, contrasena);
 
 
-            // Realizar la lógica de inicio de sesión
-            if (loggedIn)
+
+            if (isLoggedIn)
             {
-                Debug.WriteLine("if de logged in");
                 // Si las credenciales son correctas, navegar a la página de menú
-                // await DisplayAlert("siiii", "Credenciales correctas", "OK");
                 await Navigation.PushAsync(new AppShell());
             }
             else

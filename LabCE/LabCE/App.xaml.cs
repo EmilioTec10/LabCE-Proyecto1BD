@@ -18,33 +18,19 @@ using SQLite;
 using System.Threading.Tasks;
 using LabCE.Model;
 using System.Diagnostics;
-
+using System.IO;
 
 namespace LabCE
 {
     public partial class App : Application
 
     {
-        private static SQLiteHelper db;
-        public static SQLiteHelper MyDatabase
+        public static SQLiteHelper MyDatabase { get; set; }
 
-        {
-            get
-            {
-                if (db == null)
-                {
-                    Debug.WriteLine("Entro a path de base");
-                    string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "DBsqlite.db");
-                    db = new SQLiteHelper(dbPath);
-                }
-                return db;
-
-            }
-           
-        }
         public App()
         {
             InitializeComponent();
+            MyDatabase = new SQLiteHelper();
 
             MainPage = new NavigationPage(new LoginPage()); // Envuelve LoginPage en una NavigationPage
         }
