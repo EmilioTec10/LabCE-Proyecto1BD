@@ -631,13 +631,11 @@ namespace LabCEAPI.Users
         {
             LinkedList<ReporteOperador> reporte = new LinkedList<ReporteOperador>();
 
-            // Consulta SQL para seleccionar los turnos de los operadores y ordenarlos por email_op
-            string query = "SELECT email_op, fecha_hora_inicio, fecha_hora_fin FROM Turno ORDER BY email_op";
-
-            // Variables para mantener el estado del operador anterior
-            string operadorAnterior = ""; // Inicializamos con una cadena vacía
-            string emailOp = null;
-            LinkedList<HorasLaboradas> horasLaboradas = null;
+            // Consulta SQL para seleccionar los turnos de los operadores, incluyendo nombre, apellido1 y apellido2
+            string query = "SELECT o.nombre, o.apellido1, o.apellido2, t.fecha_hora_inicio, t.fecha_hora_fin " +
+                           "FROM Turno t " +
+                           "INNER JOIN Operador o ON t.email_op = o.email_op " +
+                           "ORDER BY o.nombre, o.apellido1, o.apellido2";
 
             // Crear la conexión a la base de datos
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -651,43 +649,56 @@ namespace LabCEAPI.Users
                     // Ejecutar la consulta y obtener los resultados
                     using (SqlDataReader reader = command.ExecuteReader())
                     {
+                        // Variables para mantener el estado del operador anterior
+                        string operadorAnterior = ""; // Inicializamos con una cadena vacía
+                        ReporteOperador reporteOperadorActual = null;
+
                         // Iterar sobre los resultados
                         while (reader.Read())
                         {
-                            // Obtener los datos del turno
-                            emailOp = reader.GetString(0);
-                            DateTime horaInicio = reader.GetDateTime(1);
-                            DateTime horaFin = reader.GetDateTime(2);
+                            // Obtener los datos del turno y del operador
+                            string nombre = reader.GetString(0);
+                            string apellido1 = reader.GetString(1);
+                            string apellido2 = reader.GetString(2);
+                            DateTime horaInicio = reader.GetDateTime(3);
+                            DateTime horaFin = reader.GetDateTime(4);
+
+                            // Construir una cadena única que represente al operador actual
+                            string operadorActual = $"{nombre} {apellido1} {apellido2}";
 
                             // Verificar si es un nuevo operador
-                            if (!operadorAnterior.Equals(emailOp))
+                            if (!operadorAnterior.Equals(operadorActual))
                             {
                                 // Si no es el primer operador, agregar el reporte anterior a la lista
-                                if (horasLaboradas != null)
+                                if (reporteOperadorActual != null)
                                 {
-                                    reporte.AddLast(new ReporteOperador(DateTime.Now, horasLaboradas, operadorAnterior));
+                                    reporte.AddLast(reporteOperadorActual);
                                 }
 
-                                // Actualizar el operador actual y crear una nueva lista de horas laboradas
-                                operadorAnterior = emailOp;
-                                horasLaboradas = new LinkedList<HorasLaboradas>();
+                                // Crear una nueva instancia de ReporteOperador para el operador actual
+                                reporteOperadorActual = new ReporteOperador(DateTime.Now, new LinkedList<HorasLaboradas>(), nombre, apellido1, apellido2);
+
+                                // Actualizar el operador actual
+                                operadorAnterior = operadorActual;
                             }
 
-                            // Agregar las horas laboradas del turno actual a la lista
-                            horasLaboradas.AddLast(new HorasLaboradas(horaInicio, horaFin));
+                            // Agregar las horas laboradas del turno actual a la lista del operador actual
+                            reporteOperadorActual.HorasLaboradas.AddLast(new HorasLaboradas(horaInicio, horaFin));
                         }
-                    }
 
-                    // Agregar el último reporte a la lista
-                    if (horasLaboradas != null)
-                    {
-                        reporte.AddLast(new ReporteOperador(DateTime.Now, horasLaboradas, operadorAnterior));
+                        // Agregar el último reporte a la lista
+                        if (reporteOperadorActual != null)
+                        {
+                            reporte.AddLast(reporteOperadorActual);
+                        }
                     }
                 }
             }
 
             return reporte;
         }
+
+
 
 
     }

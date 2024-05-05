@@ -25,26 +25,6 @@ import {
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-const data = [
-  {  
-    nombreyapellidos: "Emmanuel esquivel Chavarria",  
-    turnos: [
-      { dia: "02/05/2024", hora: "8:00-12:00" },
-      { dia: "04/05/2024", hora: "10:00-14:00" },
-      { dia: "06/05/2024", hora: "14:00-18:00" }
-    ]
-  },
-  { 
-    nombreyapellidos: "Carlos",  
-    turnos: [
-      { dia: "03/05/2024", hora: "9:00-13:00" },
-      { dia: "05/05/2024", hora: "11:00-15:00" },
-      { dia: "07/05/2024", hora: "13:00-17:00" }
-    ]
-  },
-  // Agrega más objetos de operadores aquí con sus respectivos turnos
-];
-
 const linksArray = [
   {
     label: 'Gestion Profesores',
@@ -192,6 +172,7 @@ class Reportes extends React.Component {
       try {
         const response = await axios.get('http://localhost:5129/api/ControladorAdmin/generar-reporte');
         this.setState({ data: response.data }); // Actualiza el estado con los datos obtenidos de la API
+        console.log(this.state.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -201,26 +182,63 @@ class Reportes extends React.Component {
   }
 
   generatePDF = () => {
+    const { data } = this.state;
+  
+    // Crear un array de datos para la tabla del PDF
+    const tableData = [
+      [{ text: 'Operador', style: 'tableHeader' },
+       { text: 'Fecha', style: 'tableHeader' },
+       { text: 'Hora de Entrada', style: 'tableHeader' },
+       { text: 'Hora de Salida', style: 'tableHeader' },
+       { text: 'Horas Trabajadas', style: 'tableHeader' }],
+      ...data.flatMap(operador => {
+        const totalHorasTrabajadas = operador.horasLaboradas.reduce((total, hora) => total + hora.horas_trabajadas, 0);
+        const operadorRow = [{ text: `${operador.apellido1} ${operador.apellido2} ${operador.nombre}` }, '', '', '', totalHorasTrabajadas];
+        const horasRows = operador.horasLaboradas.map(hora => ['', new Date(hora.fecha).toLocaleDateString(), new Date(hora.hora_ingreso).toLocaleTimeString(), new Date(hora.hora_salida).toLocaleTimeString(), hora.horas_trabajadas]);
+        return [operadorRow, ...horasRows];
+      })
+    ];
+  
+    // Definir la estructura del documento PDF
     const docDefinition = {
       content: [
-        { text: 'Reporte de Operadores', style: 'header' },
         {
-          ul: this.state.data.map((operador) => ({
-            text: `${operador.nombreyapellidos}: ${operador.turnos.map(turno => `${turno.dia} - ${turno.hora}`).join(', ')}`
-          }))
-        }
+          text: 'LabCE\nEscuela De Ingenieria en Computadores\nHoras Laboradas por Operador',
+          style: 'header',
+          alignment: 'left',
+        },
+        {
+          text: new Date().toLocaleDateString(),
+          alignment: 'right',
+          margin: [0, 0, 0, 10],
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: ['*', '*', '*', '*', '*'],
+            body: tableData,
+          },
+          layout: 'lightHorizontalLines',
+        },
       ],
       styles: {
         header: {
           fontSize: 18,
           bold: true,
-          margin: [0, 0, 0, 10]
-        }
-      }
+          margin: [0, 0, 0, 10],
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 13,
+          color: 'black',
+        },
+      },
     };
   
+    // Generar y abrir el PDF
     pdfMake.createPdf(docDefinition).open();
   };
+  
 
   render() {
     const themeStyle = this.props.theme === 'dark' ? Light : Dark;
@@ -258,30 +276,57 @@ class Reportes extends React.Component {
             <h1>Reportes</h1>
             <Table>
               <thead>
+              <tr>
+                <th colSpan="5">
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div>
+                      <p>LabCE</p>
+                      <p>Escuela De Ingenieria en Computadores</p>
+                      <p>Horas Laboradas por Operador</p>
+                    </div>
+                    <div>
+                      <p>{new Date().toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                </th>
+              </tr>
                 <tr>
                   <th>Operador</th>
                   <th>Fecha</th>
-                  <th>Entrada</th>
-                  <th>Salida</th>
+                  <th>Hora de Entrada</th>
+                  <th>Hora de Salida</th>
+                  <th>Horas Trabajadas</th>
                 </tr>
               </thead>
               <tbody>
-                {data && data.map((operador, index) => (
-                  <React.Fragment key={index}>
-                    <tr>
-                      <NameColumn>{operador.nombre}</NameColumn>
-                    </tr>
-                    {operador.turnos && operador.turnos.map((turno, i) => (
-                      <tr key={i}>
-                        <td style={{ paddingLeft: '30px' }}></td>
-                        <td>{turno.fecha}</td>
-                        <td>{turno.hora.split('-')[0]}</td>
-                        <td>{turno.hora.split('-')[1]}</td>
+                {this.state.data.map((operador, index) => {
+                  // Calcular la suma total de horas trabajadas para el operador actual
+                  const totalHorasTrabajadas = operador.horasLaboradas.reduce(
+                    (total, hora) => total + hora.horas_trabajadas,
+                    0
+                  );
+
+                  return (
+                    <React.Fragment key={index}>
+                      <tr>
+                        <NameColumn>{operador.apellido1} {operador.apellido2} {operador.nombre}</NameColumn>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{totalHorasTrabajadas}</td> {/* Mostrar la suma total aquí */}
                       </tr>
-                    ))}
-                    {index < data.length - 1 && <tr><td colSpan="4" style={{ height: '20px' }}></td></tr>}
-                  </React.Fragment>
-                ))}
+                      {operador.horasLaboradas.map((hora, i) => (
+                        <tr key={i}>
+                          <td></td>
+                          <td>{new Date(hora.fecha).toLocaleDateString()}</td>
+                          <td>{new Date(hora.hora_ingreso).toLocaleTimeString()}</td>
+                          <td>{new Date(hora.hora_salida).toLocaleTimeString()}</td>
+                          <td>{hora.horas_trabajadas}</td>
+                        </tr>
+                      ))}
+                    </React.Fragment>
+                  );
+                })}
               </tbody>
             </Table>
             <Button color="primary" onClick={this.generatePDF}>Generar PDF</Button>
