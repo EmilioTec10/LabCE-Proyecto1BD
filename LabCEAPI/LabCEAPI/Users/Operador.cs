@@ -108,7 +108,7 @@ namespace LabCEAPI.Users
         {
 
             // Consulta SQL para buscar al operador por email
-            string query = "SELECT contrasena_op, email_op FROM Operador WHERE email_op = @Email";
+            string query = "SELECT contrasena_op, email_op FROM Operador WHERE email_op = @Email AND aprovado = 1";
 
             // Variable para almacenar la contraseña recuperada de la base de datos
             string contraseñaBaseDeDatos = null;

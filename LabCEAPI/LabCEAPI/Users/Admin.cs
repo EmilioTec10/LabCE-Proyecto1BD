@@ -517,6 +517,60 @@ namespace LabCEAPI.Users
             }
         }
 
+        // Metodo que devuelve una lista con todos los usuarios registrados
+        public LinkedList<Usuario> ver_todos_usuario()
+        {
+            LinkedList<Usuario> usuarios = new LinkedList<Usuario>();
+
+            string query = @"
+        SELECT 
+            O.cedula,
+            CONCAT(O.nombre, ' ', O.apellido1, ' ', O.apellido2) AS nombre_apellidos,
+            O.fecha_nacimiento,
+            O.email_op AS email
+        FROM 
+            Operador O
+        UNION ALL
+        SELECT 
+            P.cedula,
+            CONCAT(P.nombre, ' ', P.apellido1, ' ', P.apellido2) AS nombre_apellidos,
+            P.fecha_de_nacimiento,
+            P.email_prof AS email
+        FROM 
+            Profesor P";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string cedula = reader["cedula"].ToString();
+                            string nombreApellidos = reader["nombre_apellidos"].ToString();
+                            DateTime fechaDeNacimiento = (DateTime)reader["fecha_nacimiento"];
+                            string email = reader["email"].ToString();
+
+                            // Separar el nombre y los apellidos
+                            string[] partesNombre = nombreApellidos.Split(' ');
+                            string nombre = partesNombre[0];
+                            string apellidos = partesNombre.Length > 1 ? nombreApellidos.Substring(partesNombre[0].Length + 1) : "";
+
+                            // Crear un objeto Usuario y agregarlo a la lista
+                            Usuario usuario = new Usuario(cedula, nombre, apellidos, new DateOnly(fechaDeNacimiento.Year, fechaDeNacimiento.Month, fechaDeNacimiento.Day), email);
+                            usuarios.AddLast(usuario);
+                        }
+                    }
+                }
+            }
+
+            return usuarios;
+        }
+
+
         //Metodo que genera una nueva contraseña aleatoria para el administrador
         public bool generar_nueva_contraseña(string email)
         {
@@ -525,7 +579,10 @@ namespace LabCEAPI.Users
             GeneradorContraseña.mandar_correo(email, this.contraseña);
 
             // Consulta SQL para actualizar la contraseña del profesor
-            string query = "UPDATE Profesor SET password_prof = @NuevaContraseña WHERE email_prof = @Email";
+            string queryProfesor = "UPDATE Profesor SET password_prof = @NuevaContraseña WHERE email_prof = @EmailProfesor";
+
+            // Consulta SQL para actualizar la contraseña del operador
+            string queryOperador = "UPDATE Operador SET contrasena_op = @NuevaContraseña WHERE email_op = @EmailOperador";
 
             // Crear la conexión a la base de datos
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -533,29 +590,41 @@ namespace LabCEAPI.Users
                 // Abrir la conexión
                 connection.Open();
 
-                // Crear el comando SQL
-                using (SqlCommand command = new SqlCommand(query, connection))
+                // Crear el comando SQL para actualizar la contraseña del profesor
+                using (SqlCommand commandProfesor = new SqlCommand(queryProfesor, connection))
                 {
-                    // Establecer los parámetros
+                    // Establecer los parámetros para el profesor
                     this.contraseña = EncriptacionMD5.encriptar(this.contraseña);
-                    command.Parameters.AddWithValue("@NuevaContraseña", this.contraseña);
-                    command.Parameters.AddWithValue("@Email", email);
+                    commandProfesor.Parameters.AddWithValue("@NuevaContraseña", this.contraseña);
+                    commandProfesor.Parameters.AddWithValue("@EmailProfesor", email);
 
-                    // Ejecutar la consulta
-                    int rowsAffected = command.ExecuteNonQuery();
+                    // Ejecutar la consulta para el profesor
+                    int rowsAffectedProfesor = commandProfesor.ExecuteNonQuery();
 
-                    // Verificar si se realizó la actualización correctamente
-                    if (rowsAffected > 0)
+                    // Crear el comando SQL para actualizar la contraseña del operador
+                    using (SqlCommand commandOperador = new SqlCommand(queryOperador, connection))
                     {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
+                        // Establecer los parámetros para el operador
+                        commandOperador.Parameters.AddWithValue("@NuevaContraseña", this.contraseña);
+                        commandOperador.Parameters.AddWithValue("@EmailOperador", email);
+
+                        // Ejecutar la consulta para el operador
+                        int rowsAffectedOperador = commandOperador.ExecuteNonQuery();
+
+                        // Verificar si se realizaron las actualizaciones correctamente en ambas tablas
+                        if (rowsAffectedProfesor > 0 || rowsAffectedOperador > 0)
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
                 }
             }
         }
+
 
         //Metodo que genera el reporte de horas laboradas por los operadores
         public LinkedList<ReporteOperador> generar_reporte()

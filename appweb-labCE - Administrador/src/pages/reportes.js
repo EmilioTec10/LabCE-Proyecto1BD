@@ -11,6 +11,7 @@ import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import axios from "axios";
 
 import {
   Table,
@@ -172,7 +173,7 @@ const NameColumn = styled.td`
 class Reportes extends React.Component {
   
   state = {
-    data: data,
+    data: [],
     modalActualizar: false,
     modalInsertar: false,
     form: {
@@ -184,6 +185,20 @@ class Reportes extends React.Component {
       correo: "",
     },
   };
+
+  componentDidMount() {
+    // Función para obtener los reportes de la API
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:5129/api/ControladorAdmin/generar-reporte');
+        this.setState({ data: response.data }); // Actualiza el estado con los datos obtenidos de la API
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData(); // Llama a la función para obtener los datos al cargar el componente
+  }
 
   generatePDF = () => {
     const docDefinition = {
@@ -251,20 +266,20 @@ class Reportes extends React.Component {
                 </tr>
               </thead>
               <tbody>
-                {this.state.data.map((operador, index) => (
+                {data && data.map((operador, index) => (
                   <React.Fragment key={index}>
                     <tr>
-                      <NameColumn>{operador.nombreyapellidos}</NameColumn>
+                      <NameColumn>{operador.nombre}</NameColumn>
                     </tr>
-                    {operador.turnos.map((turno, i) => (
+                    {operador.turnos && operador.turnos.map((turno, i) => (
                       <tr key={i}>
                         <td style={{ paddingLeft: '30px' }}></td>
-                        <td>{turno.dia}</td>
+                        <td>{turno.fecha}</td>
                         <td>{turno.hora.split('-')[0]}</td>
                         <td>{turno.hora.split('-')[1]}</td>
                       </tr>
                     ))}
-                    {index < this.state.data.length - 1 && <tr><td colSpan="4" style={{ height: '20px' }}></td></tr>}
+                    {index < data.length - 1 && <tr><td colSpan="4" style={{ height: '20px' }}></td></tr>}
                   </React.Fragment>
                 ))}
               </tbody>

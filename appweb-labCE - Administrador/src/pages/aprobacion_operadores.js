@@ -9,6 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
+import axios from "axios";
 
 import {
   Table,
@@ -19,15 +20,6 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
-
-const data = [
-  { cedula: 504560886, nombreyapellidos: "Emmanuel esquivel Chavarria", edad: "19", fechanacimiento: "28/10/04", correo: "prueba@gmail.com" },
-  { cedula: 103450879, nombreyapellidos: "Carlos", edad: "20", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 103410687, nombreyapellidos: "Juan", edad: "80", fechanacimiento: "23/06/97", correo: "ema@gmail.com"},
-  { cedula: 119200368, nombreyapellidos: "Pepe", edad: "45", fechanacimiento: "23/08/97", correo: "ema@gmail.com" },
-  { cedula: 123467809, nombreyapellidos: "Emilio", edad: "21", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 345676557, nombreyapellidos: "Naruto", edad: "89", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-];
 
 const linksArray = [
   {
@@ -172,15 +164,30 @@ class Aprobacion_operadores extends React.Component {
       correo: "",
     },
   };
-
   componentDidMount() {
     axios.get('http://localhost:5129/api/ControladorAdmin/ver-operadores-registrados')
       .then(response => {
-        this.setState({ data: response.data });
+        const formattedData = response.data.map(item => ({
+          ...item,
+          fecha_de_nacimiento: item.fecha_de_nacimiento.substring(0, 10), // Formatear fecha
+          edad: this.calcularEdad(item.fecha_de_nacimiento.substring(0, 10)) // Calcular edad y asignarla
+        }));
+        this.setState({ data: formattedData });
       })
       .catch(error => {
         console.error(error);
       });
+  }
+
+  calcularEdad(fechaNacimiento) {
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+    }
+    return edad;
   }
 
   guardarEmail = (email, dato) => {
@@ -191,21 +198,44 @@ class Aprobacion_operadores extends React.Component {
   };
 
   eliminar_luego_de_aceptar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas aceptar al operador" + dato.cedula);
+    var opcion = window.confirm("¿Estás seguro que deseas aceptar al operador " + dato.nombre + " " + dato.apellidos + "?");
     if (opcion === true) {
-      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-      this.setState({ data: arreglo, modalActualizar: false });
+      axios.post('http://localhost:5129/api/ControladorAdmin/aceptar-operador', { 
+        email_op: dato.email
+      })
+        .then(response => {
+          console.log(response.data); // Manejar la respuesta de la API si es necesario
+          // Filtrar el dato eliminado del estado
+          var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
+          // Actualizar el estado con el nuevo arreglo y cerrar el modal si es necesario
+          this.setState({ data: arreglo, modalActualizar: false });
+        })
+        .catch(error => {
+          console.error(error);
+          // Manejar el error si es necesario
+        });
     }
   };
+  
 
   eliminar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas rechazar al operador " + dato.cedula);
+    var opcion = window.confirm("Estás Seguro que deseas rechazar al operador " + dato.nombre + " " + dato.apellidos + "?");
     if (opcion === true) {
-      // Guardar el email antes de eliminar el row
-      this.guardarEmail(dato.correo, dato);
-      // Eliminar el row después de guardar el email
-      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-      this.setState({ data: arreglo, modalActualizar: false });
+      axios.post('http://localhost:5129/api/ControladorAdmin/rechazar-operador', { 
+        email_op: dato.email
+      })
+      .then(response => {
+        this.guardarEmail(dato.correo, dato);
+        console.log(response.data); // Manejar la respuesta de la API si es necesario
+        // Filtrar el dato eliminado del estado
+        var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
+        // Actualizar el estado con el nuevo arreglo y cerrar el modal si es necesario
+        this.setState({ data: arreglo, modalActualizar: false });
+      })
+      .catch(error => {
+        console.error(error);
+        // Manejar el error si es necesario
+      });
     }
   };
   
@@ -264,10 +294,11 @@ class Aprobacion_operadores extends React.Component {
                 {this.state.data.map((dato) => (
                   <tr key={dato.cedula}>
                     <td>{dato.cedula}</td>
-                    <td>{dato.nombreyapellidos}</td>
+                    <td>{dato.nombre}</td>
+                    <td>{dato.apellidos}</td>
                     <td>{dato.edad}</td>
-                    <td>{dato.fechanacimiento}</td>
-                    <td>{dato.correo}</td>
+                    <td>{dato.fecha_de_nacimiento}</td>
+                    <td>{dato.email}</td>
                     <td>
                       <Button
                         color="primary"

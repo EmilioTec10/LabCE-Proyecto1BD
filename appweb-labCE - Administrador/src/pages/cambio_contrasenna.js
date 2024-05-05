@@ -9,6 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
+import axios from "axios";
 
 import {
   Table,
@@ -19,15 +20,6 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
-
-const data = [
-  { cedula: 504560886, nombreyapellidos: "Emmanuel esquivel Chavarria", edad: "19", fechanacimiento: "28/10/04", correo: "prueba@gmail.com" },
-  { cedula: 103450879, nombreyapellidos: "Carlos", edad: "20", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 103410687, nombreyapellidos: "Juan", edad: "80", fechanacimiento: "23/06/97", correo: "ema@gmail.com"},
-  { cedula: 119200368, nombreyapellidos: "Pepe", edad: "45", fechanacimiento: "23/08/97", correo: "ema@gmail.com" },
-  { cedula: 123467809, nombreyapellidos: "Emilio", edad: "21", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 345676557, nombreyapellidos: "Naruto", edad: "89", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-];
 
 const linksArray = [
   {
@@ -160,7 +152,7 @@ const DataTableContainer = styled.div`
 class Cambio_contrasenna extends React.Component {
   
   state = {
-    data: data,
+    data: [],
     modalActualizar: false,
     modalInsertar: false,
     form: {
@@ -173,6 +165,31 @@ class Cambio_contrasenna extends React.Component {
     },
   };
 
+  componentDidMount() {
+    axios.get('http://localhost:5129/api/ControladorAdmin/ver-todos-usuarios')
+      .then(response => {
+        const formattedData = response.data.map(item => ({
+          ...item,
+          edad: this.calcularEdad(item.fecha_de_nacimiento) // Calcular edad y asignarla
+        }));
+        this.setState({ data: formattedData });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  calcularEdad(fechaNacimiento) {
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+    }
+    return edad;
+  }
+
   guardarEmail = (email, dato) => {
     // Aquí implementa la lógica para guardar el email relacionado a este row
     console.log('Email guardado:', email);
@@ -181,8 +198,24 @@ class Cambio_contrasenna extends React.Component {
   };
 
   eliminar_luego_de_aceptar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas cambiar la contraseña del operador" + dato.cedula);
-    
+    var opcion = window.confirm("Estás Seguro que deseas cambiar la contraseña del usuario " + dato.nombre + " " + dato.apellidos);
+    if (opcion === true) {
+      // Hacer la solicitud a la API para generar una nueva contraseña
+      console.log(dato.email);
+      axios.post('http://localhost:5129/api/ControladorAdmin/generar-nueva-contrasena',{
+        email_op: dato.email
+      })
+      .then(response => {
+          console.log(response.data);
+          // Manejar la respuesta de la API según sea necesario
+          alert(response.data); // Mostrar un mensaje de éxito
+      })
+      .catch(error => {
+          console.error(error);
+          // Manejar cualquier error que pueda ocurrir
+          alert("Hubo un error al generar la nueva contraseña");
+      });
+  }
   };
 
   
@@ -229,7 +262,8 @@ class Cambio_contrasenna extends React.Component {
               <thead>
                 <tr>
                   <th>Cedula</th>
-                  <th>Nombre y Apellidos</th>
+                  <th>Nombre</th>
+                  <th>Apellidos</th>
                   <th>Edad</th>
                   <th>Fecha de Nacimiento</th>
                   <th>Correo</th>
@@ -241,10 +275,11 @@ class Cambio_contrasenna extends React.Component {
                 {this.state.data.map((dato) => (
                   <tr key={dato.cedula}>
                     <td>{dato.cedula}</td>
-                    <td>{dato.nombreyapellidos}</td>
+                    <td>{dato.nombre}</td>
+                    <td>{dato.apellidos}</td>
                     <td>{dato.edad}</td>
-                    <td>{dato.fechanacimiento}</td>
-                    <td>{dato.correo}</td>
+                    <td>{dato.fecha_de_nacimiento}</td>
+                    <td>{dato.email}</td>
                     <td>
                       <Button
                         color="primary"

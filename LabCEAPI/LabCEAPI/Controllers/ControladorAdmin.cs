@@ -6,6 +6,7 @@ using LabCEAPI.Users;
 using static LabCEAPI.Controllers.ControladorProfesor;
 using LabCEAPI.Reservaciones;
 using LabCEAPI.Prestamos;
+using Microsoft.AspNetCore.Components.Forms;
 
 namespace LabCEAPI.Controllers
 {
@@ -147,11 +148,11 @@ namespace LabCEAPI.Controllers
 
         // Acepta el operador registrado en el sistema
         [HttpPost("aceptar-operador")]
-        public IActionResult AceptarOperador(string email_op)
+        public IActionResult AceptarOperador([FromBody] EmailOperador emailOperador)
         {
             // Aquí deberías obtener el operador de la base de datos o de alguna otra fuente de datos
    
-            bool aceptado = admin.aceptar_operador(email_op);
+            bool aceptado = admin.aceptar_operador(emailOperador.email_op);
 
             if (aceptado)
             {
@@ -166,10 +167,10 @@ namespace LabCEAPI.Controllers
         
         //Rechaza el operador registrado en el sistema
         [HttpPost("rechazar-operador")]
-        public IActionResult RechazarOperador(string email_op)
+        public IActionResult RechazarOperador([FromBody] EmailOperador emailOperador)
         {
 
-            bool rechazado = admin.rechazar_operador(email_op);
+            bool rechazado = admin.rechazar_operador(emailOperador.email_op);
 
             if (rechazado)
             {
@@ -181,11 +182,19 @@ namespace LabCEAPI.Controllers
             }
         }
 
+        // Devuelve la lista de operadores que se han registrado pero no se a revisado por un administrador
+        [HttpGet("ver-todos-usuarios")]
+        public IActionResult VerTodosUsuarios()
+        {
+            LinkedList<Usuario> usuarios = admin.ver_todos_usuario();
+            return Ok(usuarios);
+        }
+
 
         [HttpPost("generar-nueva-contrasena")]
-        public IActionResult GenerarNuevaContraseña(string email_admin)
+        public IActionResult GenerarNuevaContraseña(EmailOperador operador)
         {
-            bool generada = admin.generar_nueva_contraseña(email_admin);
+            bool generada = admin.generar_nueva_contraseña(operador.email_op);
 
             if (generada)
             {
@@ -240,6 +249,11 @@ namespace LabCEAPI.Controllers
 
             private string Contraseña { get; set; }
 
+        }
+
+        public class EmailOperador
+        {
+            public string email_op { get; set; }
         }
     }
 }
