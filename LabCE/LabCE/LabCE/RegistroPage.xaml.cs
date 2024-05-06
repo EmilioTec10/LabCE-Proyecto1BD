@@ -30,8 +30,17 @@ namespace LabCE
                 return;
             }
 
+            // Verificar si el correo electrónico ya está registrado
+            var existingProfesor = await App.MyDataBase.GetProfesorByEmail(EmailEntry.Text);
+            if (existingProfesor != null)
+            {
+                await DisplayAlert("Error", "El usuario ya está registrado.", "Aceptar");
+                return;
+            }
+
+
             // Guardar datos en la base de datos SQLite usando SQLiteHelper
-            var profesor = new ProfesorModel 
+            var profesor = new ProfesorModel
             {
                 email_prof = EmailEntry.Text,
                 password_prof = PasswordEntry.Text,
@@ -41,10 +50,19 @@ namespace LabCE
                 cedula = CedulaEntry.Text
             };
 
-            App.MyDataBase.CreateProfesor(profesor); // Inserta el profesor en la base de datos
+            // Esperar a que la inserción en la base de datos se complete
+            int result = await App.MyDataBase.CreateProfesor(profesor); // Inserta el profesor en la base de datos
 
-            await DisplayAlert("Registro", "¡Registrado exitosamente!", "Aceptar");
+            if (result > 0)
+            {
+                await DisplayAlert("Registro", "¡Registrado exitosamente!", "Aceptar");
+            }
+            else
+            {
+                await DisplayAlert("Error", "Ocurrió un error al registrar.", "Aceptar");
+            }
         }
+
 
 
         // Método para validar el formato del correo electrónico

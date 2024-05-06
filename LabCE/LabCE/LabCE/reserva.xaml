@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LabCE.reserva">
+    <ContentPage.Content>
+        <StackLayout Margin="20">
+            <Label Text="Selecciona la fecha de la reserva" />
+            <DatePicker x:Name="reservaDatePicker" />
+
+            <Label Text="Select a Time:" />
+            <TimePicker x:Name="horaInicio" />
+            <Label Text="Select a Time:" />
+            <TimePicker x:Name="horaFin" />
+
+            <Button Text="Mostrar Información de Reserva" Command="{Binding MostrarInfoReservaCommand}" />
+
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

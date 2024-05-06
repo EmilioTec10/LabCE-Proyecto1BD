@@ -3,48 +3,88 @@
   "WorkspaceRootPath": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\model\\sqlitehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\sqlitehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\registropage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\registropage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\registropage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
-      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\registropage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\app.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
-      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\app.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\loginpage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
-      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\loginpage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\model\\profesormodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\profesormodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\mainpage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
       "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\mainpage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\model\\sqlitehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\sqlitehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\app.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\app.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\model\\reservamodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\reservamodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\model\\profesormodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\profesormodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\model\\prestamomodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\prestamomodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\model\\laboratoriomodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\laboratoriomodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\model\\estudiantemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\estudiantemodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\model\\activosmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\activosmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\registropage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\registropage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\loginpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\loginpage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\loginpage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\registropage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\registropage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\prestamos.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\prestamos.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\prestamos.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\prestamos.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\appshell.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\appshell.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\reserva.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\reserva.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\appshell.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\appshell.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\labce\\reserva.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{FDD23978-B6A8-4F7B-ADDC-E78762111D78}|LabCE\\LabCE.csproj|solutionrelative:labce\\reserva.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
     }
   ],
   "DocumentGroupContainers": [
@@ -54,7 +94,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 1,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -62,78 +102,65 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 7,
+              "Title": "PrestamoModel.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\PrestamoModel.cs",
+              "RelativeDocumentMoniker": "LabCE\\Model\\PrestamoModel.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\PrestamoModel.cs",
+              "RelativeToolTip": "LabCE\\Model\\PrestamoModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T22:31:00.682Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "ReservaModel.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\ReservaModel.cs",
+              "RelativeDocumentMoniker": "LabCE\\Model\\ReservaModel.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\ReservaModel.cs",
+              "RelativeToolTip": "LabCE\\Model\\ReservaModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T22:29:51.79Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "ProfesorModel.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\ProfesorModel.cs",
+              "RelativeDocumentMoniker": "LabCE\\Model\\ProfesorModel.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\ProfesorModel.cs",
+              "RelativeToolTip": "LabCE\\Model\\ProfesorModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA8AAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T18:02:01.16Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
               "Title": "SQLiteHelper.cs",
               "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\SQLiteHelper.cs",
               "RelativeDocumentMoniker": "LabCE\\Model\\SQLiteHelper.cs",
               "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\SQLiteHelper.cs",
               "RelativeToolTip": "LabCE\\Model\\SQLiteHelper.cs",
-              "ViewState": "AQIAAAwAAAAAAAAAAIA2wCkAAAAAAAAA",
+              "ViewState": "AQIAAB4AAAAAAAAAAAAywD4AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-06T18:07:51.77Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "RegistroPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\RegistroPage.xaml.cs",
-              "RelativeDocumentMoniker": "LabCE\\RegistroPage.xaml.cs",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\RegistroPage.xaml.cs",
-              "RelativeToolTip": "LabCE\\RegistroPage.xaml.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-06T17:53:40.343Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "RegistroPage.xaml",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\RegistroPage.xaml",
-              "RelativeDocumentMoniker": "LabCE\\RegistroPage.xaml",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\RegistroPage.xaml",
-              "RelativeToolTip": "LabCE\\RegistroPage.xaml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAWAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-05-06T17:53:26.474Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 4,
-              "Title": "App.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\App.xaml.cs",
-              "RelativeDocumentMoniker": "LabCE\\App.xaml.cs",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\App.xaml.cs",
-              "RelativeToolTip": "LabCE\\App.xaml.cs",
-              "ViewState": "AQIAAAIAAAAAAAAAAAA1wBwAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-06T17:40:48.882Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "LoginPage.xaml",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\LoginPage.xaml",
-              "RelativeDocumentMoniker": "LabCE\\LoginPage.xaml",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\LoginPage.xaml",
-              "RelativeToolTip": "LabCE\\LoginPage.xaml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAOAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-05-06T17:41:18.366Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
               "Title": "App.xaml",
               "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\App.xaml",
               "RelativeDocumentMoniker": "LabCE\\App.xaml",
               "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\App.xaml",
               "RelativeToolTip": "LabCE\\App.xaml",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAOAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAATAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2024-05-06T17:40:31.535Z",
               "EditorCaption": ""
@@ -141,45 +168,19 @@
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "MainPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\MainPage.xaml.cs",
-              "RelativeDocumentMoniker": "LabCE\\MainPage.xaml.cs",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\MainPage.xaml.cs",
-              "RelativeToolTip": "LabCE\\MainPage.xaml.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABQAAAAJAAAA",
+              "Title": "App.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\App.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\App.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\App.xaml.cs",
+              "RelativeToolTip": "LabCE\\App.xaml.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACoAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-06T17:50:06.101Z",
+              "WhenOpened": "2024-05-06T17:40:48.882Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "LoginPage.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\LoginPage.xaml.cs",
-              "RelativeDocumentMoniker": "LabCE\\LoginPage.xaml.cs",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\LoginPage.xaml.cs",
-              "RelativeToolTip": "LabCE\\LoginPage.xaml.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAABwAAABjAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-06T17:41:36.222Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 8,
-              "Title": "ProfesorModel.cs",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\ProfesorModel.cs",
-              "RelativeDocumentMoniker": "LabCE\\Model\\ProfesorModel.cs",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\ProfesorModel.cs",
-              "RelativeToolTip": "LabCE\\Model\\ProfesorModel.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAqAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-06T18:02:01.16Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 9,
               "Title": "MainPage.xaml",
               "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\MainPage.xaml",
               "RelativeDocumentMoniker": "LabCE\\MainPage.xaml",
@@ -192,15 +193,184 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
-              "Title": "AssemblyInfo.cs",
-              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\AssemblyInfo.cs",
-              "RelativeDocumentMoniker": "LabCE\\AssemblyInfo.cs",
-              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\AssemblyInfo.cs",
-              "RelativeToolTip": "LabCE\\AssemblyInfo.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "DocumentIndex": 0,
+              "Title": "MainPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\MainPage.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\MainPage.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\MainPage.xaml.cs",
+              "RelativeToolTip": "LabCE\\MainPage.xaml.cs",
+              "ViewState": "AQIAAIoAAAAAAAAAAAAIwJsAAAABAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-06T17:41:31.094Z",
+              "WhenOpened": "2024-05-06T17:50:06.101Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "LaboratorioModel.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\LaboratorioModel.cs",
+              "RelativeDocumentMoniker": "LabCE\\Model\\LaboratorioModel.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\LaboratorioModel.cs",
+              "RelativeToolTip": "LabCE\\Model\\LaboratorioModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T22:28:38.876Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "EstudianteModel.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\EstudianteModel.cs",
+              "RelativeDocumentMoniker": "LabCE\\Model\\EstudianteModel.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\EstudianteModel.cs",
+              "RelativeToolTip": "LabCE\\Model\\EstudianteModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T22:29:00.639Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "ActivosModel.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\ActivosModel.cs",
+              "RelativeDocumentMoniker": "LabCE\\Model\\ActivosModel.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\Model\\ActivosModel.cs",
+              "RelativeToolTip": "LabCE\\Model\\ActivosModel.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T22:30:22.118Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 14,
+              "Title": "RegistroPage.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\RegistroPage.xaml",
+              "RelativeDocumentMoniker": "LabCE\\RegistroPage.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\RegistroPage.xaml",
+              "RelativeToolTip": "LabCE\\RegistroPage.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAWAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-05-06T17:53:26.474Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "RegistroPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\RegistroPage.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\RegistroPage.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\RegistroPage.xaml.cs",
+              "RelativeToolTip": "LabCE\\RegistroPage.xaml.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAB4AAAAHAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T17:53:40.343Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
+              "Title": "LoginPage.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\LoginPage.xaml",
+              "RelativeDocumentMoniker": "LabCE\\LoginPage.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\LoginPage.xaml",
+              "RelativeToolTip": "LabCE\\LoginPage.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-05-06T17:41:18.366Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "LoginPage.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\LoginPage.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\LoginPage.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\LoginPage.xaml.cs",
+              "RelativeToolTip": "LabCE\\LoginPage.xaml.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAC0AAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T17:41:36.222Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "prestamos.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\prestamos.xaml",
+              "RelativeDocumentMoniker": "LabCE\\prestamos.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\prestamos.xaml",
+              "RelativeToolTip": "LabCE\\prestamos.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAArAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-05-06T21:49:56.983Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "prestamos.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\prestamos.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\prestamos.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\prestamos.xaml.cs",
+              "RelativeToolTip": "LabCE\\prestamos.xaml.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T21:50:16.766Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 17,
+              "Title": "AppShell.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\AppShell.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\AppShell.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\AppShell.xaml.cs",
+              "RelativeToolTip": "LabCE\\AppShell.xaml.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAuwA8AAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T21:48:10.771Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 18,
+              "Title": "reserva.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\reserva.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\reserva.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\reserva.xaml.cs",
+              "RelativeToolTip": "LabCE\\reserva.xaml.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAsAAAAGAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-06T21:52:23.372Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 19,
+              "Title": "AppShell.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\AppShell.xaml",
+              "RelativeDocumentMoniker": "LabCE\\AppShell.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\AppShell.xaml",
+              "RelativeToolTip": "LabCE\\AppShell.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAMAAAAtAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-05-06T21:47:10.649Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 20,
+              "Title": "reserva.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\reserva.xaml",
+              "RelativeDocumentMoniker": "LabCE\\reserva.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LabCE\\reserva.xaml",
+              "RelativeToolTip": "LabCE\\reserva.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABIAAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-05-06T21:52:04.457Z",
               "EditorCaption": ""
             }
           ]

@@ -33,9 +33,8 @@ namespace LabCE
             if (profesor != null && profesor.password_prof == contrasena)
             {
                 // Si las credenciales son correctas, navegar a la página de menú
-                await DisplayAlert("Éxito", "Inicio de sesión exitoso", "OK");
-                // Puedes navegar a la página de menú u otra página después del inicio de sesión
-                // await Navigation.PushAsync(new AppShell());
+                //await DisplayAlert("Éxito", "Inicio de sesión exitoso", "OK");
+                await Navigation.PushAsync(new AppShell());
             }
             else
             {

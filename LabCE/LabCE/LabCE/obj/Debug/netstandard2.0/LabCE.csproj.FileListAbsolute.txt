@@ -16,3 +16,6 @@ C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\LabCE\obj\Debug\netstanda
 C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\LabCE\obj\Debug\netstandard2.0\LoginPage.xaml.g.cs
 C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\LabCE\obj\Debug\netstandard2.0\MainPage.xaml.g.cs
 C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\LabCE\obj\Debug\netstandard2.0\RegistroPage.xaml.g.cs
+C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\LabCE\obj\Debug\netstandard2.0\AppShell.xaml.g.cs
+C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\LabCE\obj\Debug\netstandard2.0\prestamos.xaml.g.cs
+C:\Users\MRR79\Documents\LabCE-Proyecto1BD\LabCE\LabCE\LabCE\obj\Debug\netstandard2.0\reserva.xaml.g.cs
