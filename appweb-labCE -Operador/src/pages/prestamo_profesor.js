@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Light, Dark } from '../styles/themes';
 import logo from '../assets/react.svg';
@@ -8,6 +8,7 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import DataTable from 'react-data-table-component';
 import Paper from '@mui/material/Paper';
+import axios from 'axios'; // Importar Axios
 
 const linksArray = [
   {
@@ -48,7 +49,21 @@ const secondarylinksArray = [
 const Prestamo_profesor = () => {
   const [passwordError, setPasswordError] = useState('');
   const { setTheme, theme } = useContext(ThemeContext);
+  const [data, setData] = useState([]);
   const themeStyle = theme === 'dark' ? Light : Dark;
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5129/api/Operador/prestamos-pendientes-profesores'); // Hacer la solicitud GET con Axios
+      setData(response.data); // Actualizar el estado de 'data' con los datos recibidos
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const CambiarTheme = () => {
     setTheme((theme) => (theme === 'light' ? 'dark' : 'light'));
@@ -61,64 +76,29 @@ const Prestamo_profesor = () => {
       sortable: true
     },
     {
-      name: 'Capacidad',
-      selector: row => row.capacidad,
+      name: 'Apellidos',
+      selector: row => row.apellidos,
       sortable: true
     },
     {
-      name: 'Computadores',
-      selector: row => row.computadores,
+      name: 'Email Profesor',
+      selector: row => row.email_prof,
       sortable: true
     },
     {
-      name: 'Facilidades',
-      selector: row => row.facilidades,
+      name: 'Estado',
+      selector: row => row.estado,
       sortable: true
     },
     {
-      name: 'Horario',
-      selector: row => row.horario,
+      name: 'Placa',
+      selector: row => row.placa,
       sortable: true
     },
     {
-      name: 'Activos',
-      selector: row => row.activos,
+      name: 'Fecha y Hora de Solicitud',
+      selector: row => row.fecha_hora_solicitud,
       sortable: true
-    },
-  ];
-
-  const data = [
-    {
-      nombre: 'F2-07',
-      capacidad: '30',
-      computadores: '30',
-      facilidades: 'xxx',
-      horario: 'xxx',
-      activos: 'xxx',
-    },
-    {
-      nombre: 'F2-08',
-      capacidad: '30',
-      computadores: '30',
-      facilidades: 'xxx',
-      horario: 'xxx',
-      activos: 'xxx',
-    },
-    {
-      nombre: 'F2-09',
-      capacidad: '30',
-      computadores: '30',
-      facilidades: 'xxx',
-      horario: 'xxx',
-      activos: 'xxx',
-    },
-    {
-      nombre: 'F2-10',
-      capacidad: '30',
-      computadores: '30',
-      facilidades: 'xxx',
-      horario: 'xxx',
-      activos: 'xxx',
     },
   ];
 

@@ -46,5 +46,15 @@ namespace LabCEAPI.NewFolder
             this.estado = estado;
             this.placa = placa;
         }
+
+        public PrestamoActivo(string email_prof, DateTime fecha_hora_solicitud, string estado, string placa,string nombre, string apellidos)
+        {
+            this.email_prof = email_prof;
+            this.fecha_hora_solicitud = fecha_hora_solicitud;
+            this.estado = estado;
+            this.placa = placa;
+            this.nombre = nombre;
+            this.apellidos = apellidos;
+        }
     }
 }

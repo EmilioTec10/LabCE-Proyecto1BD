@@ -135,6 +135,11 @@ const Gestion_activos = () => {
           </div>
         </Sidebar>
         <Content>
+        <Container>
+            <div className="title-container">
+              <h1 className="title"style={{ position: 'relative', right: '-420px' }}>Activos</h1>
+            </div>
+            </Container>
           <DataTableContainer>
             <DataTable
               columns={columnas}

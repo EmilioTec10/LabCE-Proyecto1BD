@@ -42,11 +42,12 @@ namespace LabCEAPI.Controllers
 
                 if (accesoPermitido)
                 {
+                    operador.email = loginData.Email;
                     return Ok("Inicio de sesión exitoso");
                 }
                 else
                 {
-                    return Unauthorized("Credenciales inválidas");
+                    return Unauthorized("Sus credenciales son inválidas o no ha sido aprobado por un administrador");
                 }
             }
             catch (Exception ex)
@@ -131,7 +132,7 @@ namespace LabCEAPI.Controllers
             }
         }
 
-        [HttpGet("aprobados")]
+        [HttpGet("ver-prestamos-aprobados")]
         public IActionResult VerPrestamosAprobados()
         {
             try
@@ -183,12 +184,28 @@ namespace LabCEAPI.Controllers
             
         }
 
+        [HttpGet("prestamos-pendientes-profesores")]
+        public IActionResult VerPrestamosPendientesProfesores()
+        {
+            try
+            {
+                LinkedList<PrestamoActivo> prestamosPendientes = operador.ver_prestamos_pendientes_profesores();
+                return Ok(prestamosPendientes);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener los préstamos pendientes: {ex.Message}");
+            }
+        }
+
         [HttpGet("ver-activos-prestados")]
         public IActionResult VerActivosPrestados()
         {
-            LinkedList<Activo> activos_prestados = Activo.activos_prestados;
+            LinkedList<Activo> activos_prestados = operador.ver_activos_prestados();
+            Console.WriteLine(activos_prestados);
             return Ok(activos_prestados);
         }
+
         [HttpPost("devolucion-activo-estudiante")]
         public IActionResult DevolucionActivoEstudiante([FromBody] DevolucionActivoData devolucionActivoData)
         {
@@ -220,10 +237,10 @@ namespace LabCEAPI.Controllers
             return Ok("Avería de activo reportada correctamente");
         }
         [HttpGet("ver-horas-laboradas")]
-        public IActionResult VerHorasLaboradas(string email_op)
+        public IActionResult VerHorasLaboradas(string email)
         {
             // Aquí deberías obtener las horas laboradas del operador de la base de datos o de alguna otra fuente de datos
-            LinkedList<HorasLaboradas> horas_laboradas= operador.ver_horas_laboradas(email_op);
+            LinkedList<HorasLaboradas> horas_laboradas= operador.ver_horas_laboradas(email);
             return Ok(horas_laboradas);
         }
 

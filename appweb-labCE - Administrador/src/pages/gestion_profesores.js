@@ -349,6 +349,11 @@ eliminar = (dato) => {
           </div>
         </Sidebar>
         <Content> 
+        <Container>
+            <div className="title-container">
+              <h1 className="title">Profesores</h1>
+            </div>
+            </Container>
           <Container>
             <br />
             <Button color="success" onClick={()=>this.mostrarModalInsertar()}>Crear</Button>

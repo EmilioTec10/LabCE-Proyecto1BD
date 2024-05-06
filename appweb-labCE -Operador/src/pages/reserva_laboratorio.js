@@ -286,7 +286,7 @@ class Reserva_laboratorio extends React.Component {
                 {this.state.data.map((dato) => (
                   <tr key={dato.laboratorio}>
                     <td>{dato.nombre}</td>
-                    <td>{dato.cantidad_personas}</td>
+                    <td>{dato.capacidad}</td>
                     <td>{dato.facilidades}</td>
                     <td>{dato.activos}</td>
                     <td>

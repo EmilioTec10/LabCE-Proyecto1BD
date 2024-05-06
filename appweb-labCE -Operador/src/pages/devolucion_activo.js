@@ -9,6 +9,7 @@ import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
+import axios from "axios";
 
 import {
   Table,
@@ -154,7 +155,7 @@ const DataTableContainer = styled.div`
 class Devolucion_activo extends React.Component {
   
   state = {
-    data: data,
+    data: [],
     modalActualizar: false,
     modalInsertar: false,
     form: {
@@ -166,15 +167,25 @@ class Devolucion_activo extends React.Component {
       correo: "",
     },
   };
+  
+  componentDidMount() {
+    axios.get('http://localhost:5129/api/Operador/ver-activos-prestados') // Reemplaza 'ruta_de_tu_api' con la URL de tu API
+      .then(response => {
+        this.setState({ data: response.data });
+      })
+      .catch(error => {
+        console.error('Error al obtener datos de la API:', error);
+      });
+  }
 
   guardarEmail = (email, dato) => {
     // Aquí implementa la lógica para guardar el email relacionado a este row
     console.log('Email guardado:', email);
     // Eliminar el row después de guardar el email
-    this.eliminar_luego_de_aceptar(dato);
+    this.devolver_activo(dato);
   };
 
-  eliminar_luego_de_aceptar = (dato) => {
+  devolver_activo = (dato) => {
     var opcion = window.confirm("Estás Seguro que deseas aceptar al operador" + dato.cedula);
     if (opcion === true) {
       var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
@@ -230,15 +241,15 @@ class Devolucion_activo extends React.Component {
           <Container>
             <br />
             <br />
-            <h1>Aprobacion de Operadores</h1>
+            <h1>Activos Prestados</h1>
             <Table>
               <thead>
                 <tr>
-                  <th>Cedula</th>
-                  <th>Nombre y Apellidos</th>
-                  <th>Edad</th>
-                  <th>Fecha de Nacimiento</th>
-                  <th>Correo</th>
+                  <th>Placa</th>
+                  <th>Tipo</th>
+                  <th>Marca</th>
+                  <th>Fecha de compra</th>
+                  <th>Lab</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -246,19 +257,18 @@ class Devolucion_activo extends React.Component {
               <tbody>
                 {this.state.data.map((dato) => (
                   <tr key={dato.cedula}>
-                    <td>{dato.cedula}</td>
-                    <td>{dato.nombreyapellidos}</td>
-                    <td>{dato.edad}</td>
-                    <td>{dato.fechanacimiento}</td>
-                    <td>{dato.correo}</td>
+                    <td>{dato.placa}</td>
+                    <td>{dato.tipo}</td>
+                    <td>{dato.marca}</td>
+                    <td>{dato.purchase_date.slice(0, 10)}</td>
+                    <td>{dato.lab}</td>
                     <td>
                       <Button
                         color="primary"
                         onClick={() => this.guardarEmail(dato.correo, dato)}
                       >
-                        Aprobar
+                        Devolver Activo
                       </Button>{" "}
-                      <Button color="danger" onClick={()=> this.eliminar(dato)}>Denegar</Button>
                     </td>
                   </tr>
                 ))}

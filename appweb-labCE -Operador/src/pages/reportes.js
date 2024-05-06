@@ -11,6 +11,8 @@ import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import axios from "axios";
+import { email_output } from "./login_operador";
 
 import {
   Table,
@@ -21,28 +23,11 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
+import { ImOpt } from "react-icons/im";
 
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
-const data = [
-  {  
-    nombreyapellidos: "Emmanuel esquivel Chavarria",  
-    turnos: [
-      { dia: "02/05/2024", hora: "8:00-12:00" },
-      { dia: "04/05/2024", hora: "10:00-14:00" },
-      { dia: "06/05/2024", hora: "14:00-18:00" }
-    ]
-  },
-  { 
-    nombreyapellidos: "Carlos",  
-    turnos: [
-      { dia: "03/05/2024", hora: "9:00-13:00" },
-      { dia: "05/05/2024", hora: "11:00-15:00" },
-      { dia: "07/05/2024", hora: "13:00-17:00" }
-    ]
-  },
-  // Agrega más objetos de operadores aquí con sus respectivos turnos
-];
+var data;
 
 const linksArray = [
   {
@@ -167,7 +152,7 @@ const NameColumn = styled.td`
 class Reportes extends React.Component {
   
   state = {
-    data: data,
+    data: [],
     modalActualizar: false,
     modalInsertar: false,
     form: {
@@ -180,21 +165,85 @@ class Reportes extends React.Component {
     },
   };
 
+  componentDidMount() {
+    axios.get('http://localhost:5129/api/Operador/ver-horas-laboradas',{
+      params:{
+        email: email_output
+      }
+    })
+    .then(response => {
+      this.setState({ data: response.data });
+      console.log(response.data);
+    })
+    .catch(error => {
+      console.error('Error al obtener los datos:', error);
+    });
+  }
+
   generatePDF = () => {
+    const { data } = this.state;
+  
+    // Crear un array de datos para la tabla del PDF
+    const tableData = [
+      [{ text: 'Operador', style: 'tableHeader' },
+       { text: 'Fecha', style: 'tableHeader' },
+       { text: 'Hora de Entrada', style: 'tableHeader' },
+       { text: 'Hora de Salida', style: 'tableHeader' },
+       { text: 'Horas Trabajadas', style: 'tableHeader' }],
+       ...data.flatMap(item => {
+        // Calcular la suma total de horas trabajadas para el item actual
+        const totalHorasTrabajadas = item.horas_trabajadas;
+      
+        // Crear la fila para el operador
+        const operadorRow = [
+          email_output,
+          '',
+          '',
+          '',
+          totalHorasTrabajadas
+        ];
+      
+        // Crear las filas para las horas laboradas
+        const horasRows = [
+          ['', new Date(item.fecha).toLocaleDateString(), new Date(item.hora_ingreso).toLocaleTimeString(), new Date(item.hora_salida).toLocaleTimeString(), item.horas_trabajadas]
+        ];
+      
+        // Retornar la fila del operador seguida de las filas de horas laboradas
+        return [operadorRow, ...horasRows];
+      })
+    ];
+  
     const docDefinition = {
       content: [
-        { text: 'Reporte de Operadores', style: 'header' },
+        { 
+          text: 'LabCE\nEscuela De Ingenieria en Computadores\nHoras Laboradas por Operador',
+          style: 'header',
+          alignment: 'left',
+        },
         {
-          ul: this.state.data.map((operador) => ({
-            text: `${operador.nombreyapellidos}: ${operador.turnos.map(turno => `${turno.dia} - ${turno.hora}`).join(', ')}`
-          }))
-        }
+          text: new Date().toLocaleDateString(),
+          alignment: 'right',
+          margin: [0, 0, 0, 10],
+        },
+        {
+          table: {
+            headerRows: 1,
+            widths: [ '*', '*', '*', '*', '*' ],
+            body: tableData,
+          },
+          layout: 'lightHorizontalLines',
+        },
       ],
       styles: {
         header: {
           fontSize: 18,
           bold: true,
           margin: [0, 0, 0, 10]
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 13,
+          color: 'black'
         }
       }
     };
@@ -232,40 +281,55 @@ class Reportes extends React.Component {
           ))}
         </Sidebar>
         <Content> 
-          <Container>
-            <br />
-            <br />
-            <h1>Reportes</h1>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Operador</th>
-                  <th>Fecha</th>
-                  <th>Entrada</th>
-                  <th>Salida</th>
+        <Container>
+          <br />
+          <br />
+          <h1>Reportes</h1>
+          <Table>
+            <thead>
+              <tr>
+                <th colSpan="5">
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div>
+                      <p>LabCE</p>
+                      <p>Escuela De Ingenieria en Computadores</p>
+                      <p>Horas Laboradas por Operador</p>
+                    </div>
+                    <div>
+                      <p>{new Date().toLocaleDateString()}</p>
+                    </div>
+                  </div>
+                </th>
+              </tr>
+              <tr>
+                <th>Operador</th>
+                <th>Fecha</th>
+                <th>Hora de Entrada</th>
+                <th>Hora de Salida</th>
+                <th>Horas Trabajadas</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <NameColumn>{email_output}</NameColumn>
+                <NameColumn></NameColumn>
+                <NameColumn></NameColumn>
+                <NameColumn></NameColumn>
+                <NameColumn>{this.state.data.reduce((total, item) => total + item.horas_trabajadas, 0)}</NameColumn>
+              </tr>
+              {this.state.data.map((item, index) => (
+                <tr key={index}>
+                  <td></td>
+                  <td>{new Date(item.fecha).toLocaleDateString()}</td>
+                  <td>{new Date(item.hora_ingreso).toLocaleTimeString()}</td>
+                  <td>{new Date(item.hora_salida).toLocaleTimeString()}</td>
+                  <td>{item.horas_trabajadas}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {this.state.data.map((operador, index) => (
-                  <React.Fragment key={index}>
-                    <tr>
-                      <NameColumn>{operador.nombreyapellidos}</NameColumn>
-                    </tr>
-                    {operador.turnos.map((turno, i) => (
-                      <tr key={i}>
-                        <td style={{ paddingLeft: '30px' }}></td>
-                        <td>{turno.dia}</td>
-                        <td>{turno.hora.split('-')[0]}</td>
-                        <td>{turno.hora.split('-')[1]}</td>
-                      </tr>
-                    ))}
-                    {index < this.state.data.length - 1 && <tr><td colSpan="4" style={{ height: '20px' }}></td></tr>}
-                  </React.Fragment>
-                ))}
-              </tbody>
-            </Table>
-            <Button color="primary" onClick={this.generatePDF}>Generar PDF</Button>
-          </Container>
+              ))}
+            </tbody>
+          </Table>
+          <Button color="primary" onClick={this.generatePDF}>Generar PDF</Button>
+        </Container>
         </Content> 
       </ThemeProvider>
     );

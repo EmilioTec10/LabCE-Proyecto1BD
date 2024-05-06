@@ -616,7 +616,7 @@ namespace LabCEAPI.Users
             LinkedList<Activo> activosPrestados = new LinkedList<Activo>();
 
             // Consulta SQL para seleccionar los activos prestados
-            string query = "SELECT tipo, marca, estado, ID_activo FROM Activos WHERE estado = 'Prestado'";
+            string query = "SELECT tipo, marca, estado, ID_activo, ID_lab FROM Activos WHERE estado = 'Prestado'";
 
             // Utilizamos using para garantizar que los recursos se liberen correctamente
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -634,7 +634,7 @@ namespace LabCEAPI.Users
                         while (reader.Read())
                         {
                             // Creamos una instancia de Activo con los datos de la fila actual
-                            Activo activo = new Activo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3));
+                            Activo activo = new Activo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4));
 
 
                             // Agregamos el activo a la lista de activos prestados
@@ -655,6 +655,45 @@ namespace LabCEAPI.Users
             DateTime ahora = DateTime.Now;
             RetornoActivo retornoActivo = new RetornoActivo(activo, fechaActual, ahora);
             return retornoActivo;
+        }
+
+        public LinkedList<PrestamoActivo> ver_prestamos_pendientes_profesores()
+        {
+            LinkedList<PrestamoActivo> prestamos = new LinkedList<PrestamoActivo>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = @"
+                SELECT p.email_prof, p.Fecha_Hora_Solicitud, p.estado, a.ID_activo, pr.nombre, pr.apellido1 + ' ' + pr.apellido2 AS apellidos
+                FROM Prestamo p
+                INNER JOIN Activos a ON p.ID_activo = a.ID_activo
+                INNER JOIN Profesor pr ON p.email_prof = pr.email_prof
+                WHERE p.email_est IS NULL AND p.Fecha_Hora_Devolucion IS NULL
+            ";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string email_prof = reader.GetString(0);
+                    DateTime fecha_hora_solicitud = reader.GetDateTime(1);
+                    string estado = reader.GetString(2);
+                    string placa = reader.GetString(3);
+                    string nombre = reader.GetString(4);
+                    string apellidos = reader.GetString(5);
+
+                    // Crear objeto PrestamoActivo y agregarlo a la lista
+                    PrestamoActivo prestamo = new PrestamoActivo(email_prof, fecha_hora_solicitud, estado, placa, nombre, apellidos);
+                    prestamos.AddLast(prestamo);
+                }
+
+                reader.Close();
+            }
+
+            return prestamos;
         }
 
         //Metodo para registrar la devolucion de un activo por parte de un profesor

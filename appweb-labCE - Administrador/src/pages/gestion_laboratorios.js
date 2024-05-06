@@ -61,6 +61,16 @@ const secondarylinksArray = [
   },
 ];
 
+const styles = {
+  titleContainer: {
+    textAlign: 'center',
+    marginTop: '20px', // Ajusta el margen superior según sea necesario
+  },
+  title: {
+    marginBottom: '20px', // Ajusta el margen inferior según sea necesario
+  },
+};
+
 const Gestion_laboratorios = () => {
   const [passwordError, setPasswordError] = useState('');
   const { setTheme, theme } = useContext(ThemeContext);
@@ -120,7 +130,7 @@ const Gestion_laboratorios = () => {
     <ThemeProvider theme={themeStyle}>
       <Container>
         <Sidebar>
-        <div className="Logocontent">
+          <div className="Logocontent">
             <div className="imgcontent">
               <img src={logo} alt="logo" />
             </div>
@@ -153,10 +163,12 @@ const Gestion_laboratorios = () => {
         </Sidebar>
         <Content>
         <Container>
-
-          <br />
-          <Table>
-          <Table>
+            <div className="title-container">
+              <h1 className="title"style={{ position: 'relative', right: '-420px' }}>Laboratorios</h1>
+            </div>
+            </Container>
+          <Container>
+            <Table>
               <thead>
                 <tr>
                   <th>Nombre</th>
@@ -168,7 +180,6 @@ const Gestion_laboratorios = () => {
                   <th>Acciones</th>
                 </tr>
               </thead>
-  
               <tbody>
                 {laboratorios.map((lab) => (
                   <tr key={lab.nombre}>
@@ -176,7 +187,7 @@ const Gestion_laboratorios = () => {
                     <td>{lab.capacidad}</td>
                     <td>{lab.computadores}</td>
                     <td>{lab.facilidades}</td>
-                    <td>{lab.horario}</td>
+                    <td>{"Ver horario"}</td>
                     <td>{lab.activos}</td>
                     <td>
                       {/* Botones de editar y eliminar */}
@@ -185,13 +196,12 @@ const Gestion_laboratorios = () => {
                 ))}
               </tbody>
             </Table>
-          </Table>
-        </Container>
-        {/* Modales para insertar y actualizar */}
+          </Container>
+          {/* Modales para insertar y actualizar */}
         </Content>
       </Container>
     </ThemeProvider>
-  );
+  );  
 };
 
 const Container = styled.div`

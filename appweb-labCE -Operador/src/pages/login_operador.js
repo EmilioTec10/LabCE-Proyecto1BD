@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import axios from 'axios';
 
+export let email_output = ''; // Declara la variable email fuera del componente
+
 const Login_operador = ({ setLoggedIn, setEmail }) => {
   const [email, setEmailInput] = useState(''); // Define setEmailInput aquí
   const [password, setPassword] = useState('');
@@ -42,19 +44,34 @@ const Login_operador = ({ setLoggedIn, setEmail }) => {
           email: email,
           contraseña: password,
         });
-
+    
         if (response.status === 200) {
           navigate('/reserva_laboratorio');
-          email = email; // Asigna el valor de emailInput a la variable email
-        } else if (response.status === 401) {
-          setEmailError('Invalid email or password');
-          setPassword('');
+          email_output = email; // Asigna el valor de emailInput a la variable email
+        } else {
+          // Si la solicitud fue exitosa pero la respuesta no es 200,
+          // significa que la API devolvió un error diferente de 200
+          setEmailError('Error al iniciar sesión');
         }
       } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        setEmailError('Error al iniciar sesión');
+        // Manejar el error de solicitud a la API
+        if (error.response) {
+          // Si la respuesta de error contiene un código de estado 401,
+          // indica que las credenciales son inválidas
+          if (error.response.status === 401) {
+            setEmailError(error.response.data);
+            setPassword('');
+          } else {
+            setEmailError('Error al iniciar sesión');
+          }
+        } else {
+          // Si el error no tiene una respuesta, es un error de red o un error interno del cliente
+          console.error('Error al iniciar sesión:', error);
+          setEmailError('Error al iniciar sesión');
+        }
       }
     }
+    
   };
 
   return (
