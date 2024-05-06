@@ -318,7 +318,7 @@ namespace LabCEAPI.Users
             LinkedList<Activo> activosPrestados = new LinkedList<Activo>();
 
             // Consulta SQL para seleccionar los activos prestados
-            string query = "SELECT tipo, marca, estado, ID_activo FROM Activos WHERE estado = 'Disponible'";
+            string query = "SELECT tipo, marca, estado, ID_activo, ID_lab FROM Activos WHERE estado = 'Disponible'";
 
             // Utilizamos using para garantizar que los recursos se liberen correctamente
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -336,7 +336,7 @@ namespace LabCEAPI.Users
                         while (reader.Read())
                         {
                             // Creamos una instancia de Activo con los datos de la fila actual
-                            Activo activo = new Activo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3));
+                            Activo activo = new Activo(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetString(4));
 
 
                             // Agregamos el activo a la lista de activos prestados
@@ -527,6 +527,46 @@ namespace LabCEAPI.Users
 
         }
 
+        public LinkedList<PrestamoActivo> ver_prestamos_pendientes_estudiantes()
+        {
+            LinkedList<PrestamoActivo> prestamos = new LinkedList<PrestamoActivo>();
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                string query = @"
+                    SELECT p.email_est, p.Fecha_Hora_Solicitud, p.estado, a.ID_activo, e.nombre, e.apellido1 + ' ' + e.apellido2 AS apellidos
+                    FROM Prestamo p
+                    INNER JOIN Activos a ON p.ID_activo = a.ID_activo
+                    INNER JOIN Estudiante e ON p.email_est = e.email_est
+                    WHERE p.email_prof IS NULL AND p.Fecha_Hora_Devolucion IS NULL
+                ";
+
+                SqlCommand command = new SqlCommand(query, connection);
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string email_est = reader.GetString(0);
+                    DateTime fecha_hora_solicitud = reader.GetDateTime(1);
+                    string estado = reader.GetString(2);
+                    string placa = reader.GetString(3);
+                    string nombre = reader.GetString(4);
+                    string apellidos = reader.GetString(5);
+
+                    // Crear objeto PrestamoActivo y agregarlo a la lista
+                    PrestamoActivo prestamo = new PrestamoActivo(email_est, fecha_hora_solicitud, estado, placa, nombre, apellidos);
+                    prestamos.AddLast(prestamo);
+                }
+
+                reader.Close();
+            }
+
+            return prestamos;
+        }
+
+
         //Metodo que presta un activo a un profesor
         public bool prestar_activo_profesor(string placa, string email_prof, string contraseña_profesor)
         {
@@ -649,12 +689,46 @@ namespace LabCEAPI.Users
         }
 
         //Metodo para registrar la devolucion de un activo por parte de un estudiante
-        public RetornoActivo devolucion_activo_estudiante(Activo activo, string contraseña_operador)
+        public bool devolucion_activo_estudiante(string placa, string email_est, string email_op, string contraseña_op)
         {
-            DateOnly fechaActual = DateOnly.FromDateTime(DateTime.Now);
-            DateTime ahora = DateTime.Now;
-            RetornoActivo retornoActivo = new RetornoActivo(activo, fechaActual, ahora);
-            return retornoActivo;
+            // Validar la contraseña del profesor
+            bool contraseñaValida = ingresar_operador(email_op, contraseña_op);
+
+            // Si la contraseña no es válida, retornar falso
+            if (!contraseñaValida)
+            {
+                return false;
+            }
+
+            // Variable para almacenar el resultado de la devolución
+            bool devolucionExitosa = false;
+
+            // Actualizar la tabla Prestamo con la fecha y hora actual en Fecha_Hora_Devolucion y activo = 0
+            string updateQuery = "UPDATE Prestamo SET Fecha_Hora_Devolucion = @FechaHoraDevolucion, activo = 0 WHERE ID_activo = @Placa AND email_est = @EmailEst AND email_prof IS NULL";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(updateQuery, connection))
+                {
+                    // Establecer los parámetros
+                    command.Parameters.AddWithValue("@FechaHoraDevolucion", DateTime.Now);
+                    command.Parameters.AddWithValue("@Placa", placa);
+                    command.Parameters.AddWithValue("@EmailEst", email_est);
+
+                    // Ejecutar la consulta de actualización
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Si al menos una fila fue afectada, la devolución fue exitosa
+                    devolucionExitosa = rowsAffected > 0;
+                }
+            }
+
+            return devolucionExitosa;
         }
 
         public LinkedList<PrestamoActivo> ver_prestamos_pendientes_profesores()
@@ -756,7 +830,7 @@ namespace LabCEAPI.Users
             bool devolucionExitosa = false;
 
             // Actualizar la tabla Prestamo con la fecha y hora actual en Fecha_Hora_Devolucion y activo = 0
-            string updateQuery = "UPDATE Prestamo SET Fecha_Hora_Devolucion = @FechaHoraDevolucion, activo = 0 WHERE ID_activo = @Placa AND email_prof = @EmailProf";
+            string updateQuery = "UPDATE Prestamo SET Fecha_Hora_Devolucion = @FechaHoraDevolucion, activo = 0 WHERE ID_activo = @Placa AND email_prof = @EmailProf AND email_est IS NULL";
 
             // Crear la conexión a la base de datos
             using (SqlConnection connection = new SqlConnection(connectionString))

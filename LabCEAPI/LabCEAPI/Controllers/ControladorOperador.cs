@@ -8,6 +8,8 @@ using LabCEAPI.Users;
 using static LabCEAPI.Controllers.ControladorAdmin;
 using static LabCEAPI.Controllers.ControladorProfesor;
 using LabCEAPI.NewFolder;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Primitives;
 
 namespace LabCEAPI.Controllers
 {
@@ -169,6 +171,20 @@ namespace LabCEAPI.Controllers
             }
         }
 
+        [HttpGet("prestamos-pendientes-estudiantes")]
+        public IActionResult VerPrestamosPendientesEstudiantes()
+        {
+            try
+            {
+                LinkedList<PrestamoActivo> prestamosPendientes = operador.ver_prestamos_pendientes_estudiantes();
+                return Ok(prestamosPendientes);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener los préstamos pendientes: {ex.Message}");
+            }
+        }
+
         [HttpPost("prestar-activo-profesor")]
         public IActionResult PrestarActivoProfesor(string placa, string email_prof, string contra_prof)
         {
@@ -209,15 +225,23 @@ namespace LabCEAPI.Controllers
         [HttpPost("devolucion-activo-estudiante")]
         public IActionResult DevolucionActivoEstudiante([FromBody] DevolucionActivoData devolucionActivoData)
         {
-            Activo activo = new Activo(devolucionActivoData.Activo.tipo, devolucionActivoData.Activo.marca, devolucionActivoData.Activo.estado, devolucionActivoData.Activo.placa);
-            operador.devolucion_activo_estudiante(activo, devolucionActivoData.ContraseñaOperador);
+            bool devolucionExitosa = operador.devolucion_activo_estudiante(devolucionActivoData.placa, devolucionActivoData.email_est, devolucionActivoData.email_op, devolucionActivoData.contraseña_op);
+            if (devolucionExitosa)
+            {
+                return Ok("Devolución de activo por parte del estudiante registrada correctamente");
+            }
+            else
+            {
+                return BadRequest("No se pudo realizar la devolución del activo. Por favor, verifique las credenciales del operador.");
+            }
             return Ok("Devolución de activo por parte del estudiante registrada correctamente");
         }
 
+
         [HttpPost("devolucion-activo-profesor")]
-        public IActionResult DevolucionActivoProfesor(string placa, string email_prof, string contraseña_prof)
+        public IActionResult DevolucionActivoProfesor([FromBody] DevolucionProfesorData profesorData)
         {
-            bool devolucionExitosa = operador.devolucion_activo_profesor(placa, email_prof, contraseña_prof);
+            bool devolucionExitosa = operador.devolucion_activo_profesor(profesorData.placa, profesorData.email_prof, profesorData.contraseña_prof);
 
             if (devolucionExitosa)
             {
@@ -296,10 +320,18 @@ namespace LabCEAPI.Controllers
 
         public class DevolucionActivoData
         {
-            public ActivoData Activo { get; set; }
-            public string ContraseñaOperador { get; set; }
+            public string placa {  get; set; }
+            public string email_est {  get; set; }
+            public string email_op {  get; set; }
+            public string contraseña_op {  get; set; }
         }
 
+        public class DevolucionProfesorData
+        {
+            public string placa { get; set; }
+            public string email_prof { get; set; }
+            public string contraseña_prof { get; set; }
+        }
         public class AveriaActivoData
         {
             public ActivoData Activo { get; set; }
@@ -313,6 +345,7 @@ namespace LabCEAPI.Controllers
             public DateTime hora_salida { get; set; }
             public float horas_trabajadas { get; set; }
         }
+
 
     } 
 }

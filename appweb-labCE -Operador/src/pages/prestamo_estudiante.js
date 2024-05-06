@@ -1,13 +1,22 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Light, Dark } from '../styles/themes';
+import { Table, Button } from 'reactstrap';
 import logo from '../assets/react.svg';
 import { AiOutlineHome, AiOutlineApartment } from 'react-icons/ai';
 import { MdOutlineAnalytics, MdLogout } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
+import axios from 'axios';
 import DataTable from 'react-data-table-component';
 import Paper from '@mui/material/Paper';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import TextField from '@mui/material/TextField';
+import DialogActions from '@mui/material/DialogActions';
+import { email_output } from './login_operador';
 
 const linksArray = [
   {
@@ -46,9 +55,60 @@ const secondarylinksArray = [
 ];
 
 const Prestamo_estudiante = () => {
-  const [passwordError, setPasswordError] = useState('');
   const { setTheme, theme } = useContext(ThemeContext);
+  const [data, setData] = useState([]);
+  const [selectedData, setSelectedData] = useState(null);
+  const [password, setPassword] = useState('');
+  const [passwordDialogOpen, setPasswordDialogOpen] = useState(false);
   const themeStyle = theme === 'dark' ? Light : Dark;
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get('http://localhost:5129/api/Operador/prestamos-pendientes-estudiantes');
+      setData(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDevolverActivo = (dato) => {
+    setSelectedData(dato);
+    setPasswordDialogOpen(true);
+  };
+
+  const handleConfirmDevolucion = () => {
+    setPasswordDialogOpen(false);
+    devolverActivo(selectedData, password);
+  };
+
+  const devolverActivo = (dato, contraseñaEst) => {
+    axios.post('http://localhost:5129/api/Operador/devolucion-activo-estudiante', {
+      placa: dato.placa,
+      email_est: dato.email_prof,
+      email_op: email_output,
+      contraseña_op: contraseñaEst
+    })
+    .then(response => {
+      console.log(response.data);
+      alert("Devolución de activo por parte del estudiante registrada correctamente");
+      setData(prevData => prevData.filter(item => item.placa !== dato.placa));
+    })
+    .catch(error => {
+      console.log(dato);
+      console.log(email_output);
+      console.log(contraseñaEst);
+      console.error(error);
+      alert("No se pudo realizar la devolución del activo. Por favor, verifique las credenciales del estudiante.");
+    });
+  };
+
+  const CambiarTheme = () => {
+    setTheme((theme) => (theme === 'light' ? 'dark' : 'light'));
+  };
 
   const columnas = [
     {
@@ -76,37 +136,13 @@ const Prestamo_estudiante = () => {
       selector: row => row.requiereAprobador,
       sortable: true,
       cell: row => <input type="checkbox" checked={row.requiereAprobador} disabled />
-    }
-  ];
-
-  const data = [
-    {
-      placa: '2234',
-      tipo: 'Proyector',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
     },
     {
-      placa: '2235',
-      tipo: 'Proyector',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
-    },
-    {
-      placa:'2236',
-      tipo: 'Control de Proyector',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
-    },
-    {
-      placa: '2237',
-      tipo: 'Control de Tele',
-      marca: 'xxx',
-      fechaCompra: '12/2/22',
-      requiereAprobador: true
+      name: 'Acciones',
+      cell: row => <Button color="primary" onClick={() => handleDevolverActivo(row)}>Devolver Activo</Button>,
+      ignoreRowClick: true,
+      allowOverflow: true,
+      button: true,
     },
   ];
 
@@ -141,31 +177,77 @@ const Prestamo_estudiante = () => {
           <div className="Themecontent">
             <div className="Togglecontent">
               <div className="grid theme-container">
-            
               </div>
             </div>
           </div>
         </Sidebar>
         <Content>
-          <DataTableContainer>
-            <DataTable
-              columns={columnas}
-              data={data}
-              fixedHeader
-              noHeader
-              dense
-              style={{ marginTop: '20px' }} // Bajar la tabla en el eje Y
-              customStyles={{
-                table: {
-                  style: {
-                    marginBottom: '400px', // Aumentar el tamaño de la tabla
-                  },
-                },
-              }}
-            />
-          </DataTableContainer>
+          <Container>
+            <h1 style={{ position: 'relative', right: '-360px' }}>Prestamos de estudiantes</h1>
+          </Container>
+         {/* Tabla de prestamos de profesores */}
+         <Table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Apellidos</th>
+                  <th>Email Estudiante</th>
+                  <th>Estado</th>
+                  <th>Placa</th>
+                  <th>Fecha de Solicitud</th>
+                  <th>Hora de Solicitud</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((row) => (
+                  <tr key={row.id}>
+                    <td>{row.nombre}</td>
+                    <td>{row.apellidos}</td>
+                    <td>{row.email_prof}</td>
+                    <td>{row.estado}</td>
+                    <td>{row.placa}</td>
+                    <td>{row.fecha_hora_solicitud.split('T')[0]}</td>
+                    <td>{row.fecha_hora_solicitud.split('T')[1].split('.')[0]}</td>
+                    <td>
+                    <Button
+                        color="primary"
+                        onClick={() => handleDevolverActivo(row)}
+                      >
+                        Devolver Activo
+                      </Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
         </Content>
-      </Container>
+        </Container>
+      <Dialog open={passwordDialogOpen} onClose={() => setPasswordDialogOpen(false)}>
+        <DialogTitle>Confirmar devolución de activo</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Por favor, ingrese la contraseña del operador para confirmar la acción.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Contraseña del operador"
+            type="password"
+            fullWidth
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setPasswordDialogOpen(false)} color="primary">
+            Cancelar
+          </Button>
+          <Button onClick={handleConfirmDevolucion} color="primary">
+            Confirmar
+          </Button>
+        </DialogActions>
+      </Dialog>
     </ThemeProvider>
   );
 };
@@ -243,8 +325,8 @@ const Sidebar = styled.div`
 `;
 
 const Content = styled.div`
-  margin-left: 300px; // Asegurar que el contenido comience después de la barra lateral
-  flex-grow: 1; // Permitir que el contenido crezca para llenar el espacio restante
+  margin-left: 300px;
+  flex-grow: 1;
 `;
 
 const Divider = styled.div`

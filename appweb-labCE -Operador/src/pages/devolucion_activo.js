@@ -169,7 +169,7 @@ class Devolucion_activo extends React.Component {
   };
   
   componentDidMount() {
-    axios.get('http://localhost:5129/api/Operador/ver-activos-prestados') // Reemplaza 'ruta_de_tu_api' con la URL de tu API
+    axios.get('http://localhost:5129/api/Operador/ver-activos-disponibles') // Reemplaza 'ruta_de_tu_api' con la URL de tu API
       .then(response => {
         this.setState({ data: response.data });
       })
@@ -185,7 +185,15 @@ class Devolucion_activo extends React.Component {
     this.devolver_activo(dato);
   };
 
-  devolver_activo = (dato) => {
+  prestar_profesor = (dato, contra_prof) => {
+    var opcion = window.confirm("Estás Seguro que deseas aceptar al operador" + dato.cedula);
+    if (opcion === true) {
+      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
+      this.setState({ data: arreglo, modalActualizar: false });
+    }
+  };
+
+  prestar_estudiante = (dato, contra_prof) => {
     var opcion = window.confirm("Estás Seguro que deseas aceptar al operador" + dato.cedula);
     if (opcion === true) {
       var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
@@ -241,7 +249,7 @@ class Devolucion_activo extends React.Component {
           <Container>
             <br />
             <br />
-            <h1>Activos Prestados</h1>
+            <h1>Activos Disponibles</h1>
             <Table>
               <thead>
                 <tr>
@@ -267,7 +275,13 @@ class Devolucion_activo extends React.Component {
                         color="primary"
                         onClick={() => this.guardarEmail(dato.correo, dato)}
                       >
-                        Devolver Activo
+                        Prestar a profesor
+                      </Button>{" "}
+                      <Button
+                        color="success"
+                        onClick={() => this.guardarEmail(dato.correo, dato)}
+                      >
+                        Solicitar a estudiante
                       </Button>{" "}
                     </td>
                   </tr>

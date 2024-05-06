@@ -270,6 +270,9 @@ class Reserva_laboratorio extends React.Component {
         </Sidebar>
         <Content> 
           <Container>
+            <h1>Laboratorios</h1>
+          </Container>
+          <Container>
             
             <Table>
               <thead>
