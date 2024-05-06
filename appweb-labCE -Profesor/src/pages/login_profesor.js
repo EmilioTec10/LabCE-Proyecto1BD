@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Importa Axios para hacer solicitudes HTTP
-import { ThemeContext } from '../App';
 
-export let email = ''; // Declara la variable email fuera del componente
-
-const Login_profesor = () => {
-  const [emailInput, setEmailInput] = useState('');
+const Login_profesor = ({ setLoggedIn, setEmail }) => {
+  const [email, setEmailInput] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -19,10 +15,10 @@ const Login_profesor = () => {
     let isValid = true;
 
     // Validación del correo electrónico
-    if (!emailInput) {
+    if (!email) {
       setEmailError('Please enter your email');
       isValid = false;
-    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(emailInput)) {
+    } else if (!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(email)) {
       setEmailError('Please enter a valid email');
       isValid = false;
     }
@@ -38,23 +34,13 @@ const Login_profesor = () => {
     
     // Validación de las credenciales del chef
     if (isValid) {
-      
-      try {
-        const response = await axios.post('http://localhost:5129/api/ControladorProfesor/ingresar', {
-          email: emailInput,
-          contraseña: password,
-        });
-
-        if (response.status === 200) {
-          navigate('/aprobacion_prestamo');
-          email = emailInput; // Asigna el valor de emailInput a la variable email
-        } else {
-          setEmailError('Invalid email or password');
-          setPassword('');
-        }
-      } catch (error) {
-        console.error('Error al iniciar sesión:', error);
-        setEmailError('Error al iniciar sesión');
+      if (email === "1@gmail.com" && password === "1") {
+        //setLoggedIn(true);
+        //setEmail(email);
+        navigate('/aprobacion_prestamo');
+      } else {
+        setEmailError('Invalid email or password');
+        setPassword('');
       }
     }
   };
@@ -67,7 +53,7 @@ const Login_profesor = () => {
       <br />
       <div className="inputContainer">
         <input
-          value={emailInput}
+          value={email}
           placeholder="Enter your email here"
           onChange={(ev) => setEmailInput(ev.target.value)}
           className="inputBox"
