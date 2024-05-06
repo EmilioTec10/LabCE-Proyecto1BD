@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LabCE.MainPage">
+    <ContentPage.Content>
+        <StackLayout VerticalOptions="CenterAndExpand" HorizontalOptions="CenterAndExpand">
+            <Label Text="Lab CE: Profesores" FontSize="24" HorizontalOptions="CenterAndExpand" Margin="0,0,0,20"/>
+            <Button Text="Registrar" Clicked="RegistrarButton_Clicked"/>
+            <Button Text="Iniciar Sesión" Clicked="IniciarSesionButton_Clicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

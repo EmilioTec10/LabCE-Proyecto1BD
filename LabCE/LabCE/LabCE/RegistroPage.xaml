@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="LabCE.RegistroPage">
+    <ContentPage.Content>
+        <StackLayout Padding="20">
+            <Entry Placeholder="Email" x:Name="EmailEntry"/>
+            <Entry Placeholder="Contraseña" IsPassword="True" x:Name="PasswordEntry"/>
+            <Entry Placeholder="Nombre" x:Name="NombreEntry"/>
+            <Entry Placeholder="Primer Apellido" x:Name="Apellido1Entry"/>
+            <Entry Placeholder="Segundo Apellido" x:Name="Apellido2Entry"/>
+            <Entry Placeholder="Cédula" x:Name="CedulaEntry"/>
+            <Button Text="Registrarse" Clicked="RegistrarseButton_Clicked"/>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
