@@ -278,11 +278,15 @@ class Gestion_profesores extends React.Component {
             </div>
           </div>
         </Sidebar>
+
+        
         <Content> 
+          <Container>
+            <h1 style={{ position: 'relative', left: '50%', transform: 'translateX(-50%)', top: '-1px' }}>Gestion Profesores</h1>
+          </Container>
           <Container>
             <br />
             <Button color="success" onClick={()=>this.mostrarModalInsertar()}>Crear</Button>
-            <br />
             <br />
             <Table>
               <thead>

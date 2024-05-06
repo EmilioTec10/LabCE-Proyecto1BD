@@ -152,6 +152,9 @@ const Gestion_activos = () => {
           </div>
         </Sidebar>
         <Content>
+          <Container>
+            <h1 style={{ position: 'relative', left: '50%', transform: 'translateX(-50%)', top: '-1px' }}>Gestion Laboratorios</h1>
+          </Container>
           <DataTableContainer>
             <DataTable
               columns={columnas}
