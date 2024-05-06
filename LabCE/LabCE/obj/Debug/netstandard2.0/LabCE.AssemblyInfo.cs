@@ -14,7 +14,11 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LabCE")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
+<<<<<<< HEAD
 [assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6eda9a0082b0ab8e506fc91f792806a6f26a6de8")]
+=======
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+967b9babf68bc945d0c29e9b8587a0a51e3ccad1")]
+>>>>>>> parent of 5bd3d050 (prestamos)
 [assembly: System.Reflection.AssemblyProductAttribute("LabCE")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LabCE")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

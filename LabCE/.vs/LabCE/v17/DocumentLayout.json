@@ -3,12 +3,41 @@
   "WorkspaceRootPath": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\",
   "Documents": [
     {
+<<<<<<< HEAD
       "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\model\\sqlitehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\sqlitehelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\model\\authenticationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\model\\authenticationhelper.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+=======
+      "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\reserva.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\reserva.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\reserva.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\reserva.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\prestamos.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\prestamos.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\appshell.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\appshell.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\appshell.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\appshell.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\assemblyinfo.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\loginpage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}",
+      "RelativeMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|solutionrelative:labce\\loginpage.xaml||{2974C621-7033-421A-B08A-11D27B021D1B}"
+>>>>>>> parent of 5bd3d050 (prestamos)
     },
     {
       "AbsoluteMoniker": "D:0:0:{A9935E02-03A0-4CA4-A325-7D0A1F9B7BAB}|LabCE\\LabCE.csproj|c:\\users\\mrr79\\documents\\labce-proyecto1bd\\labce\\labce\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,6 +63,7 @@
           "Children": [
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 4,
               "Title": "Profesor.cs",
               "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\Model\\Profesor.cs",
@@ -55,13 +85,99 @@
               "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\Model\\AuthenticationHelper.cs",
               "RelativeToolTip": "LabCE\\Model\\AuthenticationHelper.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAEAAAAAAAAA",
+=======
+              "DocumentIndex": 0,
+              "Title": "reserva.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\reserva.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\reserva.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\reserva.xaml.cs",
+              "RelativeToolTip": "LabCE\\reserva.xaml.cs",
+              "ViewState": "AQIAAMEAAAAAAAAAAAAqwN4AAAA+AAAA",
+>>>>>>> parent of 5bd3d050 (prestamos)
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-04T23:08:53.719Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 2,
+=======
+              "DocumentIndex": 1,
+              "Title": "reserva.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\reserva.xaml",
+              "RelativeDocumentMoniker": "LabCE\\reserva.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\reserva.xaml",
+              "RelativeToolTip": "LabCE\\reserva.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAABUAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-04-30T15:19:01.112Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "prestamos.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\prestamos.xaml",
+              "RelativeDocumentMoniker": "LabCE\\prestamos.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\prestamos.xaml",
+              "RelativeToolTip": "LabCE\\prestamos.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-04-30T15:22:18.327Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "AssemblyInfo.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\AssemblyInfo.cs",
+              "RelativeDocumentMoniker": "LabCE\\AssemblyInfo.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\AssemblyInfo.cs",
+              "RelativeToolTip": "LabCE\\AssemblyInfo.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-28T23:37:31.756Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "AppShell.xaml.cs",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\AppShell.xaml.cs",
+              "RelativeDocumentMoniker": "LabCE\\AppShell.xaml.cs",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\AppShell.xaml.cs",
+              "RelativeToolTip": "LabCE\\AppShell.xaml.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAxwAkAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-28T22:27:54.872Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "AppShell.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\AppShell.xaml",
+              "RelativeDocumentMoniker": "LabCE\\AppShell.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\AppShell.xaml",
+              "RelativeToolTip": "LabCE\\AppShell.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAsAAAAlAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-04-28T22:23:34.662Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LoginPage.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LoginPage.xaml",
+              "RelativeDocumentMoniker": "LabCE\\LoginPage.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\LoginPage.xaml",
+              "RelativeToolTip": "LabCE\\LoginPage.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAwAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-04-28T21:24:33.915Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+>>>>>>> parent of 5bd3d050 (prestamos)
               "Title": "App.xaml.cs",
               "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\App.xaml.cs",
               "RelativeDocumentMoniker": "LabCE\\App.xaml.cs",
@@ -74,6 +190,7 @@
             },
             {
               "$type": "Document",
+<<<<<<< HEAD
               "DocumentIndex": 0,
               "Title": "SQLiteHelper.cs",
               "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\Model\\SQLiteHelper.cs",
@@ -97,6 +214,17 @@
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-04T23:04:10.135Z",
               "EditorCaption": ""
+=======
+              "DocumentIndex": 8,
+              "Title": "App.xaml",
+              "DocumentMoniker": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\App.xaml",
+              "RelativeDocumentMoniker": "LabCE\\App.xaml",
+              "ToolTip": "C:\\Users\\MRR79\\Documents\\LabCE-Proyecto1BD\\LabCE\\LabCE\\App.xaml",
+              "RelativeToolTip": "LabCE\\App.xaml",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAcAAAAOAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-04-28T21:16:17.634Z"
+>>>>>>> parent of 5bd3d050 (prestamos)
             }
           ]
         }
