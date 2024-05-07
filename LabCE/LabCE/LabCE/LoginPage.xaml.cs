@@ -32,8 +32,10 @@ namespace LabCE
             // Realizar la lógica de inicio de sesión
             if (profesor != null && profesor.password_prof == contrasena)
             {
+                // Almacenar al profesor actual en la clase App
+                App.ProfesorActual = profesor;
+
                 // Si las credenciales son correctas, navegar a la página de menú
-                //await DisplayAlert("Éxito", "Inicio de sesión exitoso", "OK");
                 await Navigation.PushAsync(new AppShell());
             }
             else

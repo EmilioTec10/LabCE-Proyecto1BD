@@ -19,6 +19,7 @@ namespace LabCE.Model
             db.CreateTableAsync<LaboratorioModel>();
             db.CreateTableAsync<EstudianteModel>();
             db.CreateTableAsync<ActivosModel>();
+            db.CreateTableAsync<PrestamoModel>();
         }
 
         public Task<int> CreateProfesor (ProfesorModel profesor)
@@ -69,6 +70,29 @@ namespace LabCE.Model
             else
                 return 0; // Indica que el activo ya existe
         }
+
+        public async Task<int> CreatePrestamo(PrestamoModel prestamo)
+        {
+            var existingPrestamo = await db.Table<PrestamoModel>().Where(p => p.ID_prestamo == prestamo.ID_prestamo).FirstOrDefaultAsync();
+            if (existingPrestamo == null)
+                return await db.InsertAsync(prestamo);
+            else
+                return 0; // Indica que el préstamo ya existe
+        }
+
+
+        public Task<List<PrestamoModel>> GetPrestamosPendientesPorProfesor(string emailProfesor)
+        {
+            return db.Table<PrestamoModel>()
+                     .Where(p => p.email_prof == emailProfesor && p.estado == "Pendiente")
+                     .ToListAsync();
+        }
+
+        public Task<int> UpdatePrestamoAsync(PrestamoModel prestamo)
+        {
+            return db.UpdateAsync(prestamo);
+        }
+
 
     }
 }

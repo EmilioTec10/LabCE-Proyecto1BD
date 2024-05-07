@@ -20,6 +20,9 @@ namespace LabCE
                 return db;
             }
         }
+
+        public static ProfesorModel ProfesorActual { get; set; } // Propiedad para almacenar al profesor actual
+
         public App()
         {
             InitializeComponent();

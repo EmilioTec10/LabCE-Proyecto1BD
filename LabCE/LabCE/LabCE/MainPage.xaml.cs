@@ -151,6 +151,69 @@ namespace LabCE
 
 
             await App.MyDataBase.CreateActivos(activo4);
+
+            // Prestamo 1
+            var prestamo1 = new PrestamoModel
+            {
+                ID_prestamo = 001,
+                ID_activo = "ACT1x",
+                Fecha_Hora_Solicitud = DateTime.Now.ToString(),
+                Fecha_Hora_Devolucion = DateTime.Now.AddDays(7).ToString(),
+                estado = "Pendiente",
+                activo = false,
+                email_prof = "aa@itcr.ac.cr",
+                email_est = "norma@estudiantec.cr"
+            };
+
+            await App.MyDataBase.CreatePrestamo(prestamo1);
+
+            // Prestamo 2
+            var prestamo2 = new PrestamoModel
+            {
+                ID_prestamo = 002,
+                ID_activo = "ACT2x",
+                Fecha_Hora_Solicitud = DateTime.Now.ToString(),
+                Fecha_Hora_Devolucion = DateTime.Now.AddDays(5).ToString(),
+                estado = "Pendiente",
+                activo = false,
+                email_prof = "mrr@itcr.ac.cr",
+                email_est = "norma@estudiantec.cr"
+            };
+
+            await App.MyDataBase.CreatePrestamo(prestamo2);
+
+            // Prestamo 3
+            var prestamo3 = new PrestamoModel
+            {
+                ID_prestamo = 003,
+                ID_activo = "ACT3xy",
+                Fecha_Hora_Solicitud = DateTime.Now.ToString(),
+                Fecha_Hora_Devolucion = DateTime.Now.AddDays(10).ToString(),
+                estado = "Pendiente",
+                activo = false,
+                email_prof = "mrr@itcr.ac.cr",
+                email_est = "daniela@estudiantec.cr"
+            };
+
+            await App.MyDataBase.CreatePrestamo(prestamo3);
+
+            // Prestamo 4
+            var prestamo4 = new PrestamoModel
+            {
+                ID_prestamo = 04,
+                ID_activo = "ACT4abc",
+                Fecha_Hora_Solicitud = DateTime.Now.ToString(),
+                Fecha_Hora_Devolucion = DateTime.Now.AddDays(3).ToString(),
+                estado = "Pendiente",
+                activo = false,
+                email_prof = "aa@itc.ac.cr",
+                email_est = "alina@estudiantec.cr"
+            };
+
+            await App.MyDataBase.CreatePrestamo(prestamo4);
+
+            Console.WriteLine("Datos creados");
         }
     }
+
 }

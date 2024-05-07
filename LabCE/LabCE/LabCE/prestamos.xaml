@@ -4,9 +4,55 @@
              x:Class="LabCE.prestamos">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Pagina prestamos"
-                VerticalOptions="CenterAndExpand" 
-                HorizontalOptions="CenterAndExpand" />
+            <!-- Encabezados de la tabla -->
+            <Label Text="Prestamos que requieren su aprobacion" FontAttributes="Bold" />
+            <Grid>
+                <!-- Encabezados de las columnas -->
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="3*" />
+                    <ColumnDefinition Width="3*" />
+                </Grid.ColumnDefinitions>
+                <Label Text="ID de Prestamo" Grid.Row="0" Grid.Column="0" FontAttributes="Bold" />
+                <Label Text="ID de Activo" Grid.Row="0" Grid.Column="1" FontAttributes="Bold" />
+                <Label Text="Fecha y Hora de Solicitud" Grid.Row="0" Grid.Column="2" FontAttributes="Bold" />
+                <Label Text="Email del Estudiante" Grid.Row="0" Grid.Column="3" FontAttributes="Bold" />
+            </Grid>
+
+            <!-- Datos de los préstamos -->
+            <ListView x:Name="listViewPrestamos">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="2*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="3*" />
+                                    <ColumnDefinition Width="Auto" />
+                                    <!-- Columna para botones -->
+                                    <ColumnDefinition Width="Auto" />
+                                    <!-- Columna para botones -->
+                                </Grid.ColumnDefinitions>
+                                <Label Text="{Binding ID_prestamo}" Grid.Row="0" Grid.Column="0" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding ID_activo}" Grid.Row="0" Grid.Column="1" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding Fecha_Hora_Solicitud}" Grid.Row="0" Grid.Column="2" LineBreakMode="WordWrap" />
+                                <Label Text="{Binding email_est}" Grid.Row="0" Grid.Column="3" LineBreakMode="WordWrap" />
+                                <Button Text="Aprobar" Command="{Binding Source={x:Reference Name=listViewPrestamos}, Path=BindingContext.AprobarPrestamoCommand}" CommandParameter="{Binding .}" Grid.Row="0" Grid.Column="4" />
+                                <Button Text="Negar" Command="{Binding Source={x:Reference Name=listViewPrestamos}, Path=BindingContext.NegarPrestamoCommand}" CommandParameter="{Binding .}" Grid.Row="0" Grid.Column="5" />
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>
