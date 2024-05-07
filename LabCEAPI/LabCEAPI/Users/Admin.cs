@@ -411,7 +411,7 @@ namespace LabCEAPI.Users
             LinkedList<Laboratorio> laboratorios = new LinkedList<Laboratorio>();
 
             // Consulta SQL con alias para que coincidan con los nombres de las propiedades en la clase Laboratorio
-            string query = "SELECT ID_lab, capacidad, facilidades, computadoras FROM Laboratorio";
+            string query = "SELECT ID_lab, capacidad, facilidades, computadoras, activos FROM Laboratorio";
 
 
             // Utilizamos using para garantizar que los recursos se liberen correctamente
@@ -430,7 +430,7 @@ namespace LabCEAPI.Users
                         while (reader.Read())
                         {
                             // Creamos una instancia de Laboratorio con los datos de la fila actual
-                            Laboratorio lab = new Laboratorio(reader.GetString(0), reader.GetInt32(1), reader.GetString(2), reader.GetInt32(3));
+                            Laboratorio lab = new Laboratorio(reader.GetString(0), reader.GetInt32(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4));
 
                             // Agregamos el laboratorio a la lista de laboratorios disponibles
                             laboratorios.AddLast(lab);
@@ -443,7 +443,92 @@ namespace LabCEAPI.Users
             return laboratorios;
         }
 
+        // Método para actualizar los datos del laboratorio en la base de datos
+        public bool actualizar_lab(Laboratorio laboratorio)
+        {
+            // Query para la actualización de los datos del laboratorio
+            string query = @"
+                UPDATE Laboratorio
+                SET capacidad = @capacidad,
+                    facilidades = @facilidades,
+                    computadoras = @computadoras,
+                    activos = @activos
+                WHERE ID_lab = @ID_lab";
 
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer los parámetros
+                    command.Parameters.AddWithValue("@capacidad", laboratorio.capacidad);
+                    command.Parameters.AddWithValue("@facilidades", laboratorio.facilidades);
+                    command.Parameters.AddWithValue("@computadoras", laboratorio.computadores);
+                    command.Parameters.AddWithValue("@activos", laboratorio.activos);
+                    command.Parameters.AddWithValue("@ID_lab", laboratorio.nombre);
+
+                    // Ejecutar la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Retornar true si la actualización fue exitosa
+                    return rowsAffected > 0;
+                }
+            }
+        }
+
+        // Metodo que deja ver las resevaciones que se le hicieron a ese laboratorio
+        public LinkedList<ReservarLab> ver_reservaciones_lab(string nombre_lab)
+        {
+            LinkedList<ReservarLab> reservaciones = new LinkedList<ReservarLab>();
+
+            // Consulta SQL para seleccionar las reservaciones del laboratorio dado
+            string query = @"
+        SELECT fecha, hora_inicio, hora_fin, descripcion
+        FROM Reserva
+        WHERE ID_lab = @nombre_lab";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecer el parámetro
+                    command.Parameters.AddWithValue("@nombre_lab", nombre_lab);
+
+                    // Ejecutar la consulta
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        // Recorrer los resultados de la consulta
+                        while (reader.Read())
+                        {
+                            // Obtener los valores de las columnas
+                            DateTime fecha = reader.GetDateTime(0);
+                            TimeSpan horaInicio = reader.GetTimeSpan(1); // Leer como TimeSpan
+                            TimeSpan horaFin = reader.GetTimeSpan(2); // Leer como TimeSpan
+                            string descripcion = reader.GetString(3);
+
+                            // Crear objetos DateTime para la fecha y las horas
+                            DateTime horaInicioDateTime = fecha.Date + horaInicio;
+                            DateTime horaFinDateTime = fecha.Date + horaFin;
+
+                            // Crear un objeto ReservarLab y agregarlo a la lista
+                            ReservarLab reservacion = new ReservarLab(nombre_lab, new DateOnly(fecha.Year, fecha.Month, fecha.Day), horaInicioDateTime, horaFinDateTime, descripcion);
+                            reservaciones.AddLast(reservacion);
+                        }
+                    }
+                }
+            }
+
+            return reservaciones;
+        }
 
 
 

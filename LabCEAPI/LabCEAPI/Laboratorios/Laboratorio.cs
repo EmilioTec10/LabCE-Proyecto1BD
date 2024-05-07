@@ -13,6 +13,8 @@ namespace LabCEAPI.Reservaciones
 
         public int computadores { get; set; }
 
+        public string activos { get; set; }
+
        // public LinkedList<Activo> Activos { get; set; }
 
         public Laboratorio(string nombre)
@@ -20,12 +22,13 @@ namespace LabCEAPI.Reservaciones
             this.nombre = nombre;   
         }
 
-        public Laboratorio(string nombre, int cantidad_personas, string facilidades, int computadores)
+        public Laboratorio(string nombre, int cantidad_personas, string facilidades, int computadores, string activos)
         {
             this.nombre = nombre;
             this.capacidad = cantidad_personas;
             this.facilidades = facilidades;
             this.computadores = computadores;
+            this.activos = activos;
         }
     }
 }

@@ -145,6 +145,44 @@ namespace LabCEAPI.Controllers
             return Ok(laboratoriosDisponibles);
         }
 
+        [HttpPost("actualizar-laboratorio")]
+        public IActionResult ActualizarLaboratorio([FromBody] LaboratorioData laboratorioData)
+        {
+            // Validar si se recibió el objeto Laboratorio
+            Laboratorio laboratorio = new Laboratorio(laboratorioData.nombre, laboratorioData.capacidad, laboratorioData.facilidades, laboratorioData.computadores, laboratorioData.activos);
+            if (laboratorio == null)
+            {
+                return BadRequest("El objeto Laboratorio no puede ser nulo");
+            }
+
+            try
+            {
+                // Intentar actualizar la información del laboratorio
+                bool actualizado = admin.actualizar_lab(laboratorio);
+
+                if (actualizado)
+                {
+                    return Ok("Laboratorio actualizado correctamente");
+                }
+                else
+                {
+                    return NotFound("No se encontró el laboratorio o no se pudo actualizar");
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error interno del servidor: {ex.Message}");
+            }
+        }
+
+
+        [HttpGet("ver-reservaciones-lab")]
+        public IActionResult VereReservacionesLab(string nombre_lab)
+        {
+            LinkedList<ReservarLab> reservaciones = admin.ver_reservaciones_lab(nombre_lab);
+            return Ok(reservaciones);
+        }
+
 
         // Devuelve la lista de operadores que se han registrado pero no se a revisado por un administrador
         [HttpGet("ver-operadores-registrados")]
@@ -262,6 +300,19 @@ namespace LabCEAPI.Controllers
         public class EmailOperador
         {
             public string email_op { get; set; }
+        }
+
+        public class LaboratorioData
+        {
+            public string nombre { get; set; }
+
+            public int capacidad { get; set; }
+
+            public string facilidades { get; set; }
+
+            public int computadores { get; set; }
+
+            public string activos { get; set; }
         }
     }
 }

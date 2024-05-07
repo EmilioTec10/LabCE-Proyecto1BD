@@ -1,212 +1,26 @@
-import React, { useContext, useState, useEffect} from 'react';
-import { Table } from 'reactstrap';
+import React, { useContext } from 'react';
 import styled, { ThemeProvider } from 'styled-components';
 import { Light, Dark } from '../styles/themes';
-import logo from '../assets/react.svg';
-import { AiOutlineHome, AiOutlineApartment } from 'react-icons/ai';
-import { MdOutlineAnalytics, MdLogout } from 'react-icons/md';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
-import DataTable from 'react-data-table-component';
-import Paper from '@mui/material/Paper';
+import logo from '../assets/react.svg';
+import { Table, Button, Container, Modal, ModalHeader, ModalBody, FormGroup, ModalFooter } from "reactstrap";
+import { AiOutlineHome, AiOutlineApartment } from 'react-icons/ai';
+import { MdOutlineAnalytics, MdLogout } from 'react-icons/md';
 import axios from 'axios';
 
 const linksArray = [
-  {
-    label: 'Gestion Profesores',
-    icon: <AiOutlineHome />,
-    to: '/gestion_profesores',
-  },
-  {
-    label: 'Gestion Laboratorios',
-    icon: <MdOutlineAnalytics />,
-    to: '/gestion_laboratorios',
-  },
-  {
-    label: 'Gestion Activos',
-    icon: <AiOutlineApartment />,
-    to: '/gestion_activos',
-  },
-  {
-    label: 'Aprobar Operadores',
-    icon: <MdOutlineAnalytics />,
-    to: '/aprobacion_operadores',
-  },
-  {
-    label: 'Cambio Contraseña',
-    icon: <MdOutlineAnalytics />,
-    to: '/cambio_contrasenna',
-  },
-  {
-    label: 'Reportes',
-    icon: <MdOutlineAnalytics />,
-    to: '/reportes',
-  },
+  { label: 'Gestion Profesores', icon: <AiOutlineHome />, to: '/gestion_profesores' },
+  { label: 'Gestion Laboratorios', icon: <MdOutlineAnalytics />, to: '/gestion_laboratorios' },
+  { label: 'Gestion Activos', icon: <AiOutlineApartment />, to: '/gestion_activos' },
+  { label: 'Aprobar Operadores', icon: <MdOutlineAnalytics />, to: '/aprobacion_operadores' },
+  { label: 'Cambio Contraseña', icon: <MdOutlineAnalytics />, to: '/cambio_contrasenna' },
+  { label: 'Reportes', icon: <MdOutlineAnalytics />, to: '/reportes' },
 ];
-
-const Title = styled.h1`
-  text-align: center; /* Centra el texto horizontalmente */
-`;
-
-const CenteredTable = styled.div`
-  display: flex;
-  justify-content: center; /* Centra el contenido horizontalmente */
-`;
 
 const secondarylinksArray = [
-  {
-    label: 'Salir',
-    icon: <MdLogout />,
-    to: '/',
-  },
+  { label: 'Salir', icon: <MdLogout />, to: '/' },
 ];
-
-const styles = {
-  titleContainer: {
-    textAlign: 'center',
-    marginTop: '20px', // Ajusta el margen superior según sea necesario
-  },
-  title: {
-    marginBottom: '20px', // Ajusta el margen inferior según sea necesario
-  },
-};
-
-const Gestion_laboratorios = () => {
-  const [passwordError, setPasswordError] = useState('');
-  const { setTheme, theme } = useContext(ThemeContext);
-  const themeStyle = theme === 'dark' ? Light : Dark;
-  const [laboratorios, setLaboratorios] = useState([]);
-
-  useEffect(() => {
-    // Realizar la llamada a la API para obtener los laboratorios disponibles
-    axios.get('http://localhost:5129/api/ControladorAdmin/ver-laboratorios-disponibles')
-      .then(response => {
-        // Actualizar el estado de los laboratorios con la respuesta de la API
-        setLaboratorios(response.data);
-      })
-      .catch(error => {
-        console.error('Error fetching data:', error);
-      });
-  }, []);
-
-  const CambiarTheme = () => {
-    setTheme((theme) => (theme === 'light' ? 'dark' : 'light'));
-  };
-
-  const columnas = [
-    {
-      name: 'Nombre',
-      selector: row => row.nombre,
-      sortable: true
-    },
-    {
-      name: 'Capacidad',
-      selector: row => row.capacidad,
-      sortable: true
-    },
-    {
-      name: 'Computadores',
-      selector: row => row.computadores,
-      sortable: true
-    },
-    {
-      name: 'Facilidades',
-      selector: row => row.facilidades,
-      sortable: true
-    },
-    {
-      name: 'Horario',
-      selector: row => row.horario,
-      sortable: true
-    },
-    {
-      name: 'Activos',
-      selector: row => row.activos,
-      sortable: true
-    },
-  ];
-
-  return (
-    <ThemeProvider theme={themeStyle}>
-      <Container>
-        <Sidebar>
-          <div className="Logocontent">
-            <div className="imgcontent">
-              <img src={logo} alt="logo" />
-            </div>
-            <h2>LabCE</h2>
-          </div>
-          {linksArray.map(({ icon, label, to }) => (
-            <div className="LinkContainer" key={label}>
-              <NavLink to={to} className="Links" activeClassName="active">
-                <div className="Linkicon">{icon}</div>
-                <span>{label}</span>
-              </NavLink>
-            </div>
-          ))}
-          <Divider />
-          {secondarylinksArray.map(({ icon, label, to }) => (
-            <div className="LinkContainer" key={label}>
-              <NavLink to={to} className="Links" activeClassName="active">
-                <div className="Linkicon">{icon}</div>
-                <span>{label}</span>
-              </NavLink>
-            </div>
-          ))}
-          <Divider />
-          <div className="Themecontent">
-            <div className="Togglecontent">
-              <div className="grid theme-container">
-              </div>
-            </div>
-          </div>
-        </Sidebar>
-        <Content>
-        <Container>
-            <div className="title-container">
-              <h1 className="title"style={{ position: 'relative', right: '-420px' }}>Laboratorios</h1>
-            </div>
-            </Container>
-          <Container>
-            <Table>
-              <thead>
-                <tr>
-                  <th>Nombre</th>
-                  <th>Capacidad</th>
-                  <th>Computadores</th>
-                  <th>Facilidades</th>
-                  <th>Horario</th>
-                  <th>Activos</th>
-                  <th>Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                {laboratorios.map((lab) => (
-                  <tr key={lab.nombre}>
-                    <td>{lab.nombre}</td>
-                    <td>{lab.capacidad}</td>
-                    <td>{lab.computadores}</td>
-                    <td>{lab.facilidades}</td>
-                    <td>{"Ver horario"}</td>
-                    <td>{lab.activos}</td>
-                    <td>
-                      {/* Botones de editar y eliminar */}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Container>
-          {/* Modales para insertar y actualizar */}
-        </Content>
-      </Container>
-    </ThemeProvider>
-  );  
-};
-
-const Container = styled.div`
-  display: flex;
-`;
 
 const Sidebar = styled.div`
   color: ${(props) => props.theme.text};
@@ -277,8 +91,8 @@ const Sidebar = styled.div`
 `;
 
 const Content = styled.div`
-  margin-left: 300px; // Asegurar que el contenido comience después de la barra lateral
-  flex-grow: 1; // Permitir que el contenido crezca para llenar el espacio restante
+  margin-left: 300px;
+  flex-grow: 1;
 `;
 
 const Divider = styled.div`
@@ -288,10 +102,326 @@ const Divider = styled.div`
   margin: 20px 0;
 `;
 
-const DataTableContainer = styled.div`
-  width: 80%;
-  margin-left: auto;
-  margin-right: auto;
+const ScheduleContainer = styled.div`
+  display: grid;
+  grid-template-columns: auto repeat(6, minmax(100px, 1fr));
+  grid-template-rows: auto repeat(24, minmax(30px, 1fr));
+  gap: 1px;
 `;
+
+const TimeSlot = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ccc;
+  background-color: ${(props) => (props.occupied ? '#ffcccc' : '#ccffcc')};
+  position: relative; /* Para posicionar la descripción */
+`;
+
+const Description = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 5px;
+  background-color: rgba(255, 255, 255, 0.8);
+`;
+
+const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+const startTime = 7;
+const endTime = 21;
+
+const generateTimeSlots = () => {
+  const timeSlots = [];
+  for (let hour = startTime; hour <= endTime; hour++) {
+    for (let minute = 0; minute < 60; minute += 30) {
+      const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+      timeSlots.push(time);
+    }
+  }
+  return timeSlots;
+};
+var lab = "";
+class Gestion_laboratorios extends React.Component {
+  
+  state = {
+    data: [],
+    modalActualizar: false,
+    modalInsertar: false,
+    labSchedule: {}, // Inicializar labSchedule como un objeto vacío
+    selectedLab: "",
+    form: {
+      id: "",
+      nombre: "",
+      capacidad: "",
+      computadores: "",
+      facilidades: "",
+      activos: "",
+    },
+  };
+
+  componentDidMount() {
+    // Obtener los laboratorios disponibles
+    axios.get('http://localhost:5129/api/ControladorAdmin/ver-laboratorios-disponibles')
+      .then(response => {
+        console.log(response.data);
+        this.setState({ data: response.data, isLoading: false });
+      })
+      .catch(error => {
+        console.error(error);
+        this.setState({ isLoading: false });
+      });
+   
+  }
+
+  mostrarHorario = (lab) => {
+    console.log(lab);
+     // Obtener las reservaciones para el laboratorio específico (F2-07 en este caso)
+     axios.get('http://localhost:5129/api/ControladorAdmin/ver-reservaciones-lab',{
+      params:{
+        nombre_lab: lab
+      }
+    })
+      .then(response => {
+        const labReservations = response.data;
+        let newLabSchedule = {}; // Cambio const por let
+  
+        labReservations.forEach(reservation => {
+          const day = new Date(reservation.dia).toLocaleDateString('en-US', { weekday: 'long' });
+          const startTime = new Date(reservation.hora_inicio);
+          const endTime = new Date(reservation.hora_fin);
+          const description = reservation.descripcion;
+  
+          // Verificar si el día ya existe en el objeto labSchedule, si no, inicializarlo
+          if (!(day in newLabSchedule)) {
+            newLabSchedule[day] = {};
+          }
+  
+          // Iterar sobre el rango de tiempo desde la hora de inicio hasta la hora de fin
+          let currentTime = startTime;
+          while (currentTime <= endTime) {
+            const currentTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            newLabSchedule[day][currentTimeString] = description;
+            // Incrementar el tiempo en 30 minutos
+            currentTime.setMinutes(currentTime.getMinutes() + 30);
+          }
+        });
+        this.setState({ labSchedule: newLabSchedule });
+        console.log(this.state.labSchedule);
+      })
+      .catch(error => {
+        console.log(this.state.selectedLab);
+        console.error(error);
+      });
+  };
+  
+  
+
+  mostrarModalActualizar = (dato) => {
+    this.setState({
+      form: dato,
+      modalActualizar: true,
+    });
+  };
+
+  cerrarModalActualizar = () => {
+    this.setState({ modalActualizar: false });
+  };
+
+  mostrarModalInsertar = (lab) => {
+    this.mostrarHorario(lab);
+    this.setState({
+      modalInsertar: true,
+    });
+  };
+
+  cerrarModalInsertar = () => {
+    this.setState({ modalInsertar: false });
+  };
+
+  editar = (dato) => {
+    var contador = 0;
+    var arreglo = this.state.data;
+    arreglo.map((registro) => {
+      if (dato.nombre === registro.nombre) {
+        arreglo[contador].nombre = dato.nombre;
+        arreglo[contador].capacidad = dato.capacidad;
+        arreglo[contador].computadores = dato.computadores;
+        arreglo[contador].facilidades = dato.facilidades;
+        arreglo[contador].activos = dato.activos;
+      }
+      contador++;
+    });
+  
+    // Realizar la solicitud HTTP POST para actualizar el laboratorio
+    axios.post('http://localhost:5129/api/ControladorAdmin/actualizar-laboratorio', {
+      nombre: dato.nombre,
+      capacidad: dato.capacidad,
+      computadores: dato.computadores,
+      facilidades: dato.facilidades,
+      activos: dato.activos
+    })
+    .then(response => {
+      alert(response.data);
+      // Aquí puedes manejar la respuesta si es necesario
+    })
+    .catch(error => {
+      console.error(error);
+      alert(error);
+      // Aquí puedes manejar el error si es necesario
+    });
+  
+    this.setState({ data: arreglo, modalActualizar: false });
+  };
+
+  eliminar = (dato) => {
+    var opcion = window.confirm("Estás Seguro que deseas Eliminar el elemento " + dato.nombre);
+    if (opcion === true) {
+      var arreglo = this.state.data.filter(registro => registro.nombre !== dato.nombre);
+      this.setState({ data: arreglo, modalActualizar: false });
+    }
+  };
+
+  handleChange = (e) => {
+    this.setState({
+      form: {
+        ...this.state.form,
+        [e.target.name]: e.target.value,
+      },
+    });
+  };
+
+  render() {
+    const themeStyle = this.props.theme === 'dark' ? Light : Dark;
+    const timeSlots = generateTimeSlots(); 
+    
+    return (
+      <ThemeProvider theme={themeStyle}>
+        <Sidebar>
+          <div className="Logocontent">
+            <div className="imgcontent">
+              <img src={logo} alt="logo" />
+            </div>
+            <h2>LabCE</h2>
+          </div>
+          {linksArray.map(({ icon, label, to }) => (
+            <div className="LinkContainer" key={label}>
+              <NavLink to={to} className="Links" activeClassName="active">
+                <div className="Linkicon">{icon}</div>
+                <span>{label}</span>
+              </NavLink>
+            </div>
+          ))}
+          <Divider />
+          {secondarylinksArray.map(({ icon, label, to }) => (
+            <div className="LinkContainer" key={label}>
+              <NavLink to={to} className="Links" activeClassName="active">
+                <div className="Linkicon">{icon}</div>
+                <span>{label}</span>
+              </NavLink>
+            </div>
+          ))}
+          <Divider />
+          <div className="Themecontent">
+            <div className="Togglecontent">
+              <div className="grid theme-container"></div>
+            </div>
+          </div>
+        </Sidebar>
+
+        <Content> 
+          <Container>
+            <h1 style={{ position: 'relative', left: '50%', transform: 'translateX(-50%)', top: '-1px' }}>Gestion Laboratorios</h1>
+          </Container>
+          <Container>
+            <Table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Capacidad</th>
+                  <th>Computadores</th>
+                  <th>Facilidades</th>
+                  <th>Activos</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.data.map((dato) => (
+                  <tr key={dato.nombre}>
+                    <td>{dato.nombre}</td>
+                    <td>{dato.capacidad}</td>
+                    <td>{dato.computadores}</td>
+                    <td>{dato.facilidades}</td>
+                    <td>{dato.activos}</td>
+                    <td>
+                      <Button color="primary" onClick={() => this.mostrarModalActualizar(dato)}>Editar</Button>{" "}
+                      <Button color="danger" onClick={() => this.mostrarModalInsertar(dato.nombre)}>Horario</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </Table>
+          </Container>
+          <Modal isOpen={this.state.modalActualizar}>
+            <ModalHeader>
+              <div><h3>Editar</h3></div>
+            </ModalHeader>
+            <ModalBody>
+              <FormGroup>
+                <label>Nombre:</label>
+                <input className="form-control" name="nombre" type="text" onChange={this.handleChange} value={this.state.form.nombre} />
+              </FormGroup>
+              <FormGroup>
+                <label>Capacidad:</label>
+                <input className="form-control" name="capacidad" type="text" onChange={this.handleChange} value={this.state.form.capacidad} />
+              </FormGroup>
+              <FormGroup>
+                <label>Computadores:</label>
+                <input className="form-control" name="computadores" type="text" onChange={this.handleChange} value={this.state.form.computadores} />
+              </FormGroup>
+              <FormGroup>
+                <label>Facilidades:</label>
+                <input className="form-control" name="facilidades" type="text" onChange={this.handleChange} value={this.state.form.facilidades} />
+              </FormGroup>
+              <FormGroup>
+                <label>Activos:</label>
+                <input className="form-control" name="activos" type="text" onChange={this.handleChange} value={this.state.form.activos} />
+              </FormGroup>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={() => this.editar(this.state.form)}>Editar</Button>
+              <Button color="danger" onClick={() => this.cerrarModalActualizar()}>Cancelar</Button>
+            </ModalFooter>
+          </Modal>
+          <Modal isOpen={this.state.modalInsertar} size="lg">
+            <ModalHeader>
+              <div><h3>Horarios Disponibles</h3></div>
+            </ModalHeader>
+            <ScheduleContainer>
+              <div></div>
+              {daysOfWeek.map((day) => (
+                <TimeSlot key={day}>{day}</TimeSlot>
+              ))}
+              {timeSlots.map((time) => (
+                <React.Fragment key={time}>
+                  <TimeSlot>{time}</TimeSlot>
+                  {daysOfWeek.map((day, index) => (
+                    <TimeSlot key={`${day}-${time}`} occupied={this.state.labSchedule[day] && this.state.labSchedule[day][time]}>
+                      {this.state.labSchedule[day] && this.state.labSchedule[day][time] && (
+                        <Description>{this.state.labSchedule[day][time]}</Description>
+                      )}
+                    </TimeSlot>
+                  ))}
+                </React.Fragment>
+              ))}
+            </ScheduleContainer>
+            <ModalFooter>
+              <Button className="btn btn-danger" onClick={() => this.cerrarModalInsertar()}>Cerrar</Button>
+            </ModalFooter>
+          </Modal>
+        </Content> 
+      </ThemeProvider>
+    );
+  }
+}
 
 export default Gestion_laboratorios;

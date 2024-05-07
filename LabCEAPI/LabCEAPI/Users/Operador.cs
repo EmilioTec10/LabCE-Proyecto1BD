@@ -233,7 +233,7 @@ namespace LabCEAPI.Users
             LinkedList<Laboratorio> laboratorios = new LinkedList<Laboratorio>();
 
             // Consulta SQL con alias para que coincidan con los nombres de las propiedades en la clase Laboratorio
-            string query = "SELECT ID_lab, capacidad, facilidades, computadoras FROM Laboratorio";
+            string query = "SELECT ID_lab, capacidad, facilidades, computadoras, activos FROM Laboratorio";
 
 
             // Utilizamos using para garantizar que los recursos se liberen correctamente
@@ -252,7 +252,7 @@ namespace LabCEAPI.Users
                         while (reader.Read())
                         {
                             // Creamos una instancia de Laboratorio con los datos de la fila actual
-                            Laboratorio lab = new Laboratorio(reader.GetString(0), reader.GetInt32(1), reader.GetString(2), reader.GetInt32(3));
+                            Laboratorio lab = new Laboratorio(reader.GetString(0), reader.GetInt32(1), reader.GetString(2), reader.GetInt32(3), reader.GetString(4));
 
                             // Agregamos el laboratorio a la lista de laboratorios disponibles
                             laboratorios.AddLast(lab);
@@ -566,6 +566,35 @@ namespace LabCEAPI.Users
             return prestamos;
         }
 
+        // Metodo que actualiza el estado del activo en la base de datos
+        public bool prestar_activo(string placa)
+        {
+            // Query para actualizar el estado del activo a "Prestado"
+            string updateQuery = @"
+        UPDATE Activos
+        SET estado = 'Prestado'
+        WHERE ID_activo = @placa";
+
+            // Crear la conexión a la base de datos
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrir la conexión
+                connection.Open();
+
+                // Crear el comando SQL
+                using (SqlCommand command = new SqlCommand(updateQuery, connection))
+                {
+                    // Establecer el parámetro
+                    command.Parameters.AddWithValue("@placa", placa);
+
+                    // Ejecutar la consulta
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Retornar true si se actualizó el estado del activo correctamente (al menos una fila afectada)
+                    return rowsAffected > 0;
+                }
+            }
+        }
 
         //Metodo que presta un activo a un profesor
         public bool prestar_activo_profesor(string placa, string email_prof, string contraseña_profesor)
@@ -579,8 +608,8 @@ namespace LabCEAPI.Users
 
             // Si la contraseña es válida, procedemos con la inserción en la tabla Prestamo
             string query = @"
-                INSERT INTO Prestamo (ID_activo, Fecha_Hora_Solicitud, estado, activo, email_prof) 
-                VALUES (@ID_activo, @Fecha_Hora_Solicitud, @estado, @activo, @email_prof)";
+        INSERT INTO Prestamo (ID_activo, Fecha_Hora_Solicitud, estado, activo, email_prof) 
+        VALUES (@ID_activo, @Fecha_Hora_Solicitud, @estado, @activo, @email_prof)";
 
             // Crear la conexión a la base de datos
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -601,8 +630,11 @@ namespace LabCEAPI.Users
                     // Ejecutar la consulta
                     int rowsAffected = command.ExecuteNonQuery();
 
-                    // Retornar true si se realizó el préstamo correctamente (al menos una fila afectada)
-                    return rowsAffected > 0;
+                    // Llamar al método para actualizar el estado del activo
+                    bool activoPrestado = prestar_activo(placa);
+
+                    // Retornar true si se realizó el préstamo correctamente en ambas tablas
+                    return rowsAffected > 0 && activoPrestado;
                 }
             }
         }

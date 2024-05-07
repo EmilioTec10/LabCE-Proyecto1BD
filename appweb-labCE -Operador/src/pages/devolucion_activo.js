@@ -11,6 +11,13 @@ import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
 import axios from "axios";
 
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import TextField from '@mui/material/TextField';
+import DialogActions from '@mui/material/DialogActions';
+
 import {
   Table,
   Container,
@@ -20,15 +27,6 @@ import {
   FormGroup,
   ModalFooter,
 } from "reactstrap";
-
-const data = [
-  { cedula: 504560886, nombreyapellidos: "Emmanuel esquivel Chavarria", edad: "19", fechanacimiento: "28/10/04", correo: "prueba@gmail.com" },
-  { cedula: 103450879, nombreyapellidos: "Carlos", edad: "20", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 103410687, nombreyapellidos: "Juan", edad: "80", fechanacimiento: "23/06/97", correo: "ema@gmail.com"},
-  { cedula: 119200368, nombreyapellidos: "Pepe", edad: "45", fechanacimiento: "23/08/97", correo: "ema@gmail.com" },
-  { cedula: 123467809, nombreyapellidos: "Emilio", edad: "21", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-  { cedula: 345676557, nombreyapellidos: "Naruto", edad: "89", fechanacimiento: "23/08/97", correo: "ema@gmail.com"},
-];
 
 const linksArray = [
   {
@@ -158,6 +156,10 @@ class Devolucion_activo extends React.Component {
     data: [],
     modalActualizar: false,
     modalInsertar: false,
+    passwordDialogOpen: false,
+    password: '',
+    selectedData: null,
+    selectedProfessorEmail: '',
     form: {
       id: "",
       cedula: "",
@@ -166,6 +168,18 @@ class Devolucion_activo extends React.Component {
       fechanacimiento: "",
       correo: "",
     },
+  };
+
+  handlePrestarProfesor(dato, email) {
+    // Aquí puedes realizar cualquier lógica adicional antes de abrir el diálogo
+    this.setState({ selectedData: dato, selectedProfessorEmail: email, passwordDialogOpen: true });
+  }
+
+  handleConfirmPrestamoProfesor = () => {
+    // Aquí puedes implementar la lógica para confirmar el préstamo al profesor con el correo electrónico y la contraseña ingresados
+    this.setState({ passwordDialogOpen: false });
+    // Lógica adicional después de confirmar el préstamo al profesor
+    this.prestar_profesor(this.state.selectedData, this.state.selectedProfessorEmail, this.state.password);
   };
   
   componentDidMount() {
@@ -185,12 +199,31 @@ class Devolucion_activo extends React.Component {
     this.devolver_activo(dato);
   };
 
-  prestar_profesor = (dato, contra_prof) => {
-    var opcion = window.confirm("Estás Seguro que deseas aceptar al operador" + dato.cedula);
-    if (opcion === true) {
-      var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-      this.setState({ data: arreglo, modalActualizar: false });
-    }
+  prestar_profesor = (dato, email_prof, contra_prof) => {
+        console.log(email_prof);
+        console.log(contra_prof);
+        // Realizar la solicitud HTTP
+        axios.post('http://localhost:5129/api/Operador/prestar-activo-profesor', {
+          placa: dato.placa,
+          email_prof: email_prof,
+          contraseña_prof: contra_prof
+        })
+        .then(response => {
+          // Manejar la respuesta de la API
+          console.log(response.data); // Imprimir la respuesta en la consola
+          this.setState(prevState => ({
+            data: prevState.data.filter(item => item.placa !== dato.placa)
+          }));
+          alert("Prestamo de activo por parte del profesor registrada correctamente");
+        })
+        .catch(error => {
+          console.log(dato.email_prof);
+          console.log(dato.placa);
+          console.log(contra_prof);
+          // Manejar los errores de la solicitud
+          console.error(error); // Imprimir el error en la consola
+          alert("No se pudo realizar el prestamo del activo. Por favor, verifique las credenciales del profesor.");
+        });
   };
 
   prestar_estudiante = (dato, contra_prof) => {
@@ -273,7 +306,7 @@ class Devolucion_activo extends React.Component {
                     <td>
                       <Button
                         color="primary"
-                        onClick={() => this.guardarEmail(dato.correo, dato)}
+                        onClick={() => this.handlePrestarProfesor(dato)}
                       >
                         Prestar a profesor
                       </Button>{" "}
@@ -290,6 +323,39 @@ class Devolucion_activo extends React.Component {
             </Table>
           </Container>
         </Content> 
+        <Dialog open={this.state.passwordDialogOpen} onClose={() => this.setState({ passwordDialogOpen: false })}>
+  <DialogTitle>Confirmar préstamo al profesor</DialogTitle>
+  <DialogContent>
+    <DialogContentText>
+      Por favor, ingresa el correo electrónico y la contraseña del profesor.
+    </DialogContentText>
+    <TextField
+      autoFocus
+      margin="dense"
+      label="Correo electrónico del profesor"
+      type="email"
+      fullWidth
+      value={this.state.selectedProfessorEmail}
+      onChange={(e) => this.setState({ selectedProfessorEmail: e.target.value })}
+    />
+    <TextField
+      margin="dense"
+      label="Contraseña del profesor"
+      type="password"
+      fullWidth
+      value={this.state.password}
+      onChange={(e) => this.setState({ password: e.target.value })}
+    />
+  </DialogContent>
+  <DialogActions>
+    <Button onClick={() => this.setState({ passwordDialogOpen: false })} color="primary">
+      Cancelar
+    </Button>
+    <Button onClick={this.handleConfirmPrestamoProfesor} color="primary">
+      Confirmar
+    </Button>
+  </DialogActions>
+</Dialog>
       </ThemeProvider>
     );
   }

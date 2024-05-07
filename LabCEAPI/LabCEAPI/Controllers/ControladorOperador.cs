@@ -186,9 +186,9 @@ namespace LabCEAPI.Controllers
         }
 
         [HttpPost("prestar-activo-profesor")]
-        public IActionResult PrestarActivoProfesor(string placa, string email_prof, string contra_prof)
+        public IActionResult PrestarActivoProfesor([FromBody] DevolucionProfesorData profesorData)
         {
-            bool prestado = operador.prestar_activo_profesor(placa, email_prof, contra_prof);
+            bool prestado = operador.prestar_activo_profesor(profesorData.placa, profesorData.email_prof, profesorData.contraseña_prof);
 
             if (prestado) {
                 return Ok("Activo prestado a profesor correctamente");
