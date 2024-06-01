@@ -148,6 +148,39 @@ namespace LabCEAPI.Users
             return contraseña == contraseñaBaseDeDatos;
         }
 
+        public Operador ver_operador(string email_op)
+        {
+            // Consulta SQL para buscar al operador por email
+            string query = "SELECT cedula, carnet, nombre, apellido1 + ' ' + apellido2 AS apellidos, fecha_nacimiento, email_op FROM Operador WHERE email_op = @Email AND aprovado = 1";
+
+            // Variable para almacenar la contraseña recuperada de la base de datos
+            Operador operador = null;
+
+            // Utilizamos using para garantizar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                // Abrimos la conexión
+                connection.Open();
+
+                // Creamos un comando SQL
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    // Establecemos el parámetro para el correo electrónico
+                    command.Parameters.AddWithValue("@Email", email_op);
+
+                    // Ejecutamos la consulta y obtenemos la contraseña almacenada en la base de datos
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            operador = new Operador(reader.GetString(0), reader.GetString(1), reader.GetString(2), reader.GetString(3), reader.GetDateTime(4), reader.GetString(5));
+                        }
+                    }
+                }
+            }
+            return operador;
+        }
+
         // Metodo que registra la hora de entrada del turno de un operador
         public bool marcar_hora_entrada(string email_op)
         {
@@ -266,7 +299,7 @@ namespace LabCEAPI.Users
         }
 
         //Metodo para reservar un laboratorio en una fecha determinada
-        public bool reservar_laboratorio(string nombre, DateTime dia, DateTime hora_inicio, DateTime hora_fin, string descripcion, bool palmada, string email_op)
+        public bool reservar_laboratorio(string nombre, DateTime dia, DateTime hora_inicio, DateTime hora_fin, string descripcion, bool palmada, string email_est)
         {
             // Definir el estado inicial de la reserva
             string estadoReserva = "Reservado";
@@ -278,8 +311,8 @@ namespace LabCEAPI.Users
                 connection.Open();
 
                 // Consulta SQL para insertar la reserva
-                string query = @"INSERT INTO Reserva (fecha, hora_inicio, hora_fin, ID_lab, email_op, estado, descripcion, palmada) 
-                        VALUES (@Fecha, @HoraInicio, @HoraFin, @IDLab, @EmailOp, @Estado, @Descripcion, @Palmada)";
+                string query = @"INSERT INTO Reserva (fecha, hora_inicio, hora_fin, ID_lab, email_est, estado, descripcion, palmada) 
+                        VALUES (@Fecha, @HoraInicio, @HoraFin, @IDLab, @EmailEst, @Estado, @Descripcion, @Palmada)";
 
                 // Crear el comando SQL
                 using (SqlCommand command = new SqlCommand(query, connection))
@@ -289,7 +322,7 @@ namespace LabCEAPI.Users
                     command.Parameters.AddWithValue("@HoraInicio", hora_inicio);
                     command.Parameters.AddWithValue("@HoraFin", hora_fin);
                     command.Parameters.AddWithValue("@IDLab", nombre);
-                    command.Parameters.AddWithValue("@EmailOp", email_op);
+                    command.Parameters.AddWithValue("@EmailEst", email_est);
                     command.Parameters.AddWithValue("@Estado", estadoReserva);
                     command.Parameters.AddWithValue("@Descripcion", descripcion);
                     command.Parameters.AddWithValue("@Palmada", palmada);
@@ -444,9 +477,10 @@ namespace LabCEAPI.Users
             LinkedList<PrestamoActivo> prestamosAprobados = new LinkedList<PrestamoActivo>();
 
             // Query SQL para seleccionar los prestamos aprobados
-            string query = @"SELECT p.email_est, p.email_prof, p.Fecha_Hora_Solicitud, p.estado, p.ID_activo
+            string query = @"SELECT p.email_est, p.email_prof, p.Fecha_Hora_Solicitud, p.estado, p.ID_activo, e.nombre, e.apellido1 + ' ' + e.apellido2 AS apellidos
                      FROM Prestamo p
-                     WHERE p.estado = 'Aprobado' AND p.activo = 1";
+                     INNER JOIN Estudiante e ON p.email_est = e.email_est
+                     WHERE p.estado = 'Aprobado' AND p.activo = 1 AND p.email_prof IS NULL";
 
             // Crear la conexión a la base de datos
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -468,9 +502,11 @@ namespace LabCEAPI.Users
                             DateTime fecha_hora_solicitud = reader.IsDBNull(2) ? DateTime.MinValue : reader.GetDateTime(2);
                             string estado = reader.IsDBNull(3) ? string.Empty : reader.GetString(3);
                             string placa = reader.IsDBNull(4) ? string.Empty : reader.GetString(4);
+                            string nombre = reader.IsDBNull(5) ? string.Empty : reader.GetString(5);
+                            string apellidos = reader.IsDBNull(6) ? string.Empty : reader.GetString(6);
 
                             // Crear un objeto PrestamoActivo y agregarlo a la lista
-                            PrestamoActivo prestamo = new PrestamoActivo(email_est, email_prof, fecha_hora_solicitud, estado, placa);
+                            PrestamoActivo prestamo = new PrestamoActivo(email_est, email_prof, fecha_hora_solicitud, estado, placa, nombre, apellidos);
                             prestamosAprobados.AddLast(prestamo);
                         }
 
@@ -483,49 +519,39 @@ namespace LabCEAPI.Users
         }
 
         //Metodo que presta el activo al estudiante
-        public bool prestar_activo_estudiante(string email, string contraseña)
+        public bool prestar_activo_estudiante(string email_op, string contraseña_op, string placa, string email_est)
         {
-            // Consulta SQL para buscar al operador por email
-            string query = "SELECT contrasena_op, email_op FROM Operador WHERE email_op = @Email";
-
-            // Variable para almacenar la contraseña recuperada de la base de datos
-            string contraseñaBaseDeDatos = null;
-
-            // Utilizamos using para garantizar que los recursos se liberen correctamente
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            bool ingresado = this.ingresar_operador(email_op, contraseña_op);
+            if (ingresado)
             {
-                // Abrimos la conexión
-                connection.Open();
-
-                // Creamos un comando SQL
-                using (SqlCommand command = new SqlCommand(query, connection))
+                // Actualizar la tabla Prestamo y la tabla Activos
+                using (SqlConnection connection = new SqlConnection(connectionString))
                 {
-                    // Establecemos el parámetro para el correo electrónico
-                    command.Parameters.AddWithValue("@Email", email);
+                    connection.Open();
 
-                    // Ejecutamos la consulta y obtenemos la contraseña almacenada en la base de datos
-                    using (SqlDataReader reader = command.ExecuteReader())
+                    // Actualizar tabla Prestamo
+                    string updatePrestamoQuery = "UPDATE Prestamo SET activo = 0 WHERE email_est = @EmailEstudiante AND ID_activo = @Placa";
+                    using (SqlCommand command = new SqlCommand(updatePrestamoQuery, connection))
                     {
-                        if (reader.Read())
-                        {
-                            contraseñaBaseDeDatos = reader.GetString(0); // Suponiendo que la contraseña está en la primera columna
-                            this.email = reader.GetString(1);
-                        }
+                        command.Parameters.AddWithValue("@EmailEstudiante", email_est);
+                        command.Parameters.AddWithValue("@Placa", placa);
+                        command.ExecuteNonQuery();
+                    }
+
+                    // Actualizar tabla Activos
+                    string updateActivosQuery = "UPDATE Activos SET estado = 'Prestado' WHERE ID_activo = @Placa";
+                    using (SqlCommand command = new SqlCommand(updateActivosQuery, connection))
+                    {
+                        command.Parameters.AddWithValue("@Placa", placa);
+                        command.ExecuteNonQuery();
                     }
                 }
+                return true;
             }
 
-            // Si no se encontró ningún profesor con ese correo electrónico
-            if (contraseñaBaseDeDatos == null)
-            {
-                return false;
-            }
-
-            // Comparamos la contraseña proporcionada con la contraseña almacenada en la base de datos
-            contraseñaBaseDeDatos = EncriptacionMD5.desencriptar(contraseñaBaseDeDatos);
-            return contraseña == contraseñaBaseDeDatos;
-
+            return false;
         }
+
 
         public LinkedList<PrestamoActivo> ver_prestamos_pendientes_estudiantes()
         {

@@ -30,24 +30,34 @@ import {
 
 const linksArray = [
   {
-    label: 'Reserva Laboratorio',
+      label: 'Marcar Horas',
+      icon: <AiOutlineHome />,
+      to: '/marcar_horas',
+  },
+  {
+    label: 'Reservar Laboratorio',
     icon: <AiOutlineHome />,
     to: '/reserva_laboratorio',
   },
   {
-    label: 'Prestamo Profesor',
+    label: 'Prestamos Profes',
     icon: <MdOutlineAnalytics />,
     to: '/prestamo_profesor',
   },
   {
-    label: 'Prestamo Estudiante',
+    label: 'Prestamos Estudiantes',
     icon: <AiOutlineApartment />,
     to: '/prestamo_estudiante',
   },
   {
-    label: 'Devolucion Activo',
+    label: 'Prestar Activo',
     icon: <MdOutlineAnalytics />,
     to: '/devolucion_activo',
+  },
+  {
+    label: 'Prestamos Aprobados',
+    icon: <MdOutlineAnalytics />,
+    to: '/prestamos_aprobados',
   },
   {
     label: 'Reportes',
@@ -68,7 +78,7 @@ const Sidebar = styled.div`
   color: ${(props) => props.theme.text};
   background: ${(props) => props.theme.bg};
   position: fixed;
-  width: 300px;
+  width: 310px;
   height: 100vh;
   z-index: 1000;
 
@@ -132,6 +142,7 @@ const Sidebar = styled.div`
   }
 `;
 
+
 const Content = styled.div`
   margin-left: 300px; // Asegurar que el contenido comience después de la barra lateral
   flex-grow: 1; // Permitir que el contenido crezca para llenar el espacio restante
@@ -157,6 +168,8 @@ class Devolucion_activo extends React.Component {
     modalActualizar: false,
     modalInsertar: false,
     passwordDialogOpen: false,
+    emailDialogOpen: false,
+    emailEstudiante: '',
     password: '',
     selectedData: null,
     selectedProfessorEmail: '',
@@ -181,6 +194,7 @@ class Devolucion_activo extends React.Component {
     // Lógica adicional después de confirmar el préstamo al profesor
     this.prestar_profesor(this.state.selectedData, this.state.selectedProfessorEmail, this.state.password);
   };
+
   
   componentDidMount() {
     axios.get('http://localhost:5129/api/Operador/ver-activos-disponibles') // Reemplaza 'ruta_de_tu_api' con la URL de tu API
@@ -243,6 +257,54 @@ class Devolucion_activo extends React.Component {
       var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
       this.setState({ data: arreglo, modalActualizar: false });
     }
+  };
+
+  // Función para abrir el diálogo de solicitud de email del estudiante
+  openEmailDialog = (dato) => {
+    this.setState({ emailDialogOpen: true, selectedData: dato });
+  };
+
+  // Función para cerrar el diálogo de solicitud de email del estudiante
+  closeEmailDialog = () => {
+    this.setState({ emailDialogOpen: false });
+  };
+
+  // Función para manejar la confirmación de la solicitud del estudiante
+  handleConfirmSolicitudEstudiante = () => {
+    // Aquí puedes implementar la lógica para confirmar la solicitud al estudiante con el email ingresado
+    this.setState({ emailDialogOpen: false });
+    // Lógica adicional después de confirmar la solicitud al estudiante
+    this.solicitar_activo_estudiante(this.state.selectedData.placa, this.state.emailEstudiante);
+  };
+
+  // Función para guardar el email del estudiante ingresado en el diálogo
+  handleEmailChange = (event) => {
+    this.setState({ emailEstudiante: event.target.value });
+  };
+
+  handleEmailProfChange = (event) => {
+    this.setState({ selectedProfessorEmail: event.target.value})
+  }
+
+  // Lógica para solicitar el activo al estudiante mediante la API
+  solicitar_activo_estudiante = (placa, email_est) => {
+    // Realizar la solicitud HTTP
+    axios.post('http://localhost:5129/api/Operador/solicitar-activo-estudiante', {
+      placa: placa,
+      email_est: email_est,
+      email_prof: this.state.selectedProfessorEmail // Puedes utilizar el email del profesor seleccionado si lo necesitas
+    })
+    .then(response => {
+      // Manejar la respuesta de la API
+      console.log(response.data); // Imprimir la respuesta en la consola
+      // Aquí puedes implementar cualquier lógica adicional después de solicitar el activo al estudiante
+      alert("Solicitud de activo para estudiante realizada correctamente");
+    })
+    .catch(error => {
+      // Manejar los errores de la solicitud
+      console.error(error); // Imprimir el error en la consola
+      alert("No se pudo solicitar el activo para el estudiante");
+    });
   };
   
 
@@ -312,7 +374,7 @@ class Devolucion_activo extends React.Component {
                       </Button>{" "}
                       <Button
                         color="success"
-                        onClick={() => this.guardarEmail(dato.correo, dato)}
+                        onClick={() => this.openEmailDialog(dato)}
                       >
                         Solicitar a estudiante
                       </Button>{" "}
@@ -324,38 +386,77 @@ class Devolucion_activo extends React.Component {
           </Container>
         </Content> 
         <Dialog open={this.state.passwordDialogOpen} onClose={() => this.setState({ passwordDialogOpen: false })}>
-  <DialogTitle>Confirmar préstamo al profesor</DialogTitle>
-  <DialogContent>
-    <DialogContentText>
-      Por favor, ingresa el correo electrónico y la contraseña del profesor.
-    </DialogContentText>
-    <TextField
-      autoFocus
-      margin="dense"
-      label="Correo electrónico del profesor"
-      type="email"
-      fullWidth
-      value={this.state.selectedProfessorEmail}
-      onChange={(e) => this.setState({ selectedProfessorEmail: e.target.value })}
-    />
-    <TextField
-      margin="dense"
-      label="Contraseña del profesor"
-      type="password"
-      fullWidth
-      value={this.state.password}
-      onChange={(e) => this.setState({ password: e.target.value })}
-    />
-  </DialogContent>
-  <DialogActions>
-    <Button onClick={() => this.setState({ passwordDialogOpen: false })} color="primary">
-      Cancelar
-    </Button>
-    <Button onClick={this.handleConfirmPrestamoProfesor} color="primary">
-      Confirmar
-    </Button>
-  </DialogActions>
-</Dialog>
+          <DialogTitle>Confirmar préstamo al profesor</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Por favor, ingresa el correo electrónico y la contraseña del profesor.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Correo electrónico del profesor"
+              type="email"
+              fullWidth
+              value={this.state.selectedProfessorEmail}
+              onChange={(e) => this.setState({ selectedProfessorEmail: e.target.value })}
+            />
+            <TextField
+              margin="dense"
+              label="Contraseña del profesor"
+              type="password"
+              fullWidth
+              value={this.state.password}
+              onChange={(e) => this.setState({ password: e.target.value })}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => this.setState({ passwordDialogOpen: false })} color="primary">
+              Cancelar
+            </Button>
+            <Button onClick={this.handleConfirmPrestamoProfesor} color="primary">
+              Confirmar
+            </Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={this.state.emailDialogOpen} onClose={this.closeEmailDialog}>
+          <DialogTitle>Ingrese el correo electrónico del estudiante</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Por favor, ingrese el correo electrónico del estudiante al que desea solicitar el activo.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Correo electrónico del estudiante"
+              type="emailEst"
+              fullWidth
+              value={this.state.emailEstudiante}
+              onChange={this.handleEmailChange}
+            />
+          </DialogContent>
+          <DialogContent>
+            <DialogContentText>
+              Por favor, ingrese el correo electrónico del profesor que tiene que aprobar el activo.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Correo electrónico del profesor"
+              type="emailProf"
+              fullWidth
+              value={this.state.selectedProfessorEmail}
+              onChange={this.handleEmailProfChange}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={this.closeEmailDialog} color="primary">
+              Cancelar
+            </Button>
+            <Button onClick={this.handleConfirmSolicitudEstudiante} color="primary">
+              Confirmar
+            </Button>
+          </DialogActions>
+        </Dialog>
       </ThemeProvider>
     );
   }

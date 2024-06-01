@@ -10,6 +10,7 @@ using static LabCEAPI.Controllers.ControladorProfesor;
 using LabCEAPI.NewFolder;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Primitives;
+using System.Globalization;
 
 namespace LabCEAPI.Controllers
 {
@@ -49,7 +50,7 @@ namespace LabCEAPI.Controllers
                 }
                 else
                 {
-                    return Unauthorized("Sus credenciales son inválidas o no ha sido aprobado por un administrador");
+                    return Unauthorized("Sus credenciales son inválidas o no han sido aprobado por un administrador");
                 }
             }
             catch (Exception ex)
@@ -58,10 +59,17 @@ namespace LabCEAPI.Controllers
             }
         }
 
-        [HttpPost("marcar-entrada")]
-        public IActionResult MarcarHoraEntrada(string email_op)
+        [HttpGet("ver-datos-operador")]
+        public IActionResult VerOperadorData(string email_op)
         {
-            bool marcado = operador.marcar_hora_entrada(email_op);
+            Operador operador_data = operador.ver_operador(email_op);
+            return Ok(operador_data);
+        }
+
+        [HttpPost("marcar-entrada")]
+        public IActionResult MarcarHoraEntrada(MarcarHorasData horasData)
+        {
+            bool marcado = operador.marcar_hora_entrada(horasData.email_op);
             if (marcado)
             {
                 return Ok("Operador a marcado horas exitosamente");
@@ -74,9 +82,9 @@ namespace LabCEAPI.Controllers
         }
 
         [HttpPost("marcar-salida")]
-        public IActionResult MarcarHorasSalida(string email_op)
+        public IActionResult MarcarHorasSalida(MarcarHorasData horasData)
         {
-            bool marcado = operador.marcar_hora_salida(email_op);
+            bool marcado = operador.marcar_hora_salida(horasData.email_op);
             if (marcado)
             {
                 return Ok("Operador a marcado horas exitosamente");
@@ -120,10 +128,10 @@ namespace LabCEAPI.Controllers
 
         
         [HttpPost("solicitar-activo-estudiante")]
-        public IActionResult SolicitarActivoEstudiante(string placa, string email_prof, string email_est)
+        public IActionResult SolicitarActivoEstudiante(EstudianteSolicitarActivo solicitarActivoData)
         {
             // Aquí deberías obtener el profesor de la base de datos o de alguna otra fuente de datos
-            bool solicitado = operador.solicitar_activo_estudiante(placa, email_est, email_prof);
+            bool solicitado = operador.solicitar_activo_estudiante(solicitarActivoData.placa, solicitarActivoData.email_est, solicitarActivoData.email_prof);
             if (solicitado)
             {
                 return Ok("Solicitud de activo para estudiante realizada correctamente");
@@ -150,11 +158,11 @@ namespace LabCEAPI.Controllers
         }
 
         [HttpPost("prestar-activo-estudiante")]
-        public IActionResult PrestarActivoEstudiante(string email, string contraseña)
+        public IActionResult PrestarActivoEstudiante(PrestamoActivoEst prestamoActivoEst)
         {
             try
             {
-                bool prestamoExitoso = operador.prestar_activo_estudiante(email, contraseña);
+                bool prestamoExitoso = operador.prestar_activo_estudiante(prestamoActivoEst.email_op, prestamoActivoEst.contraseña_op, prestamoActivoEst.placa, prestamoActivoEst.email_est);
                 if (prestamoExitoso)
                 {
                     return Ok("El activo fue prestado exitosamente.");
@@ -346,6 +354,25 @@ namespace LabCEAPI.Controllers
             public float horas_trabajadas { get; set; }
         }
 
+        public class EstudianteSolicitarActivo
+        {
+            public string placa { get; set; }
+            public string email_est { get; set; }
+            public string email_prof { get; set; }
+        }
 
+        public class PrestamoActivoEst
+        {
+            public string placa { get; set; }
+            public string email_op { get; set; }
+            public string contraseña_op { get; set; }
+
+            public string email_est { get; set; }
+        }
+
+        public class MarcarHorasData
+        {
+            public string email_op { get; set; }
+        }
     } 
 }

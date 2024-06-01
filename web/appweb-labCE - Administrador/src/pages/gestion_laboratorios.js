@@ -10,29 +10,16 @@ import { MdOutlineAnalytics, MdLogout } from 'react-icons/md';
 import axios from 'axios';
 
 const linksArray = [
-  {
-    label: 'Aprobar Prestamos',
-    icon: <AiOutlineHome />,
-    to: '/aprobacion_prestamo',
-  },
-  {
-    label: 'Reserva Laboratorios',
-    icon: <MdOutlineAnalytics />,
-    to: '/gestion_reserva_laboratorios',
-  },
-  {
-    label: 'Cambio Contraseña',
-    icon: <MdOutlineAnalytics />,
-    to: '/cambio_contrasenna',
-  },
+  { label: 'Gestion Profesores', icon: <AiOutlineHome />, to: '/gestion_profesores' },
+  { label: 'Gestion Laboratorios', icon: <MdOutlineAnalytics />, to: '/gestion_laboratorios' },
+  { label: 'Gestion Activos', icon: <AiOutlineApartment />, to: '/gestion_activos' },
+  { label: 'Aprobar Operadores', icon: <MdOutlineAnalytics />, to: '/aprobacion_operadores' },
+  { label: 'Cambio Contraseña', icon: <MdOutlineAnalytics />, to: '/cambio_contrasenna' },
+  { label: 'Reportes', icon: <MdOutlineAnalytics />, to: '/reportes' },
 ];
 
 const secondarylinksArray = [
-  {
-    label: 'Salir',
-    icon: <MdLogout />,
-    to: '/',
-  },
+  { label: 'Salir', icon: <MdLogout />, to: '/' },
 ];
 
 const Sidebar = styled.div`
@@ -154,49 +141,23 @@ const generateTimeSlots = () => {
   return timeSlots;
 };
 
+var lab = "";
 class Gestion_laboratorios extends React.Component {
+  
   state = {
     data: [],
     modalActualizar: false,
     modalInsertar: false,
-    labSchedule: {},
+    labSchedule: {}, // Inicializar labSchedule como un objeto vacío
     selectedLab: "",
     form: {
-      // Agrega los campos necesarios para el formulario de reserva
-      dia: "",
-      horaInicio: "",
-      horaFin: "",
-      descripcion: "",
-      palmada: false,
-      email_est: "", // No veo este campo en la info que se manda a la API
-      email_prof: "" // No veo este campo en la info que se manda a la API
+      id: "",
+      nombre: "",
+      capacidad: "",
+      computadores: "",
+      facilidades: "",
+      activos: "",
     },
-  };
-
-  reservarLaboratorio = () => {
-    // Recopilar los datos del formulario de reserva
-    const { dia, horaInicio, horaFin, descripcion, palmada, email_est, email_prof } = this.state.form;
-
-    // Realizar la solicitud HTTP POST a la API
-    axios.post('http://localhost:5129/api/ControladorAdmin/reservar-laboratorio', {
-      Nombre: this.state.selectedLab,
-      Dia: dia,
-      HoraInicio: horaInicio,
-      HoraFin: horaFin,
-      Descripcion: descripcion,
-      Palmada: palmada,
-      email_est: email_est,
-      email_prof: email_prof
-    })
-    .then(response => {
-      alert(response.data);
-      // Aquí puedes manejar la respuesta si es necesario
-    })
-    .catch(error => {
-      console.error(error);
-      alert(error);
-      // Aquí puedes manejar el error si es necesario
-    });
   };
 
   componentDidMount() {
@@ -221,37 +182,43 @@ class Gestion_laboratorios extends React.Component {
         nombre_lab: lab
       }
     })
-      .then(response => {
-        const labReservations = response.data;
-        let newLabSchedule = {}; // Cambio const por let
-  
-        labReservations.forEach(reservation => {
-          const day = new Date(reservation.dia).toLocaleDateString('en-US', { weekday: 'long' });
+    .then(response => {
+      const labReservations = response.data;
+      let newLabSchedule = {}; // Cambio const por let
+
+      labReservations.forEach(reservation => {
+          const date = new Date(reservation.dia);
+          date.setDate(date.getDate() + 1);
+          const day = date.toLocaleDateString('en-US', { weekday: 'long' });
           const startTime = new Date(reservation.hora_inicio);
           const endTime = new Date(reservation.hora_fin);
           const description = reservation.descripcion;
-  
-          // Verificar si el día ya existe en el objeto labSchedule, si no, inicializarlo
-          if (!(day in newLabSchedule)) {
-            newLabSchedule[day] = {};
+
+          // Verificar si la fecha de la reservación es mayor que la fecha actual
+          const currentDate = new Date();
+          if (startTime >= currentDate) {
+              // Verificar si el día ya existe en el objeto labSchedule, si no, inicializarlo
+              if (!(day in newLabSchedule)) {
+                  newLabSchedule[day] = {};
+              }
+
+              // Iterar sobre el rango de tiempo desde la hora de inicio hasta la hora de fin
+              let currentTime = startTime;
+              while (currentTime <= endTime) {
+                  const currentTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                  newLabSchedule[day][currentTimeString] = description;
+                  // Incrementar el tiempo en 30 minutos
+                  currentTime.setMinutes(currentTime.getMinutes() + 30);
+              }
           }
-  
-          // Iterar sobre el rango de tiempo desde la hora de inicio hasta la hora de fin
-          let currentTime = startTime;
-          while (currentTime <= endTime) {
-            const currentTimeString = currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            newLabSchedule[day][currentTimeString] = description;
-            // Incrementar el tiempo en 30 minutos
-            currentTime.setMinutes(currentTime.getMinutes() + 30);
-          }
-        });
-        this.setState({ labSchedule: newLabSchedule });
-        console.log(this.state.labSchedule);
-      })
-      .catch(error => {
-        console.log(this.state.selectedLab);
-        console.error(error);
       });
+      this.setState({ labSchedule: newLabSchedule });
+      console.log(this.state.labSchedule);
+  })
+  .catch(error => {
+      console.log(this.state.selectedLab);
+      console.error(error);
+  });
   };
   
   
@@ -329,7 +296,6 @@ class Gestion_laboratorios extends React.Component {
       },
     });
   };
-  
 
   render() {
     const themeStyle = this.props.theme === 'dark' ? Light : Dark;
@@ -394,7 +360,7 @@ class Gestion_laboratorios extends React.Component {
                     <td>{dato.facilidades}</td>
                     <td>{dato.activos}</td>
                     <td>
-                      <Button color="primary" onClick={() => this.mostrarModalActualizar(dato)}>Reservar</Button>{" "}
+                      <Button color="primary" onClick={() => this.mostrarModalActualizar(dato)}>Editar</Button>{" "}
                       <Button color="danger" onClick={() => this.mostrarModalInsertar(dato.nombre)}>Horario</Button>
                     </td>
                   </tr>
@@ -402,41 +368,37 @@ class Gestion_laboratorios extends React.Component {
               </tbody>
             </Table>
           </Container>
-          
-        <Modal isOpen={this.state.modalInsertar} size="lg">
-          <ModalHeader>
-            <div><h3>Reservar Laboratorio</h3></div>
-          </ModalHeader>
-          <ModalBody>
-            {/* Agrega los campos necesarios para el formulario de reserva */}
-            <FormGroup>
-              <label>Fecha:</label>
-              <input className="form-control" name="dia" type="date" onChange={this.handleChange} value={this.state.form.dia} />
-            </FormGroup>
-            <FormGroup>
-              <label>Hora de inicio:</label>
-              <input className="form-control" name="horaInicio" type="time" onChange={this.handleChange} value={this.state.form.horaInicio} />
-            </FormGroup>
-            <FormGroup>
-              <label>Hora de fin:</label>
-              <input className="form-control" name="horaFin" type="time" onChange={this.handleChange} value={this.state.form.horaFin} />
-            </FormGroup>
-            <FormGroup>
-              <label>Descripción:</label>
-              <textarea className="form-control" name="descripcion" onChange={this.handleChange} value={this.state.form.descripcion} />
-            </FormGroup>
-            <FormGroup check>
-              <label check>
-                <input type="checkbox" name="palmada" onChange={this.handleChange} checked={this.state.form.palmada} />{' '}
-                Palmada
-              </label>
-            </FormGroup>
-          </ModalBody>
-          <ModalFooter>
-            <Button color="primary" onClick={() => this.reservarLaboratorio()}>Confirmar</Button>
-            <Button className="btn btn-danger" onClick={() => this.cerrarModalInsertar()}>Cerrar</Button>
-          </ModalFooter>
-        </Modal>
+          <Modal isOpen={this.state.modalActualizar}>
+            <ModalHeader>
+              <div><h3>Editar</h3></div>
+            </ModalHeader>
+            <ModalBody>
+              <FormGroup>
+                <label>Nombre:</label>
+                <input className="form-control" name="nombre" type="text" onChange={this.handleChange} value={this.state.form.nombre} />
+              </FormGroup>
+              <FormGroup>
+                <label>Capacidad:</label>
+                <input className="form-control" name="capacidad" type="text" onChange={this.handleChange} value={this.state.form.capacidad} />
+              </FormGroup>
+              <FormGroup>
+                <label>Computadores:</label>
+                <input className="form-control" name="computadores" type="text" onChange={this.handleChange} value={this.state.form.computadores} />
+              </FormGroup>
+              <FormGroup>
+                <label>Facilidades:</label>
+                <input className="form-control" name="facilidades" type="text" onChange={this.handleChange} value={this.state.form.facilidades} />
+              </FormGroup>
+              <FormGroup>
+                <label>Activos:</label>
+                <input className="form-control" name="activos" type="text" onChange={this.handleChange} value={this.state.form.activos} />
+              </FormGroup>
+            </ModalBody>
+            <ModalFooter>
+              <Button color="primary" onClick={() => this.editar(this.state.form)}>Editar</Button>
+              <Button color="danger" onClick={() => this.cerrarModalActualizar()}>Cancelar</Button>
+            </ModalFooter>
+          </Modal>
           <Modal isOpen={this.state.modalInsertar} size="lg">
             <ModalHeader>
               <div><h3>Horarios Disponibles</h3></div>

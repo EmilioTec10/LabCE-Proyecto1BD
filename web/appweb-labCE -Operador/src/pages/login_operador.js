@@ -5,13 +5,20 @@ import axios from 'axios';
 
 export let email_output = ''; // Declara la variable email fuera del componente
 
+
+
 const Login_operador = ({ setLoggedIn, setEmail }) => {
   const [email, setEmailInput] = useState(''); // Define setEmailInput aquí
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [emailOutput, setEmailOutput] = useState('');
   const navigate = useNavigate();
   const { theme } = useContext(ThemeContext);
+
+  const volver = async () => {
+    navigate("/");
+  } ;
 
   const onButtonClick = async () => {
     setEmailError('');
@@ -46,8 +53,12 @@ const Login_operador = ({ setLoggedIn, setEmail }) => {
         });
     
         if (response.status === 200) {
-          navigate('/reserva_laboratorio');
           email_output = email; // Asigna el valor de emailInput a la variable email
+          // Guardar email_output en localStorage
+          localStorage.clear();
+          localStorage.setItem('email_output', email_output);
+          console.log(localStorage.getItem('email_output'));
+          navigate('/marcar_horas');
         } else {
           // Si la solicitud fue exitosa pero la respuesta no es 200,
           // significa que la API devolvió un error diferente de 200
@@ -70,7 +81,7 @@ const Login_operador = ({ setLoggedIn, setEmail }) => {
           setEmailError('Error al iniciar sesión');
         }
       }
-    }
+    };
     
   };
 
@@ -92,6 +103,7 @@ const Login_operador = ({ setLoggedIn, setEmail }) => {
       <br />
       <div className="inputContainer">
         <input
+          type="password"
           value={password}
           placeholder="Enter your password here"
           onChange={(ev) => setPassword(ev.target.value)}
@@ -100,8 +112,9 @@ const Login_operador = ({ setLoggedIn, setEmail }) => {
         <label className="errorLabel">{passwordError}</label>
       </div>
       <br />
-      <div className="inputContainer">
+      <div className="inputCon" style={{ display: 'flex', justifyContent: 'space-between' }}>
         <input className="inputButton" type="button" onClick={onButtonClick} value="Log in" />
+        <input className="inputButton" type="button" onClick={volver} value="Volver" />
       </div>
     </div>
   );

@@ -8,12 +8,8 @@ import { Light, Dark } from '../styles/themes';
 import { NavLink } from 'react-router-dom';
 import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import TimePicker from 'react-time-picker';
-import 'react-time-picker/dist/TimePicker.css';
-
-
+import { Button } from "reactstrap";
+import axios from "axios";
 
 import {
   Table,
@@ -23,36 +19,23 @@ import {
   ModalBody,
   FormGroup,
   ModalFooter,
-  Button,
 } from "reactstrap";
-
-
 
 const linksArray = [
   {
-    label: 'Reserva Laboratorio',
+    label: 'Aprobar Prestamos',
     icon: <AiOutlineHome />,
-    to: '/reserva_laboratorio',
+    to: '/aprobacion_prestamo',
   },
   {
-    label: 'Prestamo Profesor',
+    label: 'Reserva Laboratorios',
     icon: <MdOutlineAnalytics />,
-    to: '/prestamo_profesor',
+    to: '/gestion_reserva_laboratorios',
   },
   {
-    label: 'Prestamo Estudiante',
-    icon: <AiOutlineApartment />,
-    to: '/prestamo_estudiante',
-  },
-  {
-    label: 'Devolucion Activo',
+    label: 'Cambio Contraseña',
     icon: <MdOutlineAnalytics />,
-    to: '/devolucion_activo',
-  },
-  {
-    label: 'Reportes',
-    icon: <MdOutlineAnalytics />,
-    to: '/reportes',
+    to: '/cambio_contrasenna',
   },
 ];
 
@@ -150,89 +133,82 @@ const DataTableContainer = styled.div`
   margin-right: auto;
 `;
 
-class Reserva_laboratorio extends React.Component {
-  constructor(props) {
-    super(props);
+class Cambio_contrasenna extends React.Component {
   
-    this.state = {
-      data: [], // Inicialmente, los datos estarán vacíos
-      modalActualizar: false,
-      modalInsertar: false,
-      form: {
-        laboratorio: "",
-        capacidad: "",
-        facilidades: "",
-        activos: "",
-      },
-    };
-  }
+  state = {
+    data: [],
+    modalActualizar: false,
+    modalInsertar: false,
+    form: {
+      id: "",
+      cedula: "",
+      nombreyapellidos: "",
+      edad: "",
+      fechanacimiento: "",
+      correo: "",
+    },
+  };
 
   componentDidMount() {
-    // Realizar la solicitud al endpoint de la API para obtener los datos
-    fetch('http://localhost:5129/api/Operador/ver-labs-disponibles')
-      .then(response => response.json())
+    let email = localStorage.getItem("email");
+    // Hacer la solicitud HTTP para obtener los datos del profesor
+    axios.get('http://localhost:5129/api/ControladorProfesor/ver-datos-profesor', {
+      params:{
+        email: email
+      }
+    })
+      .then(response => response.data)
       .then(data => {
-        // Actualizar el estado con los datos recibidos
-        this.setState({ data: data });
+        // Actualizar el estado del componente con los datos del profesor
+        this.setState({ data: [data] }); // Supongo que los datos del profesor se devuelven en un objeto único
       })
-      .catch(error => {
-        console.error('Error al obtener los datos del laboratorio:', error);
-      });
+      .catch(error => console.error('Error fetching data:', error));
   }
 
-  cerrarModalActualizar = () => {
-    this.setState({ modalActualizar: false });
+  guardarEmail = (email, dato) => {
+    // Aquí implementa la lógica para guardar el email relacionado a este row
+    console.log('Email guardado:', email);
+    // Eliminar el row después de guardar el email
+    this.eliminar_luego_de_aceptar(dato);
   };
 
-  mostrarModalInsertar = () => {
-    this.setState({
-      modalInsertar: true,
-    });
-  };
-
-  cerrarModalInsertar = () => {
-    this.setState({ modalInsertar: false });
-  };
-
-  editar = (dato) => {
-    var arreglo = [...this.state.data]; // Copia del array de datos
-    var indice = arreglo.findIndex(item => item.laboratorio === dato.laboratorio); // Busca el índice del dato a editar
-    if (indice !== -1) {
-      arreglo[indice] = dato; // Reemplaza el dato en el índice encontrado
-      this.setState({ data: arreglo, modalActualizar: false }); // Actualiza el estado con el nuevo array de datos
+  eliminar_luego_de_aceptar = (dato) => {
+    var opcion = window.confirm("Estás Seguro que deseas cambiar la contraseña del profesor " + dato.nombre + " " + dato.apellidos);
+    if (opcion === true){
+      let email = localStorage.getItem("email");
+      axios.post('http://localhost:5129/api/ControladorProfesor/generar-nueva-contrasena', {
+        email:email
+      })
+      .then(response => {
+        console.log(response.data);
+        // Manejar la respuesta de la API según sea necesario
+        alert(response.data); // Mostrar un mensaje de éxito
+      })
+      .catch(error => {
+          console.error(error);
+          // Manejar cualquier error que pueda ocurrir
+          alert("Hubo un error al generar la nueva contraseña");
+      });
     }
   };
-  
-  handleChange = (e) => {
-    this.setState({
-      form: {
-        ...this.state.form,
-        [e.target.name]: e.target.value,
-      },
-    });
-  };
 
-  CambiarTheme = () => {
-    const { setTheme, theme } = useContext(ThemeContext);
-    setTheme((theme) => (theme === 'light' ? 'dark' : 'light'));
-  };
-
-  //-----------codigo de reserva-----------//
-
-
-  
-
-  
-
-  
+  calcularEdad(fechaNacimiento) {
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+    }
+    return edad;
+}
 
   
   
+
   render() {
     const themeStyle = this.props.theme === 'dark' ? Light : Dark;
-    
-  
-    
+
     return (
       <ThemeProvider theme={themeStyle}>
         <Sidebar>
@@ -260,80 +236,49 @@ class Reserva_laboratorio extends React.Component {
             </div>
           ))}
           <Divider />
-          <div className="Themecontent">
-            <div className="Togglecontent">
-              <div className="grid theme-container">
-                
-              </div>
-            </div>
-          </div>
         </Sidebar>
-        <Content> 
+        <Content>
           <Container>
-            <h1>Laboratorios</h1>
-          </Container>
-          <Container>
-            
+            <br />
+            <br />
+            <h1>Cambio de Contraseña</h1>
             <Table>
               <thead>
                 <tr>
-                  <th>Laboratorio</th>
-                  <th>Capacidad</th>
-                  <th>Facilidades</th>
-                  <th>Activos</th>
+                  <th>Cedula</th>
+                  <th>Nombre</th>
+                  <th>Apellidos</th>
+                  <th>Edad</th>
+                  <th>Fecha de Nacimiento</th>
+                  <th>Correo</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
-  
               <tbody>
                 {this.state.data.map((dato) => (
-                  <tr key={dato.laboratorio}>
+                  <tr key={dato.cedula}>
+                    <td>{dato.cedula}</td>
                     <td>{dato.nombre}</td>
-                    <td>{dato.capacidad}</td>
-                    <td>{dato.facilidades}</td>
-                    <td>{dato.activos}</td>
+                    <td>{dato.apellidos}</td>
+                    <td>{this.calcularEdad(dato.fecha_de_nacimiento)}</td>
+                    <td>{dato.fecha_de_nacimiento}</td>
+                    <td>{dato.email}</td>
                     <td>
                       <Button
                         color="primary"
-                        onClick={() => this.mostrarModalActualizar(dato)}
+                        onClick={() => this.guardarEmail(dato.correo, dato)}
                       >
-                        Reservar
-                      </Button>
+                        Cambiar Contraseña
+                      </Button>{" "}
                     </td>
                   </tr>
                 ))}
               </tbody>
             </Table>
           </Container>
-          <Modal isOpen={this.state.modalActualizar}>
-            <ModalHeader>
-            <div><h3>Selecciona la Fecha</h3></div>
-            </ModalHeader>
-  
-            <ModalBody>
-              
-              
-            </ModalBody>
-  
-            <ModalFooter>
-              <Button
-                color="primary"
-                onClick={() => this.editar(this.state.form)}
-              >
-                Reservar
-              </Button>
-              <Button
-                color="danger"
-                onClick={() => this.cerrarModalActualizar()}
-              >
-                Cancelar
-              </Button>
-            </ModalFooter>
-          </Modal>
-        </Content> 
-        
+        </Content>
       </ThemeProvider>
     );
   }
 }
-export default Reserva_laboratorio;
+export default Cambio_contrasenna;

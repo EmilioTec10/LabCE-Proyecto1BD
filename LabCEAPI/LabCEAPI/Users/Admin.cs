@@ -653,6 +653,8 @@ namespace LabCEAPI.Users
             O.email_op AS email
         FROM 
             Operador O
+        WHERE 
+            O.aprovado = 1
         UNION ALL
         SELECT 
             P.cedula,

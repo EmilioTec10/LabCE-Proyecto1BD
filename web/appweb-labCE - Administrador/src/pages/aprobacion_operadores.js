@@ -10,7 +10,6 @@ import { ThemeContext } from '../App';
 import logo from '../assets/react.svg';
 import { Button } from "reactstrap";
 import axios from "axios";
-import { email } from './login_profesor';
 
 import {
   Table,
@@ -22,32 +21,37 @@ import {
   ModalFooter,
 } from "reactstrap";
 
-
-
-const data = [
-  { nombreyapellidos: "Emmanuel esquivel Chavarria",placa: "2231",  correo: "prueba@gmail.com" },
-  { nombreyapellidos: "Carlos", placa: "2251", correo: "ema@gmail.com"},
-  { nombreyapellidos: "Juan",  placa: "6231", correo: "ema@gmail.com"},
-  { nombreyapellidos: "Pepe", placa: "2731",  correo: "ema@gmail.com" },
-  { nombreyapellidos: "Emilio", placa: "2239",  correo: "ema@gmail.com"},
-  { nombreyapellidos: "Naruto", placa: "2211",  correo: "ema@gmail.com"},
-];
-
 const linksArray = [
   {
-    label: 'Aprobar Prestamos',
+    label: 'Gestion Profesores',
     icon: <AiOutlineHome />,
-    to: '/aprobacion_prestamo',
+    to: '/gestion_profesores',
   },
   {
-    label: 'Reserva Laboratorios',
+    label: 'Gestion Laboratorios',
     icon: <MdOutlineAnalytics />,
-    to: '/gestion_reserva_laboratorios',
+    to: '/gestion_laboratorios',
+  },
+  {
+    label: 'Gestion Activos',
+    icon: <AiOutlineApartment />,
+    to: '/gestion_activos',
+  },
+  {
+    label: 'Aprobar Operadores',
+    icon: <MdOutlineAnalytics />,
+    to: '/aprobacion_operadores',
   },
   {
     label: 'Cambio Contraseña',
     icon: <MdOutlineAnalytics />,
     to: '/cambio_contrasenna',
+  },
+  ,
+  {
+    label: 'Reportes',
+    icon: <MdOutlineAnalytics />,
+    to: '/reportes',
   },
 ];
 
@@ -145,7 +149,7 @@ const DataTableContainer = styled.div`
   margin-right: auto;
 `;
 
-class Aprobacion_prestamo extends React.Component {
+class Aprobacion_operadores extends React.Component {
   
   state = {
     data: [],
@@ -160,74 +164,76 @@ class Aprobacion_prestamo extends React.Component {
       correo: "",
     },
   };
-
   componentDidMount() {
-    console.log(email);
-    // Realiza la solicitud HTTP para obtener los datos de la API
-    axios.get('http://localhost:5129/api/ControladorProfesor/ver-prestamos-pendientes', {
-      params: {
-        email: email
-      }
-    })
-    .then(response => {
-      console.log(response.data);
-      this.setState({ data: response.data });
-    })
-    .catch(error => {
-      console.error(error);
-    });
+    axios.get('http://localhost:5129/api/ControladorAdmin/ver-operadores-registrados')
+      .then(response => {
+        const formattedData = response.data.map(item => ({
+          ...item,
+          fecha_de_nacimiento: item.fecha_de_nacimiento.substring(0, 10), // Formatear fecha
+          edad: this.calcularEdad(item.fecha_de_nacimiento.substring(0, 10)) // Calcular edad y asignarla
+        }));
+        this.setState({ data: formattedData });
+      })
+      .catch(error => {
+        console.error(error);
+      });
   }
-  
+
+  calcularEdad(fechaNacimiento) {
+    const hoy = new Date();
+    const nacimiento = new Date(fechaNacimiento);
+    let edad = hoy.getFullYear() - nacimiento.getFullYear();
+    const mes = hoy.getMonth() - nacimiento.getMonth();
+    if (mes < 0 || (mes === 0 && hoy.getDate() < nacimiento.getDate())) {
+        edad--;
+    }
+    return edad;
+  }
 
   guardarEmail = (email, dato) => {
     // Aquí implementa la lógica para guardar el email relacionado a este row
     console.log('Email guardado:', email);
     // Eliminar el row después de guardar el email
-    this.eliminar_luego_de_aceptar(dato);
   };
 
   eliminar_luego_de_aceptar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas aceptar el prestamo a la estudiante " + dato.nombre);
+    var opcion = window.confirm("¿Estás seguro que deseas aceptar al operador " + dato.nombre + " " + dato.apellidos + "?");
     if (opcion === true) {
-    
-      axios.post('http://localhost:5129/api/ControladorProfesor/aceptar-solicitud-prestamo', {
-        ID_activo: dato.placa,
-        email_estudiante: dato.email_est,
-        email_prof: dato.email_prof
-        
+      axios.post('http://localhost:5129/api/ControladorAdmin/aceptar-operador', { 
+        email_op: dato.email
       })
-      .then(response => {
-        if (response.status === 200) {
-          console.log(response.data); // "Solicitud de préstamo de activo aceptada correctamente"
+        .then(response => {
+          console.log(response.data); // Manejar la respuesta de la API si es necesario
+          // Filtrar el dato eliminado del estado
           var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
+          // Actualizar el estado con el nuevo arreglo y cerrar el modal si es necesario
           this.setState({ data: arreglo, modalActualizar: false });
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
+        })
+        .catch(error => {
+          console.error(error);
+          // Manejar el error si es necesario
+        });
     }
   };
+  
 
   eliminar = (dato) => {
-    var opcion = window.confirm("Estás Seguro que deseas rechazar el prestamo al operador " + dato.nombre);
+    var opcion = window.confirm("Estás Seguro que deseas rechazar al operador " + dato.nombre + " " + dato.apellidos + "?");
     if (opcion === true) {
-    
-      axios.post('http://localhost:5129/api/ControladorProfesor/rechazar-solicitud-prestamo', {
-        ID_activo: dato.placa,
-        email_estudiante: dato.email_est,
-        email_prof: dato.email_prof
-        
+      axios.post('http://localhost:5129/api/ControladorAdmin/rechazar-operador', { 
+        email_op: dato.email
       })
       .then(response => {
-        if (response.status === 200) {
-          console.log(response.data); // "Solicitud de préstamo de activo aceptada correctamente"
-          var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
-          this.setState({ data: arreglo, modalActualizar: false });
-        }
+        this.guardarEmail(dato.correo, dato);
+        console.log(response.data); // Manejar la respuesta de la API si es necesario
+        // Filtrar el dato eliminado del estado
+        var arreglo = this.state.data.filter(registro => registro.cedula !== dato.cedula);
+        // Actualizar el estado con el nuevo arreglo y cerrar el modal si es necesario
+        this.setState({ data: arreglo, modalActualizar: false });
       })
       .catch(error => {
         console.error(error);
+        // Manejar el error si es necesario
       });
     }
   };
@@ -235,6 +241,7 @@ class Aprobacion_prestamo extends React.Component {
 
   render() {
     const themeStyle = this.props.theme === 'dark' ? Light : Dark;
+    
     return (
       <ThemeProvider theme={themeStyle}>
         <Sidebar>
@@ -268,37 +275,41 @@ class Aprobacion_prestamo extends React.Component {
           <Container>
             <br />
             <br />
-            <h1>Aprobacion de Prestamos</h1>
+            <h1>Aprobacion de Operadores</h1>
             <Table>
               <thead>
                 <tr>
+                  <th>Cedula</th>
                   <th>Nombre</th>
                   <th>Apellidos</th>
+                  <th>Edad</th>
+                  <th>Fecha de Nacimiento</th>
                   <th>Correo</th>
-                  <th>Placa Activo</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
   
               <tbody>
-              {this.state.data.map((dato) => (
-                <tr key={dato.nombre}>
-                  <td>{dato.nombre}</td>
-                  <td>{dato.apellidos}</td>
-                  <td>{dato.email_est}</td>
-                  <td>{dato.placa}</td>
-                  <td>
-                    <Button
-                      color="primary"
-                      onClick={() => this.guardarEmail(dato.email_est, dato)}
-                    >
-                      Aprobar
-                    </Button>{" "}
-                    <Button color="danger" onClick={() => this.eliminar(dato)}>Denegar</Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+                {this.state.data.map((dato) => (
+                  <tr key={dato.cedula}>
+                    <td>{dato.cedula}</td>
+                    <td>{dato.nombre}</td>
+                    <td>{dato.apellidos}</td>
+                    <td>{dato.edad}</td>
+                    <td>{dato.fecha_de_nacimiento}</td>
+                    <td>{dato.email}</td>
+                    <td>
+                      <Button
+                        color="primary"
+                        onClick={() => this.eliminar_luego_de_aceptar(dato)}
+                      >
+                        Aprobar
+                      </Button>{" "}
+                      <Button color="danger" onClick={()=> this.eliminar(dato)}>Denegar</Button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
             </Table>
           </Container>
         </Content> 
@@ -306,4 +317,4 @@ class Aprobacion_prestamo extends React.Component {
     );
   }
 }
-export default Aprobacion_prestamo;
+export default Aprobacion_operadores;

@@ -43,6 +43,10 @@ const Registro = ({ setLoggedIn, setEmail }) => {
     return `${partes[2]}-${partes[1]}-${partes[0]}`;
   };
 
+  const volver = async () => {
+    navigate("/");
+  } ;
+
   const onButtonClick = async () => {
     setPasswordError('');
     setCedulaError('');
@@ -220,8 +224,9 @@ const Registro = ({ setLoggedIn, setEmail }) => {
         <label className="errorLabel">{passwordError}</label>
       </div>
       <br />
-      <div className="inputContainer">
+      <div className="inputCon" style={{ display: 'flex', justifyContent: 'space-between' }}>
         <input className="inputButton" type="button" onClick={onButtonClick} value="Registrarse" />
+        <input className="inputButton" type="button" onClick={volver} value="Volver" />
       </div>
     </div>
   );

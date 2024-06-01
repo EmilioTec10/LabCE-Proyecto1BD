@@ -135,7 +135,7 @@ namespace LabCEAPI.Controllers
             if (reservado)
             {
                 // Si se realizó correctamente, devolver un mensaje de éxito
-                return Ok("Laboratorio reservado correctamente para el día " + reserva_data.Dia.ToString() + " de " + reserva_data.HoraInicio.ToString() + " hasta " + reserva_data.HoraFin.ToString());
+                return Ok("Laboratorio reservado correctamente para el día " + reserva_data.Dia.Date.ToString() + " de " + reserva_data.HoraInicio.Hour.ToString() + " hasta " + reserva_data.HoraFin.Hour.ToString());
             }
             else
             {

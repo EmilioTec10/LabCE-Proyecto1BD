@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Importa Axios para hacer solicitudes HTTP
+import axios from 'axios';
 import { ThemeContext } from '../App';
 
-export let email = ''; // Declara la variable email fuera del componente
+export let email = '';
 
 const Login_profesor = () => {
   const [emailInput, setEmailInput] = useState('');
@@ -11,6 +11,7 @@ const Login_profesor = () => {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const navigate = useNavigate();
+  const { setLoggedIn } = useContext(ThemeContext);
 
   const onButtonClick = async () => {
     setEmailError('');
@@ -35,10 +36,9 @@ const Login_profesor = () => {
       setPasswordError('The password must be 8 characters or longer');
       isValid = false;
     }
-    
+
     // Validación de las credenciales del chef
     if (isValid) {
-      
       try {
         const response = await axios.post('http://localhost:5129/api/ControladorProfesor/ingresar', {
           email: emailInput,
@@ -46,8 +46,11 @@ const Login_profesor = () => {
         });
 
         if (response.status === 200) {
-          navigate('/aprobacion_prestamo');
           email = emailInput; // Asigna el valor de emailInput a la variable email
+          localStorage.clear();
+          localStorage.setItem('email', email);
+          setLoggedIn(true); // Actualiza el estado de autenticación
+          navigate('/aprobacion_prestamo');
         } else {
           setEmailError('Invalid email or password');
           setPassword('');
@@ -62,7 +65,7 @@ const Login_profesor = () => {
   return (
     <div className="mainContainer">
       <div className="titleContainer">
-        <div>Inserte sus credenciales </div>
+        <div>Inserte sus credenciales</div>
       </div>
       <br />
       <div className="inputContainer">
@@ -77,6 +80,7 @@ const Login_profesor = () => {
       <br />
       <div className="inputContainer">
         <input
+          type="password"
           value={password}
           placeholder="Enter your password here"
           onChange={(ev) => setPassword(ev.target.value)}

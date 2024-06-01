@@ -1,4 +1,4 @@
-import React, { useState, useContext} from 'react';
+import React, { useState, createContext } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import './App.css';
 
@@ -6,7 +6,7 @@ import Login_profesor from './pages/login_profesor';
 import Cambio_contrasenna from './pages/cambio_contrasenna';
 import Gestion_reserva_laboratorios from './pages/gestion_reserva_laboratorios';
 import Aprobacion_prestamo from './pages/aprobacion_prestamo';
-import { createContext } from 'react';
+import ProtectedRoute from './components/ProtectedRoute'; // Asegúrate de importar correctamente
 
 // Definimos y exportamos ThemeContext aquí
 export const ThemeContext = createContext({
@@ -23,11 +23,6 @@ function App() {
   const [email, setEmail] = useState('');
   const [theme, setTheme] = useState('light');
 
-  const handleAdminLogin = () => {
-    setLoggedIn(true);
-    setEmail('');
-  };
-
   return (
     <div className="App">
       <BrowserRouter>
@@ -35,11 +30,10 @@ function App() {
         <ThemeContext.Provider value={{ loggedIn, setLoggedIn, email, setEmail, theme, setTheme }}>
           {/* Rutas y componentes */}
           <Routes>
-            
-            <Route path="/" element={<Login_profesor setLoggedIn={setLoggedIn} />} />
-            <Route path="/cambio_contrasenna" element={<Cambio_contrasenna  />} />
-            <Route path="/gestion_reserva_laboratorios" element={<Gestion_reserva_laboratorios />} />
-            <Route path="/aprobacion_prestamo" element={<Aprobacion_prestamo />} />
+            <Route path="/" element={<Login_profesor />} />
+            <Route path="/cambio_contrasenna" element={<ProtectedRoute><Cambio_contrasenna /></ProtectedRoute>} />
+            <Route path="/gestion_reserva_laboratorios" element={<ProtectedRoute><Gestion_reserva_laboratorios /></ProtectedRoute>} />
+            <Route path="/aprobacion_prestamo" element={<ProtectedRoute><Aprobacion_prestamo /></ProtectedRoute>} />
           </Routes>
         </ThemeContext.Provider>
       </BrowserRouter>

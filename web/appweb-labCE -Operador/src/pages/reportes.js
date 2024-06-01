@@ -12,7 +12,6 @@ import { Button } from "reactstrap";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
 import axios from "axios";
-import { email_output } from "./login_operador";
 
 import {
   Table,
@@ -31,24 +30,34 @@ var data;
 
 const linksArray = [
   {
-    label: 'Reserva Laboratorio',
+      label: 'Marcar Horas',
+      icon: <AiOutlineHome />,
+      to: '/marcar_horas',
+  },
+  {
+    label: 'Reservar Laboratorio',
     icon: <AiOutlineHome />,
     to: '/reserva_laboratorio',
   },
   {
-    label: 'Prestamo Profesor',
+    label: 'Prestamos Profes',
     icon: <MdOutlineAnalytics />,
     to: '/prestamo_profesor',
   },
   {
-    label: 'Prestamo Estudiante',
+    label: 'Prestamos Estudiantes',
     icon: <AiOutlineApartment />,
     to: '/prestamo_estudiante',
   },
   {
-    label: 'Devolucion Activo',
+    label: 'Prestar Activo',
     icon: <MdOutlineAnalytics />,
     to: '/devolucion_activo',
+  },
+  {
+    label: 'Prestamos Aprobados',
+    icon: <MdOutlineAnalytics />,
+    to: '/prestamos_aprobados',
   },
   {
     label: 'Reportes',
@@ -69,7 +78,7 @@ const Sidebar = styled.div`
   color: ${(props) => props.theme.text};
   background: ${(props) => props.theme.bg};
   position: fixed;
-  width: 300px;
+  width: 310px;
   height: 100vh;
   z-index: 1000;
 
@@ -133,10 +142,19 @@ const Sidebar = styled.div`
   }
 `;
 
+
 const Content = styled.div`
   margin-left: 300px; // Asegurar que el contenido comience después de la barra lateral
   flex-grow: 1; // Permitir que el contenido crezca para llenar el espacio restante
 `;
+
+const Divider = styled.div`
+  height: 1px;
+  width: 100%;
+  background: ${(props) => props.theme.bg3};
+  margin: 20px 0;
+`;
+
 
 const DataTableContainer = styled.div`
   width: 80%;
@@ -166,6 +184,7 @@ class Reportes extends React.Component {
   };
 
   componentDidMount() {
+    let email_output = localStorage.getItem("email_output");
     axios.get('http://localhost:5129/api/Operador/ver-horas-laboradas',{
       params:{
         email: email_output
@@ -182,14 +201,15 @@ class Reportes extends React.Component {
 
   generatePDF = () => {
     const { data } = this.state;
+    let email_output = localStorage.getItem("email_output");
   
     // Crear un array de datos para la tabla del PDF
     const tableData = [
       [{ text: 'Operador', style: 'tableHeader' },
        { text: 'Fecha', style: 'tableHeader' },
-       { text: 'Hora de Entrada', style: 'tableHeader' },
-       { text: 'Hora de Salida', style: 'tableHeader' },
-       { text: 'Horas Trabajadas', style: 'tableHeader' }],
+       { text: 'Entrada', style: 'tableHeader' },
+       { text: 'Salida', style: 'tableHeader' },
+       { text: 'Trabajadas', style: 'tableHeader' }],
        ...data.flatMap(item => {
         // Calcular la suma total de horas trabajadas para el item actual
         const totalHorasTrabajadas = item.horas_trabajadas;
@@ -228,7 +248,7 @@ class Reportes extends React.Component {
         {
           table: {
             headerRows: 1,
-            widths: [ '*', '*', '*', '*', '*' ],
+            widths: [ '*', '*', '*', '*', '*'],
             body: tableData,
           },
           layout: 'lightHorizontalLines',
@@ -253,7 +273,7 @@ class Reportes extends React.Component {
 
   render() {
     const themeStyle = this.props.theme === 'dark' ? Light : Dark;
-
+    let email_output = localStorage.getItem("email_output");
     return (
       <ThemeProvider theme={themeStyle}>
         <Sidebar>
@@ -271,6 +291,7 @@ class Reportes extends React.Component {
               </NavLink>
             </div>
           ))}
+          <Divider />
           {secondarylinksArray.map(({ icon, label, to }) => (
             <div className="LinkContainer" key={label}>
               <NavLink to={to} className="Links" activeClassName="active">
@@ -278,7 +299,9 @@ class Reportes extends React.Component {
                 <span>{label}</span>
               </NavLink>
             </div>
+            
           ))}
+          <Divider />
         </Sidebar>
         <Content> 
         <Container>
